@@ -1,0 +1,194 @@
+##############################################################################
+# FUNCTION - GET FILENAMES IN FOLDER
+#
+# DESCRIPTION: Get filenames in folder.
+#
+# NAME:         Pieter Overdevest.
+# DATE:         Aug 4, 2021.
+# VERSION:      5.
+#
+# VERSIONS:     v1 -    Start-up
+#               v2 -    Added md5 checksum
+#               v3 -    Added filename without extention.
+#               v4 -    Added md5sum.
+#                       Added boolean kolom om aan te geven of de filename met een datum begint.
+#                       Hidden files en files zonder datum worden niet meer buitengesloten.
+#               v5 -    md5 sum optioneel gemaakt door introductie van 'b.return.md5'. Als de
+#                       bestanden groot zijn kost md5 bepaling veel tijd.
+#
+#
+##############################################################################
+
+        f_get_filenames_in_folder = function(c.path,
+                                             b.recursive  = FALSE,
+                                             c.file.type  = NULL,
+                                             b.return.md5 = TRUE) {
+
+
+#################################################################################
+# TEST!
+#################################################################################
+
+        # c.path       = c.path.source
+        # b.recursive  = FALSE
+        # c.file.type  = NULL
+
+        # c.path       = c.path.destination
+        # b.recursive  = FALSE
+        # c.file.type  = NULL
+
+        # c.path       = paste0(path.iwd, "Documents/")
+        # b.recursive  = FALSE
+        # c.file.type  = NULL
+
+
+#################################################################################
+# ERROR CHECK
+#################################################################################
+
+        if(!dir.exists(c.path)) {
+
+                stop("The folder '", c.path, "' does not exist!\n")
+        }
+
+
+#################################################################################
+# INITIALIZE
+#################################################################################
+
+        if(is.null(c.file.type)) {
+
+                c.pattern <- NULL
+
+        } else {
+
+                c.pattern <- paste0("\\.", c.file.type, "[xm]?$")
+
+                }
+
+
+#################################################################################
+# MAIN BODY
+#################################################################################
+
+        # Get all files in the path folder that match c.pattern.
+        # path	        a character vector of path names. The default corresponds to the working directory returned by getwd(). You can specify more than one directory path.
+        # pattern	a character string containing a regular expression. If the basename of a file matches the regular expression, it is returned. See the regexpr function for details on regular expressions. By default, NULL, specifying returning all files found in path.
+        # all.files	a logical value. If TRUE, the entire contents of directory are returned. If FALSE (the default, only visible (non-hidden) file or directory names are returned. (Hidden files or directories are those with names that begin with a period.)
+        # full.names	a logical value. If TRUE, the directory path is prepended to the returned names. If FALSE (the default), only the file or directory name is in the return value.
+        # recursive	a logical value. If TRUE, the file names in all directory paths are listed recursively. When include.dirs=TRUE, the names of subdirectories are also returned. The default is FALSE.
+        # ignore.case	a logical value. If TRUE, uppercase and lowercase characters are considered equivalent when matching. The default is FALSE.
+        # include.dirs	a logical value. Only used when recursive=TRUE. If TRUE, both names of files and subdirectories are returned. Otherwise, only names of files are returned.
+
+        df.file <- tibble(
+
+                full.path = list.files(
+
+                        path         = c.path,
+                        recursive    = b.recursive,
+                        full.names   = TRUE,
+                        ignore.case  = TRUE,
+                        pattern      = c.pattern)
+                )
+
+
+
+        # Check whether a file was found.
+        if (nrow(df.file) == 0) {
+
+                warning(paste0("No files found of ",
+                            ifelse(is.null(c.file.type), "any", c.file.type),
+                            " type in path '", c.path, "'!"))
+                }
+
+        # Clean up the file names and get the concerned file name.
+        df.output.source <- df.file %>%
+
+                # Check version number in the filename.
+                mutate(
+
+                        # Determine file and folder name.
+                        folder.name   = dirname(full.path),
+                        file.name     = basename(full.path),
+
+                        # Is observation a file or a folder?
+                        is.dir        = file.info(full.path)$isdir,
+
+                        # Is observation a hidden file?
+                        is.hidden     = grepl("^~", file.name),
+
+                        # Get the last modified date for file.
+                        date.last.mod = file.info(full.path)$mtime
+
+                        )
+
+
+        # Continue..
+        df.output <- df.output.source %>%
+
+                # Verwijder directories
+                filter(!is.dir) %>%
+
+                mutate(
+                        # Extract date from file name.
+                        date.in.file.name = ymd(str_extract(file.name, "^[0-9]{4} [0-9]{2} [0-9]{2}")),
+                        contains.date     = !is.na(date.in.file.name)
+                        ) %>%
+
+                arrange(date.in.file.name)
+
+
+        # Voeg md5 toe, indien gevraagd.
+        if(b.return.md5) {
+
+                df.output <- df.output %>% mutate(file.md5 = tools::md5sum(full.path))
+                }
+
+
+#################################################################################
+# ERROR CHECK
+#################################################################################
+
+        if(nrow(df.output) == 0) {
+
+                cat(paste0("The folder '", c.path, "' contains no files.\n"))
+        }
+
+
+        if(sum(df.output.source$is.dir) > 0) {
+
+                cat(paste0("The folder '", c.path, "' contains ", sum(df.output.source$is.dir), " subfolder(s). ",
+                    "Files in the subfolder(s) are not included, since b.recursive was set to FALSE:\n",
+                    paste(df.output.source %>% filter(is.dir) %>% pull(full.path), collapse = "\n"), "\n"
+                    ))
+        }
+
+
+        if(sum(df.output$is.hidden) > 0) {
+
+                cat(paste0("The folder '", c.path, "' contains ", sum(df.output$is.hidden),
+                    " case(s) of hidden files. ",
+                    "These are included in the listed output:\n",
+                    paste(df.output %>% filter(is.hidden) %>% pull(file.name), collapse = "\n"), "\n"
+                    ))
+        }
+
+
+        if(sum(!df.output$contains.date) > 0) {
+
+                cat(paste0("The folder '", c.path, "' contains ", sum(!df.output$contains.date),
+                    " case(s) of missing, incomplete, or incorrect dates in filenames. ",
+                    "These are considered in the listed output.\n"
+                    # "These are included in the listed output:\n\n",
+                    # paste(df.output %>% filter(!contains.date) %>% pull(file.name), collapse = "\n"), "\n"
+                    ))
+        }
+
+
+#################################################################################
+# RETURN
+#################################################################################
+
+        return(df.output)
+
+}

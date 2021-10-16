@@ -1,0 +1,22 @@
+###############
+# OS junk files
+###############
+[Tt]humbs.db
+*.DS_Store
+*.orig
+
+
+###############
+# Archive
+###############
+Archive/
+
+
+###############
+# RStudio
+###############
+*.Rproj
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata

@@ -1,7 +1,7 @@
 ##############################################################################################
 # BUILD PACKAGE - GENERALTOOLBOX
 #
-# NAME:         Pieter Overdevest
+# NAME:         Pieter Overdevest.
 # DATE:         Mar 23, 2021.
 # VERSION:      2.
 #

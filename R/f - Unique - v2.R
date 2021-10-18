@@ -1,7 +1,7 @@
 #################################################################################
 # FUNCTION - Return sorted unique elements
 #
-# NAME:         Pieter Overdevest.
+# NAME:         Pieter Overdevest
 # DATE:         Dec 23, 2020.
 # VERSION:      2.
 #
@@ -11,12 +11,12 @@
 #################################################################################
 
         f_unique <- function(v.vector) {
-                
+
                 v.result <- sort(unique(v.vector))
-                
+
                 if(length(v.result) > 10000)
                         stop("Meer dan 10,000 items, bedoelde je 'f_is_unique'?")
-        
+
                 return(v.result)
-                
+
         }

@@ -1,23 +1,8 @@
-##############################################################################
-# FUNCTION - GET FILENAMES IN FOLDER
-#
-# DESCRIPTION: Get filenames in folder.
-#
-# NAME:         Pieter Overdevest.
-# DATE:         Aug 4, 2021.
-# VERSION:      5.
-#
-# VERSIONS:     v1 -    Start-up
-#               v2 -    Added md5 checksum
-#               v3 -    Added filename without extention.
-#               v4 -    Added md5sum.
-#                       Added boolean kolom om aan te geven of de filename met een datum begint.
-#                       Hidden files en files zonder datum worden niet meer buitengesloten.
-#               v5 -    md5 sum optioneel gemaakt door introductie van 'b.return.md5'. Als de
-#                       bestanden groot zijn kost md5 bepaling veel tijd.
-#
-#
-##############################################################################
+#################################################################################
+# NAME:         FUNCTION - Get filesnames in folder
+# AUTHOR:       Pieter Overdevest.
+# DESCRIPTION:  Get filenames in folder (c.path).
+#################################################################################
 
         f_get_filenames_in_folder = function(c.path,
                                              b.recursive  = FALSE,

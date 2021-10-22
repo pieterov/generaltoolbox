@@ -1,20 +1,7 @@
 #################################################################################
-# FUNCTION - Read data from file.
-#
-# NAME:         Pieter Overdevest
-# DATE:         October 16, 2021.
-# VERSION:      19.
-#
-# VERSIONS:     v13 -   v.col.type vervangen door l.col.type.
-#               v14 -   De stop vervangen door een warning in dien een SQLITE niet een van de tabellen bevat //
-#                       Als er geen drager (of borden) tabel aanwezig is in de SQLITE, dan wordt deze niet ingelezen.
-#               v15 -   Optie om b.add.mod.date.path.file (default false).
-#               v16 -   'Sheet_1' vervangen door 'Sheet1' voor alignment met 'Write data to file' en default in Excel.
-#               v17 -   Toevoeging dat bepaalde term excluded moet zijn in v.file.string (c.file.string.exclude).
-#               v18 -   Toevoegen path en mod_date per file type. Beter dan eerst overal toevoegen en dan
-#                       aan einde weer verwijderen.
-#               v19 -   Optie om parquet file te lezen.
-#
+# NAME:         FUNCTION - Read data from file
+# AUTHOR:       Pieter Overdevest.
+# DESCRIPTION:  Read data from file.
 #################################################################################
 
         f_read_data_from_file <- function(

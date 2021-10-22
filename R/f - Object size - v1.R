@@ -1,17 +1,10 @@
 #################################################################################
-# FUNCTION - CALCULATE OBJECT SIZE.
-#
-# DESCRIPTION: Calculate the MB/GB of data frame.
-#
-# NAME:     Pieter Overdevest.
-# DATE:     May 19, 2021.
-# VERSION:  1
-#
-# VERSIONS: v1 -        Start-up
-#
+# NAME:         FUNCTION - Object size.
+# AUTHOR:       Pieter Overdevest.
+# DESCRIPTION:  Calculate object size.
 #################################################################################
 
-f_object_size <- function(df.input) {
+        f_object_size <- function(df.input) {
 
 #################################################################################
 # ERROR CHECK

@@ -1,28 +1,8 @@
-##############################################################################
-# FUNCTION - MOVE FILES
-#
-# DESCRIPTION: Move files from one folder to another (directories excluded).
-#
-# NAME:         Pieter Overdevest.
-# DATE:         Aug 3, 2021.
-# VERSION:      6.
-#
-# VERSIONS:     v1 -    Start-up
-#               v2 -    Added v.file.to.move en c.date.treshold mag NULL zijn.
-#               v3 -    ...
-#               v4 -    Aanpassing in de message indien, nrow(df.file.to.move) == 0
-#                       Filter files to move based on grepl, ipv '%in%'.
-#               v5 -    Optie om files wel/niet te overschrijven in destination folder.
-#                       Alle scenario's verder uitgewerkt.
-#               v6 -    Save files with double md5 files to Excel.
-#                       Added print statement at end.
-#                       Added condition when to remove all rows.
-#                       Optie om check op dubbele md5's in source en destination
-#                       folder wel/niet uit te voeren.
-#
-#
-#
-##############################################################################
+#################################################################################
+# NAME:         FUNCTION - Move files.
+# AUTHOR:       Pieter Overdevest.
+# DESCRIPTION:  Move files.
+#################################################################################
 
         f_move_files = function(
 

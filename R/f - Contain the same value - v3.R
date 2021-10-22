@@ -1,15 +1,8 @@
-##############################################################
-# FUNCTION - CONTAIN THE SAME VALUE
-#
-# VERSION:      3.
-# DATE:         July 27, 2021.
-# NAME:         Pieter Overdevest.
-#
-# VERSIONS:     v1 -    start
-#               v2 -    ...
-#               v3 -    Uitbreiding van vergelijking/analyse.
-#
-##############################################################
+#################################################################################
+# NAME:         FUNCTION - Contain the same value
+# AUTHOR:       Pieter Overdevest.
+# DESCRIPTION:  Assess similarity between two vectors.
+#################################################################################
 
         f_contain_the_same_value <- function(v1, v2) {
 

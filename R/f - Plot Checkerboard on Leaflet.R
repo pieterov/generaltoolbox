@@ -1,10 +1,8 @@
-##############################################################################
-# FUNCTION - Plot Checkerboard on Leaflet
-#
-# Name:         Pieter Overdevest.
-# Date:         Oct 18, 2021.
-#
-##############################################################################
+#################################################################################
+# NAME:         FUNCTION - Plot Checkerboard on Leaflet.
+# AUTHOR:       Pieter Overdevest.
+# DESCRIPTION:  Plot Checkerboard on Leaflet.
+#################################################################################
 
         f_plot_checkerboard_on_leaflet = function(
 

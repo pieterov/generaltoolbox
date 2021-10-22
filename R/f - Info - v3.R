@@ -1,11 +1,8 @@
-##############################################################
-# FUNCTION - Give basic info on vector or data frame.
-#
-# Name:    Pieter Overdevest.
-# Date:    Mei 8, 2020.
-# Version: 2.
-#
-##############################################################
+#################################################################################
+# NAME:         FUNCTION - Info
+# AUTHOR:       Pieter Overdevest.
+# DESCRIPTION:  Give basic info on vector or data frame.
+#################################################################################
 
         f_info <- function(x,
                            n.top     = 10,

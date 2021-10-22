@@ -1,20 +1,15 @@
 #################################################################################
-# FUNCTION - Put strings in list.
-#
-# NAME:         Pieter Overdevest.
-# DATE:         Oct 13, 2020.
-# VERSION:      2.
-#
-# COMMENT:      Add option to remove duplicates.
-#
+# NAME:         FUNCTION - Paste.
+# AUTHOR:       Pieter Overdevest.
+# DESCRIPTION:  Concatenate items in vector.
 #################################################################################
 
-f_paste <- function(v.string,
-                    c.collapse   = ",",
-                    b.capitalize = FALSE,
-                    b.quotation  = FALSE,
-                    b.sort       = TRUE,
-                    b.unique     = FALSE) {
+        f_paste <- function(v.string,
+                            c.collapse   = ",",
+                            b.capitalize = FALSE,
+                            b.quotation  = FALSE,
+                            b.sort       = TRUE,
+                            b.unique     = FALSE) {
 
 
 #########################################################################

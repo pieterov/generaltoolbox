@@ -1,19 +1,7 @@
 #################################################################################
-# FUNCTION - CALCULATE TABLE
-#
-# NAME:         Pieter Overdevest.
-# DATE:         July 29, 2021
-# VERSION:      5.
-#
-# VERSIONS:     v1 -    Start-up.
-#               v2 -    Optie voor 1D tabel toegevoegd (c.hor = NULL).
-#               v3 -    Added option to check for empty data frame.
-#               v4 -    Optie toegevoegd om warning uit te zetten.
-#                       'wt = n()' verwijderd in count() functie.
-#               v5 -    Print functie verwijderd aangezien het issue gaf bij renderen van
-#                       markdown document. Output van functie moet dataframe zijn,
-#                       want die gaan daar f_kable in.
-#
+# NAME:         FUNCTION - Calculate table
+# AUTHOR:       Pieter Overdevest.
+# DESCRIPTION:  Prepare table
 #################################################################################
 
 f_table <- function(df.input,

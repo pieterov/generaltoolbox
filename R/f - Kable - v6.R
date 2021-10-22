@@ -1,33 +1,21 @@
 #################################################################################
-# FUNCTION - Print Kable in R-Markdown
-#
-# NAME:         Pieter Overdevest.
-# DATE:         Oct 12, 2021
-# VERSION:      6.
-#
-# VERSIONS:     v1 -    Start-up
-#               v2 -    ...
-#               v3 -    Aanpassing kleur van onderste rij (if gelijk aan total).
-#               v4 -    Check op aantal kolommen; alleen als df.input meer dan 1 kolom
-#                       heeft dan kolombreedte aanpassen.
-#               v5 -    Check ingebouwd zodat output een deel van data
-#                       frame toont indient het meer dan n.max (15) rijen bevat.
-#               v6 -    Toevoeging mogelijkheid om font size aan te passen.
-#
+# NAME:         FUNCTION - Kable.
+# AUTHOR:       Pieter Overdevest.
+# DESCRIPTION:  Print Kable in R-Markdown.
 #################################################################################
 
-f_kable <- function(df.input,
-                    c.caption,
-                    c.position  = "center",
-                    c.width     = "2cm",
-                    n.angle     = NULL,
-                    n.font.size = NULL,
-                    n.max       = 15        # Optional, number of rows to print. Default print all.
-                    ) {
+        f_kable <- function(df.input,
+                            c.caption,
+                            c.position  = "center",
+                            c.width     = "2cm",
+                            n.angle     = NULL,
+                            n.font.size = NULL,
+                            n.max       = 15        # Optional, number of rows to print. Default print all.
+                            ) {
 
-        #########################################################################
-        # Test Only!
-        #########################################################################
+#########################################################################
+# Test Only!
+#########################################################################
 
         # Altijd!
         # c.position = "center"
@@ -45,9 +33,9 @@ f_kable <- function(df.input,
         # c.caption = "Borden zonder image op picture server en met link naar StreetSmart (bord type rood):"
         # n.max     = 10
 
-        #########################################################################
-        # Initialization.
-        #########################################################################
+#########################################################################
+# Initialization.
+#########################################################################
 
         # Indien het dataframe leeg is, voeg dan een lege rij toe, om error te voorkomen.
         if(nrow(df.input) == 0) {
@@ -71,9 +59,9 @@ f_kable <- function(df.input,
 
         }
 
-        #########################################################################
-        # Processing
-        #########################################################################
+#########################################################################
+# Processing
+#########################################################################
 
         df.output <- df.input %>%
 
@@ -136,9 +124,9 @@ f_kable <- function(df.input,
                 }
 
 
-        #########################################################################
-        # Return
-        #########################################################################
+#########################################################################
+# Return
+#########################################################################
 
         return(df.output)
 

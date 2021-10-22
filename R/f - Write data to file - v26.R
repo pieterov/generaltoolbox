@@ -1,21 +1,7 @@
 #################################################################################
-# FUNCTION - Write data to file.
-#
-# DATE:         Oct, 2021.
-# VERSION:      26.
-#
-# VERSIONS:     v18 -   Change default v.path to path.data.source.
-#               v19 -   Change default v.path to path.ipsm.dropbox.
-#               v20 -   'Sheet_' vervangen door 'Sheet' voor alignment met 'Write data to file' en default in Excel ('Sheet1').
-#               v21 -   Default naam aangepast zodat naam van het dataframe toegevoegd wordt aan de default naam.
-#                       Header 90 graden gedraaid, header row hoger gemaakt, default blauw. Vectoren voor kleuren in de headers.
-#               v22 -   Banded rows is FALSE in write to XLS. Banded rows zorgde voor verwarring in de DCS.
-#               v23 -   Conditional formating (grijze balk) als input variabele toegevoegd: c.conditional.eval (en kleur), en b.banded.rows.
-#               v24 -   Added more colors for headers - light/dark blue - en eerste rij iets hoger gemaakt (125 --> 220 pts).
-#               v25 -   BOM op FALSE gezet, aan gezien CSV niet geimporteerd kon worden in IPSm:
-#                       "If TRUE a BOM (Byte Order Mark) sequence (EF BB BF) is added at the beginning of the file; format 'UTF-8 with BOM'."
-#               v26 -   Optie toegevoegd om parquet files te schrijven.
-#
+# NAME:         FUNCTION - Write data to file.
+# AUTHOR:       Pieter Overdevest
+# DESCRIPTION:  Write data to file
 #################################################################################
 
 f_write_data_to_file <- function(

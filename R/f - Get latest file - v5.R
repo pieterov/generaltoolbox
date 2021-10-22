@@ -1,15 +1,8 @@
 #################################################################################
-# FUNCTION - Get latest file.
-#
-# NAME:         Pieter Overdevest
-# DATE:         October 31, 2019.
-# VERSION:      5.
-#
-# VERSIONS:     v1 t/m v4 - start
-#               v5 -    Toevoeging dat bepaalde term excluded moet zijn in v.file.string (c.file.string.exclude).
-#
+# NAME:         FUNCTION - Get latest file
+# AUTHOR:       Pieter Overdevest.
+# DESCRIPTION:  Get latest file with given c.file.string and of type c.file.type.
 #################################################################################
-
 
         f_get_latest_file <- function(
 
@@ -35,9 +28,9 @@
                 ) {
 
 
-                ##############################################################################
-                # Initialize data.
-                ##############################################################################
+##############################################################################
+# Initialize data.
+##############################################################################
 
                 # Determine c.pattern based on whether the exact string/filename needs to be found.
                 c.pattern <- ifelse(b.exact.match,
@@ -47,9 +40,9 @@
                                     paste0(c.file.string, ".*\\.", c.file.type, "[xm]?$"))
 
 
-                ##############################################################################
-                # Get latest file.
-                ##############################################################################
+##############################################################################
+# Get latest file.
+##############################################################################
 
                 # Get all files in the path folder that match c.pattern.
                 df.file <- tibble(

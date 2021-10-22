@@ -1,13 +1,7 @@
 #################################################################################
-# FUNCTION - Source file.
-#
-# DATE:         Feb 14, 2021.
-# VERSION:      8.
-#
-# VERSIONS:     v6 -    func.to.src vervangen door script.to.source.
-#               v7 -    code aangepast naar base code.
-#               v8 -    source file zonder gebruik te maken van setwd().
-#
+# NAME:         FUNCTION - Source file.
+# AUTHOR:       Pieter Overdevest.
+# DESCRIPTION:  Source newest file.
 #################################################################################
 
         f_source <- function(script.to.source,

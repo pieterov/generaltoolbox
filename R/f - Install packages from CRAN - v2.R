@@ -1,13 +1,8 @@
-##############################################################
-# FUNCTION - Install latest packages from CRAN, and 'library' them.
-#
-# NAME:         Pieter Overdevest.
-# DATE:         Feb 12, 2021.
-# VERSION:      1.
-#
-# VERSIONS:     v1 - Start-up.
-#
-##############################################################
+#################################################################################
+# NAME:         FUNCTION - Install Packages From CRAN
+# AUTHOR:       Pieter Overdevest.
+# DESCRIPTION:  Install latest packages from CRAN, and 'library' them.
+#################################################################################
 
         # TESTING
         # v.package <- c("tmaptools")

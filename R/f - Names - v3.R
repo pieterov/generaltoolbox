@@ -1,18 +1,12 @@
-##############################################################
-# FUNCTION - Give names of data frame
-#
-# DATE:         Jan 30, 2021.
-# NAME:         Pieter Overdevest.
-# VERSION:      3.
-#
-# VERSIONS:     v1/v2 - Start
-#               v3    - Velden gesorteerd op Class en dan op Name
-#
-##############################################################
+#################################################################################
+# NAME:         FUNCTION - Names.
+# AUTHOR:       Pieter Overdevest.
+# DESCRIPTION:  Give names of data frame.
+#################################################################################
 
-f_names <- function(df,
-                    b.sort.name  = TRUE,
-                    b.sort.class = TRUE) {
+        f_names <- function(df,
+                            b.sort.name  = TRUE,
+                            b.sort.class = TRUE) {
 
 ##############################################################################
 # TEST ONLY!!

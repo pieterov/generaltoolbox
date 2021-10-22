@@ -1,13 +1,7 @@
 #################################################################################
-# FUNCTION - Return sorted unique elements
-#
-# NAME:         Pieter Overdevest
-# DATE:         Dec 23, 2020.
-# VERSION:      2.
-#
-# VERSIONS:     v1 - start
-#               v2 - removed 'cat' from return.
-#
+# NAME:         FUNCTION - Return sorted unique elements.
+# AUTHOR:       Pieter Overdevest
+# DESCRIPTION:  Return sorted unique elements.
 #################################################################################
 
         f_unique <- function(v.vector) {

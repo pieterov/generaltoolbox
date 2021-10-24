@@ -9,20 +9,21 @@
                 df.input,
                 v.coord.point,
                 c.value,
-                c.leaflet.title,
-                n.layer,
-                n.round,
-                n.dig.lab,
-                v.info.tag.polygon.label,
-                v.info.veld.polygon.label,
-                v.info.tag.polygon.popup,
-                v.info.veld.polygon.popup,
-                b.save.leaflet
+                c.leaflet.title           = "Title",
+                n.layer                   = NULL,
+                v.layer                   = NULL,
+                n.round                   = 0,
+                n.dig.lab                 = 3,
+                v.info.tag.polygon.label  = NULL,
+                v.info.veld.polygon.label = NULL,
+                v.info.tag.polygon.popup  = NULL,
+                v.info.veld.polygon.popup = NULL,
+                b.save.leaflet            = FALSE
         ) {
 
 
 ##############################################################################
-# TEST ONLY!!
+# TEST ONLY!
 ##############################################################################
 
         # Testing
@@ -39,14 +40,54 @@
         # v.info.veld.polygon.popup = c("polygon.result")
         # b.save.leaflet            = TRUE
 
+        # M7
+        # df.input                  = df.bord.hl.final.vl.final.dlv.conversie %>% filter(!is.na(perc.conversie))
+        # v.coord.point             = c("bord.x.rnd", "bord.y.rnd")
+        # c.value                   = "perc.conversie"
+        # c.leaflet.title           = paste0("Percentage 2021 borden op de geleverde borden (cellen ",
+        #                                    n.step/1000,"km bij ", n.step/1000,"km)")
+        # n.layer                   = NULL
+        # v.layer                   = c(0, 50, 75, 90, 95, 99, 100)
+        # n.round                   = 1
+        # n.dig.lab                 = 3
+        # v.info.tag.polygon.label  = c("Conversie", "RD_x", "RD_y"),
+        # v.info.veld.polygon.label = c("perc.conversie", "bord.x.rnd", "bord.y.rnd,"),
+        # v.info.tag.polygon.popup  = c("Totaal in vl", "Nog niet geleverd in hl", "Geleverd in hl",
+        #                               "Geleverd in hl (huidige jaar)", "Geleverd in hl (niet huidig jaar)",
+        #                               "Conversie (%)", "Nog te leveren (%)", "Projecten (vl)", "Projecten (hl)")
+        # v.info.veld.polygon.popup = c("n.bord.totaal.vl", "n.bord.nog.niet.geleverd", "n.bord.geleverd",
+        #                               "n.bord.geleverd.huidige.jaar", "n.bord.geleverd.niet.huidige.jaar",
+        #                               "perc.conversie", "perc.nog.te.leveren", "cell.label.vl", "cell.label.hl")
+        # b.save.leaflet            = TRUE
+
+
+
+##############################################################################
+# INITIALIZE.
+##############################################################################
+
+        if(!is.null(v.layer)) {
+
+                v.layer[1]               <- min(df.input[[c.value]], na.rm = TRUE)
+                v.layer[length(v.layer)] <- max(df.input[[c.value]], na.rm = TRUE)
+
+                # Error check
+                if(!all(v.layer == sort(v.layer))) {
+
+                        stop("Let op, v.layer moet oplopend zijn!")
+                }
+        }
+
 
 ##############################################################################
 # ERROR CHECK.
 ##############################################################################
 
-##############################################################################
-# INITIALIZE.
-##############################################################################
+        if((!is.null(n.layer) & !is.null(v.layer)) | (is.null(n.layer) & is.null(v.layer))) {
+
+                stop("Let op, alleen n.layer of v.layer moet gelijk zijn aan NULL, niet beide!")
+        }
+
 
 ##############################################################################
 # PROCESS DATA.
@@ -71,7 +112,10 @@
 
 
         # Error check
-        if(n.step.local != median(diff(f_unique(df.input$polygon.x.mid)))) {
+        if(
+                n.step.local != median(diff(f_unique(df.input$polygon.x.mid))) |
+                n.step.local != median(diff(f_unique(df.input$polygon.y.mid)))
+           ) {
 
                 stop(paste0("Let op, n.step zijn verschillend in x (", n.step.local,
                      ") en y (", median(diff(f_unique(df.input$polygon.x.mid))), ") richting!"))
@@ -79,13 +123,20 @@
 
 
         # Bereken breaks.
-        v.seq <- seq(
-                from       = min(df.input$polygon.value),
-                to         = max(df.input$polygon.value),
-                length.out = n.layer
-        )
+        if(!is.null(n.layer)) {
 
-        v.seq[2:(length(v.seq)-1)] <- round(v.seq[2:(length(v.seq)-1)], n.round)
+                v.seq <- seq(
+                        from       = min(df.input$polygon.value, na.rm = TRUE),
+                        to         = max(df.input$polygon.value, na.rm = TRUE),
+                        length.out = n.layer
+                )
+
+                v.seq[2:(length(v.seq)-1)] <- round(v.seq[2:(length(v.seq)-1)], n.round)
+
+        } else {
+
+                v.seq <- v.layer
+        }
 
 
         # Voeg factorisatie toe van continue variabele.
@@ -158,7 +209,6 @@
                 )
 
 
-
 ##############################################################################
 # PLOT LEAFLET.
 ##############################################################################
@@ -195,6 +245,6 @@
 # Return data.
 ##############################################################################
 
-        return()
+        return(df.polygon.plot)
 
       }

@@ -9,6 +9,7 @@ f_table <- function(df.input,
                     c.hor     = NULL,
                     c.useNA   = "ifany",  # options: "no", "ifany", "always"
                     c.type    = "abs",    # options: "abs", "rel"
+                    n.round   = 0,
                     b.warning = TRUE
                     ) {   # Warnings are shown (default).
 
@@ -21,6 +22,7 @@ f_table <- function(df.input,
         # c.hor    <- NULL
         # c.useNA  <- "ifany"
         # c.type   <- "abs"
+        # n.round  <- 0
 
         # Depending on case:
         # df.input <- df.temp
@@ -80,7 +82,7 @@ f_table <- function(df.input,
 
                         arrange(desc(n)) %>%
 
-                        mutate(`Total (%)` = round(n / sum(n, na.rm = TRUE) * 100, 1)) %>%
+                        mutate(`Total (%)` = round(n / sum(n, na.rm = TRUE) * 100, n.round)) %>%
 
                         bind_rows(summarise(.,
                                             across(where(is.numeric), sum),
@@ -112,7 +114,7 @@ f_table <- function(df.input,
                                 pivot_wider(id_cols = "Var1", names_from = "Var2", values_from = "Freq") %>%
 
                                 mutate(Total       = rowSums(select_if(., is.numeric)),
-                                       `Total (%)` = round(Total / sum(Total, na.rm = TRUE) * 100, 1)) %>%
+                                       `Total (%)` = round(Total / sum(Total, na.rm = TRUE) * 100, n.round)) %>%
 
                                 bind_rows(summarise(.,
                                                     across(where(is.numeric), sum),
@@ -128,7 +130,7 @@ f_table <- function(df.input,
                                 group_by(Var1) %>%
 
                                 mutate(n.tot    = sum(Freq),
-                                       perc.ver = round(Freq/n.tot*100, 0)) %>%
+                                       perc.ver = round(Freq/n.tot*100, n.round)) %>%
 
                                 ungroup() %>%
 

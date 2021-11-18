@@ -9,7 +9,7 @@ f_table <- function(df.input,
                     c.hor     = NULL,
                     c.useNA   = "ifany",  # options: "no", "ifany", "always"
                     c.type    = "abs",    # options: "abs", "rel"
-                    n.round   = 0,
+                    n.round   = 1,
                     b.warning = TRUE
                     ) {   # Warnings are shown (default).
 
@@ -19,18 +19,23 @@ f_table <- function(df.input,
         #########################################################################
 
         # Allways
-        # c.hor    <- NULL
-        # c.useNA  <- "ifany"
-        # c.type   <- "abs"
-        # n.round  <- 0
+        # c.hor     = NULL
+        # c.useNA   = "ifany"
+        # c.type    = "abs"
+        # n.round   = 0
+        # b.warning = TRUE
 
         # Depending on case:
-        # df.input <- df.temp
-        # c.ver    <- "in.ipsm"
-        # c.hor    <- "scenario"
+        # df.input = df.temp
+        # c.ver    = "in.ipsm"
+        # c.hor    = "scenario"
 
-        # df.input <- df.bord.fid
-        # c.ver    <- "project.name"
+        # df.input = df.bord.fid
+        # c.ver    = "project.name"
+
+        # df.input  = df.bord.drager.sqlite
+        # c.ver     = "bord.historie"
+        # c.ver     = "datum.eerste.vastlegging"
 
 
         #########################################################################
@@ -72,13 +77,20 @@ f_table <- function(df.input,
         }
 
 
+        # Maak van logical attributes character attributes, zodat het bij 'sum' niet tot verkeerde tellingen
+        # leidt, aangezien booleans ook opgeteld kunnen worden (= is.numeric).
+        df.input <- df.input %>% mutate(across(where(is.logical) | where(is.Date), as.character))
+
+
         #########################################################################
         # Processing
         #########################################################################
 
         if(is.null(c.hor)) {
 
-                df.output <- count(df.input, get(c.ver)) %>%
+                df.output <- df.input %>%
+
+                        count(get(c.ver)) %>%
 
                         arrange(desc(n)) %>%
 
@@ -86,7 +98,7 @@ f_table <- function(df.input,
 
                         bind_rows(summarise(.,
                                             across(where(is.numeric), sum),
-                                            across(where(is.character) | where(is.factor), ~"Total")))
+                                            across(!where(is.numeric), ~"Total")))
 
                 # Set sum of 100% to '100%'. Sometimes, the total is 99.9 because we sum rounded numbers.
                 df.output$`Total (%)`[nrow(df.output)] <- 100

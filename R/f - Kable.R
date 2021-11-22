@@ -21,8 +21,8 @@
         # c.position  = "center"
         # c.width     = "2cm"
         # n.angle     = NULL
-        # n.font.size = NULL
-        # n.top       = 15
+        # n.font.size = 8
+        # n.top       = 35
 
         # Set 1
         # df.input  = df.temp
@@ -39,6 +39,11 @@
         # df.input    = df.dummy
         # c.caption   = "test"
 
+        # Set 4
+        # df.input  = df.temp
+        # c.caption = "Aantal borden per project (incl. historie):"
+        # c.width   = "3cm"
+
 
 #########################################################################
 # Initialization.
@@ -51,37 +56,54 @@
         }
 
 
-        # Indien het dataframe meer dan n.top regels bevat, toon dan alleen
-        # de eerste n.top regels.
-        df.output <- df.input %>%
-
-                head(n.top) %>%
-
-                mutate_all(as.character)
+        # Get df.total, if total is present in last row, else df.total is NULL.
+        df.input <- df.input %>% mutate_all(as.character)
+        df.total <- df.input %>% tail(1)
 
 
-        # Let op, als het dataframe meer dan n.top rijen bevat, check dan of de
-        # laatste rij 'total' bevat. Zo ja, dan moet die toegevoegd worden.
+        # Remove total from df.output if present.
         if(
-                nrow(df.input) > n.top &
-
                 any(
                         grepl(
-                                pattern     = "tot[a]{1,2}l",
-                                x           = df.input %>% tail(1) %>% unlist(),
+                                pattern     = "^tot[a]{1,2}l",
+                                x           = df.total %>% unlist(),
                                 ignore.case = TRUE
                         )
                 )
         ) {
 
+                # Verwijder total row from df.input (last row).
+                df.output <- df.input %>% head(-1)
+
+        } else {
+
+                df.total  <- NULL
+                df.output <- df.input
+        }
+
+
+
+        # Let op, als het dataframe meer dan n.top rijen bevat.
+        if(
+                nrow(df.output) > n.top
+        ) {
+
                 df.output <- rbind(
 
-                        df.output,
+                        df.output %>% head(n.top),
 
                         "...",
 
-                        df.input %>% tail(1)
+                        df.total
                         )
+        } else {
+
+                df.output <- rbind(
+
+                        df.output %>% head(n.top),
+
+                        df.total
+                )
         }
 
 

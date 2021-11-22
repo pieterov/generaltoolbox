@@ -6,12 +6,12 @@
 
 f_table <- function(df.input,
                     c.ver,
-                    c.hor     = NULL,
+                    c.hor     = NULL,     # option to have 2D table.
                     c.useNA   = "ifany",  # options: "no", "ifany", "always"
                     c.type    = "abs",    # options: "abs", "rel"
-                    n.round   = 1,
-                    b.warning = TRUE
-                    ) {   # Warnings are shown (default).
+                    n.round   = 1,        # 1 digit roundinbg
+                    b.warning = TRUE      # Warnings are shown (default).
+                    ) {
 
 
         #########################################################################
@@ -22,11 +22,12 @@ f_table <- function(df.input,
         # c.hor     = NULL
         # c.useNA   = "ifany"
         # c.type    = "abs"
-        # n.round   = 0
+        # n.round   = 1
         # b.warning = TRUE
 
         # Depending on case:
         # df.input = df.temp
+        # c.ver    = "jaar.eerste.vastlegging"
         # c.ver    = "in.ipsm"
         # c.hor    = "scenario"
 
@@ -79,8 +80,8 @@ f_table <- function(df.input,
 
         # Maak van logical attributes character attributes, zodat het bij 'sum' niet tot verkeerde tellingen
         # leidt, aangezien booleans ook opgeteld kunnen worden (= is.numeric).
-        df.input <- df.input %>% mutate(across(where(is.logical) | where(is.Date), as.character))
-
+        #df.input <- df.input %>% mutate(across(where(is.logical) | where(is.Date), as.character))
+        df.input <- df.input %>% mutate_all(as.character)
 
         #########################################################################
         # Processing
@@ -96,12 +97,11 @@ f_table <- function(df.input,
 
                         mutate(`Total (%)` = round(n / sum(n, na.rm = TRUE) * 100, n.round)) %>%
 
-                        bind_rows(summarise(.,
-                                            across(where(is.numeric), sum),
-                                            across(!where(is.numeric), ~"Total")))
+                        bind_rows(summarise(., across(where(is.numeric), sum)))
 
                 # Set sum of 100% to '100%'. Sometimes, the total is 99.9 because we sum rounded numbers.
                 df.output$`Total (%)`[nrow(df.output)] <- 100
+                df.output[nrow(df.output),1]           <- "Total"
 
                 # Update eerste header.
                 v.name <- names(df.output)

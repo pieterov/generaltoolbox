@@ -7,6 +7,7 @@
         f_plot_checkerboard_on_leaflet = function(
 
                 df.input,
+                c.id.polygon,
                 v.coord.point,
                 c.value,
                 c.leaflet.title           = "Title",
@@ -40,24 +41,50 @@
         # v.info.veld.polygon.popup = c("polygon.result")
         # b.save.leaflet            = TRUE
 
-        # M7
-        # df.input                  = df.bord.hl.final.vl.final.dlv.conversie %>% filter(!is.na(perc.conversie))
+        # M7 - Delivery
+        # df.input                  = df.bord.hl.final.vl.final.dlv.actualisation
+        # c.id.polygon              = "cell.id"
         # v.coord.point             = c("bord.x.rnd", "bord.y.rnd")
-        # c.value                   = "perc.conversie"
+        # c.value                   = "perc.delivered"
+        # c.leaflet.title           = paste0("Delivery percentage of final signs in ", n.delivery.year,
+        #                                    " out of all final signs delivered in delivery year ", n.delivery.year-1,
+        #                                    " (cells ", n.step/1000,"km by ", n.step/1000,"km)")
+        # n.layer                   = NULL
+        # v.layer                   = c(0, 1, 50, 75, 90, 95, 99, 100)
+        # n.round                   = 1
+        # n.dig.lab                 = 3
+        # v.info.tag.polygon.label  = c("Delivered", "RD_x", "RD_y")
+        # v.info.veld.polygon.label = c("perc.delivered", "bord.x.rnd", "bord.y.rnd")
+        # v.info.tag.polygon.popup  = c("Total in vl", "Not yet delivered in hl", "Delivered in hl",
+        #                               "Delivered in hl (current year)", "Delivered in hl (not current year)",
+        #                               "Delivered (%)", "Projects (vl)", "Projects (hl)",
+        #                               "RD_x", "RD_y")
+        # v.info.veld.polygon.popup = c("n.bord.total.vl", "n.bord.not.yet.delivered", "n.bord.delivered",
+        #                               "n.bord.delivered.current.year", "n.bord.delivered.not.current.year",
+        #                               "perc.delivered", "cell.label.vl", "cell.label.hl",
+        #                               "bord.x.rnd", "bord.y.rnd")
+        # b.save.leaflet            = TRUE
+
+
+        # M7 - Actualisatie
+        # df.input                  = df.bord.hl.final.vl.final.dlv.actualisation %>% filter(!is.na(perc.actualisation))
+        # c.id.polygon              = "cell.id"
+        # v.coord.point             = c("bord.x.rnd", "bord.y.rnd")
+        # c.value                   = "perc.actualisation"
         # c.leaflet.title           = paste0("Percentage 2021 borden op de geleverde borden (cellen ",
         #                                    n.step/1000,"km bij ", n.step/1000,"km)")
         # n.layer                   = NULL
         # v.layer                   = c(0, 50, 75, 90, 95, 99, 100)
         # n.round                   = 1
         # n.dig.lab                 = 3
-        # v.info.tag.polygon.label  = c("Conversie", "RD_x", "RD_y"),
-        # v.info.veld.polygon.label = c("perc.conversie", "bord.x.rnd", "bord.y.rnd,"),
+        # v.info.tag.polygon.label  = c("Actualisation", "RD_x", "RD_y"),
+        # v.info.veld.polygon.label = c("perc.actualisation", "bord.x.rnd", "bord.y.rnd,"),
         # v.info.tag.polygon.popup  = c("Totaal in vl", "Nog niet geleverd in hl", "Geleverd in hl",
         #                               "Geleverd in hl (huidige jaar)", "Geleverd in hl (niet huidig jaar)",
         #                               "Conversie (%)", "Nog te leveren (%)", "Projecten (vl)", "Projecten (hl)")
         # v.info.veld.polygon.popup = c("n.bord.totaal.vl", "n.bord.nog.niet.geleverd", "n.bord.geleverd",
         #                               "n.bord.geleverd.huidige.jaar", "n.bord.geleverd.niet.huidige.jaar",
-        #                               "perc.conversie", "perc.nog.te.leveren", "cell.label.vl", "cell.label.hl")
+        #                               "perc.actualisation", "perc.nog.te.leveren", "cell.label.vl", "cell.label.hl")
         # b.save.leaflet            = TRUE
 
 
@@ -199,10 +226,6 @@
         # Voeg ID toe.
         df.polygon.plot <- df.polygon.plot %>%
 
-                mutate(
-                        polygon.id = rep(seq(nrow(.)/5), each = 5)
-                ) %>%
-
                 inner_join(
                         y  = df.input,
                         by = c("polygon.x.mid", "polygon.y.mid")
@@ -225,7 +248,7 @@
 
                 df.polygon                = df.polygon.plot,
                 v.coord.polygon           = c("polygon.x", "polygon.y"),
-                c.id.polygon              = "polygon.id",
+                c.id.polygon              = c.id.polygon,
 
                 c.fill.numeric.polygon    = "polygon.col",
                 n.fill.opacity.polygon    = 0.6,

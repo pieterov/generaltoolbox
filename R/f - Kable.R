@@ -116,7 +116,8 @@
                 # Do not show row names.
                 kbl(
                         row.names = FALSE,
-                        caption   = c.caption) %>%
+                        caption   = c.caption
+                ) %>%
 
                 kable_styling(
 
@@ -124,35 +125,36 @@
                         position      = c.position,
                         font_size     = n.font.size,
                         latex_options = "hold_position"
-                        ) %>%
+                ) %>%
 
                 row_spec(
 
                         row        = 0,
                         bold       = TRUE,
                         background = "#D3D3D3"
-                        ) %>%
+                ) %>%
 
                 row_spec(
 
                         row        = grep("tot[a]{1,2}l", df.output %>% pull(1), ignore.case = TRUE),
                         bold       = TRUE,
                         background = "#E8E8E8"
-                        ) %>%
+                ) %>%
 
-                column_spec(
-
-                        column     = 1,
-                        bold       = TRUE,
-                        background = "#E8E8E8"
-                        ) %>%
+                # Deze actie hidden omdat we latex error kregen.
+                # column_spec(
+                #
+                #         column     = 1,
+                #         bold       = TRUE,
+                #         background = "#E8E8E8"
+                # ) %>%
 
                 column_spec(
 
                         column     = grep("tot[a]{1,2}l", names(df.output),  ignore.case = TRUE),
                         bold       = TRUE,
                         background = "#E8E8E8"
-                        )
+                )
 
 
         # Pas kolombreedte aan van kolom 2 t/m n, indien df.output meer dan 1 kolom bevat.

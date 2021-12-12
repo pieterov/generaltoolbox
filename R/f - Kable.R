@@ -5,7 +5,7 @@
 #################################################################################
 
         f_kable <- function(df.input,
-                            c.caption,
+                            c.caption   = "Add nice caption through 'c.caption'",
                             c.position  = "center",
                             c.width     = "2cm",
                             n.angle     = NULL,

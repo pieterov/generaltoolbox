@@ -1,6 +1,6 @@
 #################################################################################
 # NAME:         FUNCTION - Paste.
-# AUTHOR:       Pieter Overdevest.
+# AUTHOR:       Pieter Overdevest
 # DESCRIPTION:  Concatenate items in vector.
 #################################################################################
 

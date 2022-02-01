@@ -1,5 +1,5 @@
 #################################################################################
-# NAME:         FUNCTION - Source file.
+# NAME:         FUNCTION - SOURCE.
 # AUTHOR:       Pieter Overdevest.
 # DESCRIPTION:  Source newest file.
 #################################################################################
@@ -17,7 +17,10 @@
                         recursive   = FALSE,
                         full.names  = TRUE,
                         ignore.case = TRUE,
-                        pattern     = c.pattern))
+                        pattern     = c.pattern),
+
+                        stringsAsFactors = FALSE
+                )
 
                 # Check whether a file was found.
                 if (nrow(df.file) == 0) stop(paste0("There was no file found with string '", script.to.source,

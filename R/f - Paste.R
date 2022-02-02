@@ -6,6 +6,7 @@
 
         f_paste <- function(v.string,
                             c.collapse   = ",",
+                            c.and        = "and",
                             b.capitalize = FALSE,
                             b.quotation  = FALSE,
                             b.sort       = TRUE,
@@ -55,13 +56,19 @@
 
 
         # Determine c.and.
-        if(length(v.string) == 1)
-                c.and <- ""
+        if(length(v.string) == 1) {
 
-        else if(length(v.string) == 1)
-                c.and <- " en "
+                c.and.updated <- ""
+        }
 
-        else c.and <- paste0(c.collapse, " en ")
+        else if(length(v.string) == 2) {
+
+                c.and.updated <- paste0(" ", c.and, " ")
+        }
+
+        else {
+                c.and.updated <- paste0(c.collapse, " ", c.and, " ")
+        }
 
 
 #########################################################################
@@ -72,7 +79,7 @@
 
                 paste(head(v.string, -1), collapse = paste0(c.collapse, " ")),
 
-                c.and,
+                c.and.updated,
 
                 tail(v.string, 1)
 

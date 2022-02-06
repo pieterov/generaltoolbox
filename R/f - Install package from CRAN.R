@@ -7,7 +7,7 @@
         # TESTING
         # v.package <- c("tmaptools")
 
-        f_install_packages_from_cran <- function(v.package) {
+        f_install_package_from_cran <- function(v.package) {
 
                 # Install (if needed) and load libraries.
                 v.loaded <- lapply(v.package,

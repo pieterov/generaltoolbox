@@ -1,7 +1,7 @@
 Package: generaltoolbox
 Type: Package
 Title: General toolbox by Pieter Overdevest
-Version: 1.1.39
+Version: 1.1.40
 Author: Pieter Overdevest
 Maintainer: The package maintainer <pieter@innovatewithdata.nl>
 Description: This package contains general toolbox functions.

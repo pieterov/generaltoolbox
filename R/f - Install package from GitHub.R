@@ -15,12 +15,16 @@
 # TESTING ONLY!!
 ##############################################################################################
 
+        # LET  OP - NOOIT EEN TOKEN IN DIT TEST BLOK PLAKKEN. GITHUB HERKENT DEZE TOKENS
+        # IN COMMITS EN REVOKES VERVOLGENS HET TOKEN. GOED VOOR SECURITY! MAAR ONHANDIG IN
+        # GEBRUIK!
+
         # c.package    <- "generaltoolbox"
         # c.package    <- "ipsmtoolbox"
-        # c.auth.token <- "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"
+        # c.auth.token <- ""
 
         # f_install_package_from_github("generaltoolbox")
-        # f_install_package_from_github("ipsmtoolbox", "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")
+        # f_install_package_from_github("ipsmtoolbox", c.auth.token)
 
 
 ##############################################################################################
@@ -90,9 +94,9 @@
                 # Update the toolbox by downloading the latest version from GitHub.
                 devtools::install_github(
 
-                        repo         = "hr-groep/ipsmtoolbox",
-                        auth_token   = "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",
-                        INSTALL_opts = c("--no-multiarch")
+                        repo         = paste0(c.repo, "/", c.package),
+                        auth_token   = c.auth.token#,
+                        #INSTALL_opts = c("--no-multiarch")
                 )
 
                 # Comms to user.

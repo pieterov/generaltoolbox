@@ -101,7 +101,7 @@
 
                 # Comms to user.
                 cat(paste0(
-                        "A new version of '", c.package, "' was installed (", packageVersion("ipsmtoolbox"), ")!"
+                        "A new version of '", c.package, "' was installed (", packageVersion(c.package), ")!"
                 ))
         }
 

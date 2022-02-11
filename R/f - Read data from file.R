@@ -92,11 +92,10 @@
                 # c.show.report       = c.show.report
 
                 # Google Sheet
-                # c.file.type              = "gs"
-                # c.path                   = "https://docs.google.com/spreadsheets/d/1bqRGItDJUloEgkQtuOINOzM4Z45M7io99mykbPx5-D8/edit#gid=1603506188"
-                # c.sheet.name             = "FeatureDictionary"
-                # col_types                = strrep("c", f_gs_col_number(c.path, c.sheet))
-                # b.clean.up.header.names  = FALSE
+                # c.file.type             = "gs"
+                # c.path                  = "https://docs.google.com/spreadsheets/d/1bqRGItDJUloEgkQtuOINOzM4Z45M7io99mykbPx5-D8"
+                # c.sheet.name            = "FeatureDictionary"
+                # b.clean.up.header.names = FALSE
 
                 # delim
                 # c.path      = c.url.source
@@ -109,7 +108,6 @@
                 ##############################################################################
 
                 # Get latest file in case other file than Google Sheet is read.
-
                 if(!is.null(v.file.string)) {
 
                         l.path.file <- lapply(v.file.string, function(c.file.string) {# c.file.string <- v.file.string[1]
@@ -129,6 +127,13 @@
                 } else {
 
                         l.path.file <- list(c.path)
+                }
+
+
+                # Define l.col.type in case c.file.type is 'gs' and l.col.type is NULL.
+                if(c.file.type == "gs" & is.null(l.col.type)) {
+
+                        l.col.type <- strrep("c", f_gs_col_number(c.path, c.sheet.name))
                 }
 
 

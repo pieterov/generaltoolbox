@@ -9,7 +9,7 @@
                 # String to search for in the filename. In case of Google Sheet this can be kept NULL.
                 v.file.string            = NULL,
 
-                # Options: 'xls', 'delim', 'rds', 'fst', 'parquet', 'sqlite', 'shp', 'dbf', 'gs'.
+                # Options: 'xls', 'csv', 'txt', 'delim', 'rds', 'fst', 'parquet', 'sqlite', 'shp', 'dbf', 'gs'.
                 c.file.type,
 
                 # Path where file should be searched for.
@@ -26,9 +26,10 @@
                 c.sheet.name             = "Sheet1", # Was NULL
                 n.slice.rows             = 0,
 
-                # In case of csv file, this is default delimiter.
-                c.delim                  = ",",
+                # Needed in case c.file.type is equal to 'delim'.
+                c.delim                  = NULL,
 
+                # Do the data contain header names?
                 b.col.names              = TRUE,
 
                 # In case of a Excel or delimited file.
@@ -102,10 +103,59 @@
                 # c.file.type = "delim"
                 # l.col.type  = cols(.default = "c")
 
+                # DataChamp
+                # v.file.string           = "2022 02 09 - DataChamp - Oletti Productfeed"
+                # c.file.type             = "delim"
+                # c.path                  = path.data
+                # b.clean.up.header.names = FALSE
+
 
                 ##############################################################################
-                # Initialize data.
+                # ERRROR CHECK
                 ##############################################################################
+
+                # Does c.file.type have a valid value?
+                if(!c.file.type %in% c("xls", "csv", "txt", "delim", "rds", "fst", "parquet", "sqlite", "shp", "dbf", "gs")) {
+
+                        stop(paste0(
+
+                                "Note, the value for c.file.type ('", c.file.type, "') is invalid. It must be one of, ",
+                                "'xls', 'csv', 'txt', 'delim', 'rds', 'fst', 'parquet', 'sqlite', 'shp', 'dbf', or 'gs'. In case you ",
+                                "gave the value 'csv', use 'delim' instead!"
+                        ))
+                }
+
+
+                # Does c.delim have a value when needed?
+                if(c.file.type == "delim" & is.null(c.delim)) {
+
+                        stop(paste0(
+
+                                "Note, you must provide a value for 'c.delim' in case you have chosen 'c.file.type' to be 'delim'!"
+                        ))
+                }
+
+
+                ##############################################################################
+                # INITIALIZE
+                ##############################################################################
+
+                # Define c.file.category and c.delim in case of c.file.type to be 'csv' or 'txt'.
+                if(c.file.type %in% c("csv", "txt")) {
+
+                        c.file.category <- "delim"
+
+                        c.delim <- case_when(
+
+                                c.file.type == "csv" ~ ",",
+                                c.file.type == "txt" ~ " "
+                        )
+
+                } else {
+
+                        c.file.category <- c.file.type
+                }
+
 
                 # Get latest file in case other file than Google Sheet is read.
                 if(!is.null(v.file.string)) {
@@ -142,7 +192,7 @@
                 ##############################################################################
 
                 # Get data.
-                switch(c.file.type,
+                switch(c.file.category,
 
                        "xls" = {
 

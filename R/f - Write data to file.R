@@ -9,42 +9,54 @@ f_write_data_to_file <- function(
                         x,
 
                         # Vector of sheet names, in case of save to Excel.
-                        v.sheet.name  = NULL, # In case of XLS, CSV, TXT.
-                        v.table.name  = NULL, # In case of SQLITE
+                        v.sheet.name        = NULL, # In case of XLS, CSV, TXT.
+                        v.table.name        = NULL, # In case of SQLITE
 
                         # Vector of paths where file should be stored. Default saved in Downloads.
-                        v.path        = path.ipsm.dropbox,
+                        v.path              = path.ipsm.dropbox,
 
                         # File name without date and without extension, like xlsx.
-                        c.file.string = "Data Export",
+                        c.file.string       = "Data Export",
 
                         # Logical to confirm whether date should be added to the filename
                         # v.add.date must be as long as v.path, allowing to set add.date per
                         # file location. If length is one, it will be used for all. Default
                         # is true.
-                        v.add.date       = TRUE,
-
-                        # Used for xls (Excel). Number of rows and columns to freeze.
-                        v.freeze.row     = NULL,
-                        v.freeze.col     = NULL,
+                        v.add.date          = TRUE,
 
                         # Determine where to save the data to.
-                        v.xls            = FALSE,
-                        v.csv            = FALSE,
-                        v.txt            = FALSE,
-                        v.rds            = FALSE,
-                        v.fst            = FALSE,
-                        v.sqlite         = FALSE,
-                        v.parquet        = FALSE,
+                        v.xls               = FALSE,
+                        v.csv               = FALSE,
+                        v.txt               = FALSE,
+                        v.delim             = FALSE,
+                        v.rds               = FALSE,
+                        v.fst               = FALSE,
+                        v.sqlite            = FALSE,
+                        v.parquet           = FALSE,
+
+                        # Needed in case c.file.type is equal to 'delim'.
+                        c.delim             = NULL,
+
+                        # Should we write header names in first row?
+                        b.col.names         = TRUE,
+
+                        # Should data be appended?
+                        b.append            = FALSE,
+
+                        # Used for xls (Excel).
+
+                        # Number of rows and columns to freeze.
+                        v.freeze.row        = NULL,
+                        v.freeze.col        = NULL,
 
                         # Column numbers of headers to color.
-                        v.col.dark.blue  = NULL,
-                        v.col.light.blue = NULL,
-                        v.col.green      = NULL,
-                        v.col.purple     = NULL,
-                        v.col.lila       = NULL,
-                        v.col.orange     = NULL,
-                        v.col.red        = NULL,
+                        v.col.dark.blue     = NULL,
+                        v.col.light.blue    = NULL,
+                        v.col.green         = NULL,
+                        v.col.purple        = NULL,
+                        v.col.lila          = NULL,
+                        v.col.orange        = NULL,
+                        v.col.red           = NULL,
 
                         c.conditional.eval  = NULL, # bijv. "$I2==0"
                         c.conditional.color = "#ABB2B9",
@@ -90,10 +102,14 @@ f_write_data_to_file <- function(
         # v.xls               = FALSE
         # v.csv               = FALSE
         # v.txt               = FALSE
+        # v.delim             = FALSE
         # v.rds               = FALSE
         # v.fst               = FALSE
         # v.sqlite            = FALSE
         # v.parquet           = FALSE
+        # c.delim             = NULL
+        # b.col.names         = TRUE
+        # b.append            = FALSE
         # v.col.dark.blue     = NULL
         # v.col.light.blue    = NULL
         # v.col.green         = NULL
@@ -119,23 +135,92 @@ f_write_data_to_file <- function(
         # v.parquet     = TRUE
         # v.path        = path.data
 
+        # Test
+        # x               = data.frame(x=seq(5),y=LETTERS[1:5])
+        # v.path          = path.data
+        # v.delim         = TRUE
+        # c.delim         = ";"
+        # b.append        = TRUE
+
 
 ##############################################################################
-# Initialize data.
+# ERROR CHECK
+##############################################################################
+
+        # Data cannot be saved to CSV and TXT files within the same function call.
+        if(any(v.csv) & any(v.txt)) {
+
+                stop(paste0(
+
+                        "The function 'f_write_data_to_file' can only write to one delimited ",
+                        "file type, for example, 'csv' OR 'txt', and not to 'csv' and 'txt' at ",
+                        "the same time. This is because the data is written using fwrite by ",
+                        "data.table - a general purpose and fast writing function!"
+                ))
+        }
+
+
+        # Does c.delim have a value when needed?
+        if(c.file.type == "delim" & is.null(c.delim)) {
+
+                stop(paste0(
+
+                        "Note, you must provide a value for 'c.delim' in case you have chosen 'c.file.type' to be 'delim'!"
+                ))
+        }
+
+
+##############################################################################
+# INITIALIZE
 ##############################################################################
 
         # Update filename in case the default is chosen.
-        if (c.file.string == "Data Export")
+        if (c.file.string == "Data Export") {
+
                 c.file.string = paste("Data Export -", deparse(substitute(x)))
+        }
 
         # Maak v.xls gelijk aan TRUE, indien alle FALSE zijn.
-        if( all(!v.csv) & all(!v.txt) & all(!v.rds) & all(!v.fst) & all(!v.xls) & all(!v.sqlite) & all(!v.parquet) )
+        if( all(!v.csv) & all(!v.txt) & all(!v.delim) & all(!v.rds) & all(!v.fst) &
+            all(!v.xls) & all(!v.sqlite) & all(!v.parquet) ) {
+
                 v.xls = TRUE
+        }
+
+
+        # Define v.delim, c.delim, and c.extension, in case of v.csv.
+        if(any(v.csv)) {
+
+                v.delim     <- v.csv
+
+                c.delim     <- ","
+
+                c.extension <- "csv"
+        }
+
+        # Define v.delim, c.delim, and c.extension, in case of v.txt.
+        if(any(v.txt)) {
+
+                v.delim     <- v.txt
+
+                c.delim     <- " "
+
+                c.extension <- "txt"
+        }
+
+        # Define c.extension, in case of v.delim.
+        if(any(v.delim)) {
+
+                c.extension <- "txt"
+        }
+
 
         # Initialize.
         v.file <- NULL
 
-        # Define Excel style.
+
+
+        # Define Excel style when needed
         excel.style.center    <- openxlsx::createStyle(
 
                 halign = "center")
@@ -210,8 +295,7 @@ f_write_data_to_file <- function(
                 # Initialize.
                 v.add.date.i <- ifelse(length(v.add.date) == 1, v.add.date, v.add.date[i])
                 v.xls.i      <- ifelse(length(v.xls)      == 1, v.xls,      v.xls[i])
-                v.csv.i      <- ifelse(length(v.csv)      == 1, v.csv,      v.csv[i])
-                v.txt.i      <- ifelse(length(v.txt)      == 1, v.txt,      v.txt[i])
+                v.delim.i    <- ifelse(length(v.delim)    == 1, v.delim,    v.delim[i])
                 v.rds.i      <- ifelse(length(v.rds)      == 1, v.rds,      v.rds[i])
                 v.fst.i      <- ifelse(length(v.fst)      == 1, v.fst,      v.fst[i])
                 v.sqlite.i   <- ifelse(length(v.sqlite)   == 1, v.sqlite,   v.sqlite[i])
@@ -494,13 +578,13 @@ f_write_data_to_file <- function(
 
 
 
-                # Add dataframe to CSV file.
-                if (v.csv.i) {
+                # Add dataframe to delimited file.
+                if (v.delim.i) {
 
                         # Turn the object into a list, if not already.
                         if (!any(class(x) == "list")) {x.object <- list(x)} else {x.object <- x}
 
-                        # Add data to csv file(s).
+                        # Add data to delimited file(s).
                         for (k in seq_along(x.object)) { # k <- 1
 
                                 # Convert object to dataframe if not already.
@@ -517,7 +601,7 @@ f_write_data_to_file <- function(
                                 # Determine sheet names.
                                 if (any(is.null(v.sheet.name))) {
 
-                                        v.sheet.name.k <- paste0("csv", k)
+                                        v.sheet.name.k <- paste0(c.extension, k)
 
                                         } else {
 
@@ -532,79 +616,43 @@ f_write_data_to_file <- function(
 
 
                                 # Create filename.
-                                c.file.k <- paste0(c.file,
-                                                 ifelse(length(x.object) == 1, "", paste(" -", v.sheet.name.k)),
-                                                 ".csv")
+                                c.file.k <- paste0(
+
+                                        c.file,
+                                        ifelse(length(x.object) == 1, "", paste(" -", v.sheet.name.k)),
+                                        ".", c.extension
+                                )
+
+
+                                # Check whether file already exists. In case b.append is TRUE, then set b.col.names to FALSE.
+                                # This is to prevent writing the column names again. POINT FOR IMPROVEMENT: TEST NUMBER OF COLUMNS
+                                # IN THE FILE THAT IS ALREADY THERE AND COMPARE TO THE NUMBER OF COLUMNS IN THE DATA FRAME TO
+                                # BE WRITTEN.
+                                if(file.exists(paste0(v.path[i], c.file.k)) & b.append) {
+
+                                        b.col.names <- FALSE
+                                }
+
 
                                 # Append filename to vector.
                                 v.file <- c(v.file, c.file.k)
+
 
                                 # Write data to csv file. Eerder had ik BOM op TRUE gezet ivm diakritische tekens. Nu weer op FALSE omdat er probleem
                                 # is met inlezen van allocatie tabel. Diakritische tekens heeft Rian intern opgelost.
                                 # "If TRUE a BOM (Byte Order Mark) sequence (EF BB BF) is added at the beginning of the file; format 'UTF-8 with BOM'."
                                 data.table::fwrite(x         = as.data.table(x.object.k),
                                                    file      = paste0(v.path[i], c.file.k),
-                                                   bom       = FALSE
-                                                   )
+                                                   bom       = FALSE,
+                                                   append    = b.append,
+                                                   sep       = c.delim,
+                                                   dec       = ".",
+                                                   row.names = FALSE,
+                                                   col.names = b.col.names
+                                )
                         }
                 }
 
-                # Add dataframe to TXT file(s).
-                if (v.txt.i) {
-
-                        # Turn the object into a list, if not already.
-                        if (!any(class(x) == "list")) {x.object <- list(x)} else {x.object <- x}
-
-                        # Add data to txt file(s).
-                        for (k in seq_along(x.object)) {
-
-                                # Convert object to dataframe if not already.
-                                if (!any(class(x.object[[k]]) == "data.frame")) {
-
-                                        x.object.k <- data.frame(x.object = x.object[[k]])
-
-                                } else {
-
-                                        x.object.k <- x.object[[k]]
-
-                                }
-
-
-                                # Determine sheet names.
-                                if (any(is.null(v.sheet.name))) {
-
-                                        v.sheet.name.k <- paste0("txt", k)
-
-                                } else {
-
-                                        if ((length(v.sheet.name) != length(x.object)) & !any(is.null(v.sheet.name)))
-
-                                                stop(paste("The number of sheet names must equal the number of objects.",
-                                                           "Or v.sheet.name should equal NULL, and the sheets will be",
-                                                           "named 'Sheet_[seq]'."))
-
-                                        v.sheet.name.k <- v.sheet.name[k]
-                                }
-
-
-                                # Create filename.
-                                c.file.k <- paste0(c.file,
-                                                 ifelse(length(x.object) == 1, "", paste(" -", v.sheet.name.k)),
-                                                 ".txt")
-
-                                # Append filename to vector.
-                                v.file <- c(v.file, c.file.k)
-
-                                # Write data to txt file.
-                                write.table(x         = as.data.table(x.object.k),
-                                            file      = paste0(v.path[i], c.file.k),
-                                            append    = FALSE,
-                                            sep       = " ",
-                                            dec       = ".",
-                                            row.names = FALSE,
-                                            col.names = FALSE)
-                        }
-                }
 
                 # Add dataframe to SQLITE file(s).
                 if (v.sqlite.i) {

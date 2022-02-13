@@ -34,7 +34,7 @@ f_write_data_to_file <- function(
                         v.sqlite            = FALSE,
                         v.parquet           = FALSE,
 
-                        # Needed in case c.file.type is equal to 'delim'.
+                        # Needed in case v.delim is equal to TRUE.
                         c.delim             = NULL,
 
                         # Should we write header names in first row?
@@ -161,11 +161,11 @@ f_write_data_to_file <- function(
 
 
         # Does c.delim have a value when needed?
-        if(c.file.type == "delim" & is.null(c.delim)) {
+        if(any(v.delim) & is.null(c.delim)) {
 
                 stop(paste0(
 
-                        "Note, you must provide a value for 'c.delim' in case you have chosen 'c.file.type' to be 'delim'!"
+                        "Note, you must provide a value for 'c.delim' in case you have chosen 'v.delim' to be TRUE!"
                 ))
         }
 

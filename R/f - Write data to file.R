@@ -46,6 +46,7 @@ f_write_data_to_file <- function(
                         # Used for xls (Excel).
 
                         # Number of rows and columns to freeze.
+                        # Default is first row and first column.
                         v.freeze.row        = NULL,
                         v.freeze.col        = NULL,
 
@@ -141,6 +142,12 @@ f_write_data_to_file <- function(
         # v.delim         = TRUE
         # c.delim         = ";"
         # b.append        = TRUE
+
+        # Sondeeronderzoek (wb 74)
+        # x             = l.sondeeronderzoek
+        # v.sheet.name  = v.sonderonderzoek.tabellen
+        # v.path        = path.deliverables
+        # c.file.string = "Sondeerdata van PDOK - sample"
 
 
 ##############################################################################
@@ -321,13 +328,32 @@ f_write_data_to_file <- function(
                                 # Convert object to dataframe if not already.
                                 if (!any(class(x.object[[j]]) == "data.frame")) {
 
-                                        x.object.j <- data.frame(x = x.object[[j]])
+                                        x.object.j <- as.data.frame(x = x.object[[j]])
 
                                         } else {
 
-                                                x.object.j <- x.object[[j]]
+                                        x.object.j <- x.object[[j]]
 
-                                                }
+                                        }
+
+                                # Check that all columns are of acceptable class.
+                                v.class.observed          <- lapply(lapply(x.object.j, class), function(xx) {paste(xx, collapse = "|")}) %>% unlist()
+                                v.class.scope             <- c("character", "numeric", "integer", "logical", "Date", "POSIXct", "POSIXt", "list")
+                                v.class.observed.in.scope <- lapply(v.class.observed, function(xx) {any(grepl(xx, v.class.scope))}) %>% unlist()
+
+                                if(!all(v.class.observed.in.scope)) {
+
+                                        stop(paste0(
+
+                                                "Note, the following features in '", deparse(substitute(x)),
+                                                "' do not have an acceptable class: ",
+                                                f_paste(names(x.object.j)[!v.class.observed.in.scope], b.quotation = TRUE),
+                                                ". They are of class: ",
+                                                f_paste(v.class.observed[!v.class.observed.in.scope], b.quotation = TRUE),
+                                                ", resp. Features must be one of, ",
+                                                f_paste(v.class.scope, b.quotation = TRUE, c.and = "or"), "!"
+                                        ))
+                                }
 
                                 # Determine numeric columns.
                                 v.col.numeric <- seq(ncol(x.object.j))[unlist(lapply(x.object.j, is.numeric))]

@@ -15,12 +15,14 @@
                 # Path where file can be found.
                 c.path,
 
-                # Exact match or not.
-                b.exact.match            = FALSE,
-                c.file.string.exclude    = NULL,
-
                 # Google Drive folder.
-                c.folder
+                c.folder,
+
+                # Exact match or not.
+                b.exact.match         = FALSE,
+                c.file.string.exclude = NULL,
+                c.show.report         = "all"
+
                 ) {
 
 
@@ -61,6 +63,7 @@
         df.destination <- drive_get(path = c.folder)
 
         cat("\n")
+
 
 ##############################################################################
 # ERRROR CHECK

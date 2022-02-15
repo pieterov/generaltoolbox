@@ -122,7 +122,6 @@ f_write_data_to_file <- function(
         # c.conditional.color = "#ABB2B9"
         # b.banded.rows       = TRUE
 
-
         # Set 1
         # x             = df.nwb.look.up
         # c.file.string = paste0(c.time, " - df.nwb.look.up - Analyse - Wide2 - ", c.init)
@@ -148,6 +147,11 @@ f_write_data_to_file <- function(
         # v.sheet.name  = v.sonderonderzoek.tabellen
         # v.path        = path.deliverables
         # c.file.string = "Sondeerdata van PDOK - sample"
+
+        # x             = data.frame(x=seq(10),y=LETTERS[1:10])
+        # v.path        = path.root.local
+        # c.file.string = "Data Export"
+        # v.csv         = TRUE
 
 
 ##############################################################################
@@ -187,11 +191,19 @@ f_write_data_to_file <- function(
                 c.file.string = paste("Data Export -", deparse(substitute(x)))
         }
 
+
         # Maak v.xls gelijk aan TRUE, indien alle FALSE zijn.
         if( all(!v.csv) & all(!v.txt) & all(!v.delim) & all(!v.rds) & all(!v.fst) &
             all(!v.xls) & all(!v.sqlite) & all(!v.parquet) ) {
 
                 v.xls = TRUE
+        }
+
+
+        # Define c.extension, in case of v.delim.
+        if(any(v.delim)) {
+
+                c.extension <- "txt"
         }
 
 
@@ -205,6 +217,7 @@ f_write_data_to_file <- function(
                 c.extension <- "csv"
         }
 
+
         # Define v.delim, c.delim, and c.extension, in case of v.txt.
         if(any(v.txt)) {
 
@@ -215,16 +228,9 @@ f_write_data_to_file <- function(
                 c.extension <- "txt"
         }
 
-        # Define c.extension, in case of v.delim.
-        if(any(v.delim)) {
-
-                c.extension <- "txt"
-        }
-
 
         # Initialize.
         v.file <- NULL
-
 
 
         # Define Excel style when needed
@@ -667,7 +673,7 @@ f_write_data_to_file <- function(
                                 # Write data to csv file. Eerder had ik BOM op TRUE gezet ivm diakritische tekens. Nu weer op FALSE omdat er probleem
                                 # is met inlezen van allocatie tabel. Diakritische tekens heeft Rian intern opgelost.
                                 # "If TRUE a BOM (Byte Order Mark) sequence (EF BB BF) is added at the beginning of the file; format 'UTF-8 with BOM'."
-                                data.table::fwrite(x         = as.data.table(x.object.k),
+                                data.table::fwrite(x         = data.table::as.data.table(x.object.k),
                                                    file      = paste0(v.path[i], c.file.k),
                                                    bom       = FALSE,
                                                    append    = b.append,

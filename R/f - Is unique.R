@@ -5,23 +5,35 @@
 #################################################################################
 
         f_is_unique <- function(v.vector,
-                                v.excluding = c(NULL, NA)
+                                v.excluding = NA
                                 ) {
 
 #########################################################################
 # TEST
 #########################################################################
 
-        #v.vector <- v.temp
+        #v.vector <- c(1,2,3, NA)
 
 
 #########################################################################
-# TEST
+# PROCESS
 #########################################################################
 
         # Verwijder elementen die niet meegenomen moeten worden, bijv NA en NULL.
         v.output <- v.vector[!v.vector %in% v.excluding]
 
-        return(length(unique(v.output)) == length(v.output))
+        b.unique <- length(unique(v.output)) == length(v.output)
+
+        # Check of er v.excluding elementen in v.vector zitten.
+        if(b.unique & any(v.excluding %in% v.vector)) {
+
+                warning(paste0(
+
+                        "The vector ", deparse(substitute(v.vector)), " contains unique elements, however, ",
+                        "only after removing one or more NAs present in the vector!"
+                ))
+        }
+
+        return(b.unique)
 
         }

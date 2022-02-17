@@ -17,6 +17,19 @@
 # TEST ONLY
 #########################################################################
 
+        # ALWAYS
+        # c.collapse   = ","
+        # c.and        = "and"
+        # b.capitalize = FALSE
+        # b.quotation  = FALSE
+        # b.sort       = TRUE
+        # b.unique     = FALSE
+
+        # Set1
+        # v.string    = df.temp$ID
+        # b.quotation = TRUE
+
+
 #########################################################################
 # INITIALIZATION
 #########################################################################
@@ -31,42 +44,46 @@
 
 
         # Remove duplicates, if required.
-        if(b.unique)
+        if(b.unique) {
+
                 v.string <- unique(v.string)
+        }
 
 
         # Sort words, if required.
-        if(b.sort)
+        if(b.sort) {
+
                 v.string <- sort(v.string)
+        }
 
 
         # Capitalize words, if required.
-        if(b.capitalize)
+        if(b.capitalize) {
+
                 v.string <- stri_trans_totitle(v.string)
+        }
 
 
         # Add quotation, if required.
-        if(b.quotation)
+        if(b.quotation) {
 
                 v.string <- sapply(v.string, function(x) {
 
                 paste0("'", x, "'")
 
                 })
-
+        }
 
         # Determine c.and.
         if(length(v.string) == 1) {
 
                 c.and.updated <- ""
-        }
 
-        else if(length(v.string) == 2) {
+        } else if(length(v.string) == 2) {
 
                 c.and.updated <- paste0(" ", c.and, " ")
-        }
 
-        else {
+        } else {
                 c.and.updated <- paste0(c.collapse, " ", c.and, " ")
         }
 

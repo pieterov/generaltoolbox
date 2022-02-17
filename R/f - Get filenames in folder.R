@@ -81,9 +81,11 @@
         # Check whether a file was found.
         if (nrow(df.file) == 0) {
 
-                warning(paste0("No files found of ",
-                            ifelse(is.null(c.file.type), "any", c.file.type),
-                            " type in path '", c.path, "'!"))
+                cat(paste0(
+
+                        "No files found of ", ifelse(is.null(c.file.type), "any", c.file.type), " type in path '", c.path, "'!"
+                ))
+
                 }
 
         # Clean up the file names and get the concerned file name.
@@ -131,7 +133,7 @@
 
 
 #################################################################################
-# ERROR CHECK
+# COMMUNICATION
 #################################################################################
 
         if(nrow(df.output) == 0) {
@@ -144,7 +146,7 @@
 
                 cat(paste0("The folder '", c.path, "' contains ", sum(df.output.source$is.dir), " subfolder(s). ",
                     "Files in the subfolder(s) are not included, since b.recursive was set to FALSE:\n",
-                    paste(df.output.source %>% filter(is.dir) %>% pull(full.path), collapse = "\n"), "\n"
+                    paste(df.output.source %>% filter(is.dir) %>% pull(full.path), collapse = "\n"), "\n\n"
                     ))
         }
 
@@ -154,7 +156,7 @@
                 cat(paste0("The folder '", c.path, "' contains ", sum(df.output$is.hidden),
                     " case(s) of hidden files. ",
                     "These are included in the listed output:\n",
-                    paste(df.output %>% filter(is.hidden) %>% pull(file.name), collapse = "\n"), "\n"
+                    paste(df.output %>% filter(is.hidden) %>% pull(file.name), collapse = "\n"), "\n\n"
                     ))
         }
 
@@ -163,7 +165,7 @@
 
                 cat(paste0("The folder '", c.path, "' contains ", sum(!df.output$contains.date),
                     " case(s) of missing, incomplete, or incorrect dates in filenames. ",
-                    "These are considered in the listed output.\n"
+                    "These are considered in the listed output.\n\n"
                     # "These are included in the listed output:\n\n",
                     # paste(df.output %>% filter(!contains.date) %>% pull(file.name), collapse = "\n"), "\n"
                     ))

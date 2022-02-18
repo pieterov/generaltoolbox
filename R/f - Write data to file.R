@@ -8,21 +8,22 @@ f_write_data_to_file <- function(
 
                         x,
 
+                        # File name without date and without extension, like xlsx.
+                        c.file.string       = "Data Export",
+
+                        # Vector of paths where file should be stored. Default saved in Downloads.
+                        v.path,
+
                         # Vector of sheet names, in case of save to Excel.
                         v.sheet.name        = NULL, # In case of XLS, CSV, TXT.
                         v.table.name        = NULL, # In case of SQLITE
-
-                        # Vector of paths where file should be stored. Default saved in Downloads.
-                        v.path              = path.ipsm.dropbox,
-
-                        # File name without date and without extension, like xlsx.
-                        c.file.string       = "Data Export",
 
                         # Logical to confirm whether date should be added to the filename
                         # v.add.date must be as long as v.path, allowing to set add.date per
                         # file location. If length is one, it will be used for all. Default
                         # is true.
                         v.add.date          = TRUE,
+                        v.add.time          = FALSE,
 
                         # Determine where to save the data to.
                         v.xls               = FALSE,
@@ -95,9 +96,9 @@ f_write_data_to_file <- function(
         # ALTIJD
         # v.sheet.name        = NULL
         # v.table.name        = NULL
-        # v.path              = path.ipsm.dropbox
         # c.file.string       = "Data Export"
         # v.add.date          = TRUE
+        # v.add.time          = FALSE
         # v.freeze.row        = NULL
         # v.freeze.col        = NULL
         # v.xls               = FALSE
@@ -151,7 +152,8 @@ f_write_data_to_file <- function(
         # x             = data.frame(x=seq(10),y=LETTERS[1:10])
         # v.path        = path.root.local
         # c.file.string = "Data Export"
-        # v.csv         = TRUE
+        # v.add.time    = FALSE
+
 
 
 ##############################################################################
@@ -179,6 +181,7 @@ f_write_data_to_file <- function(
                         "Note, you must provide a value for 'c.delim' in case you have chosen 'v.delim' to be TRUE!"
                 ))
         }
+
 
 
 ##############################################################################
@@ -296,7 +299,12 @@ f_write_data_to_file <- function(
 # Error check.
 ##############################################################################
 
-        ##lapply(x, function(df) {if(df == NULL) stop("One of dataframe is NULL")})
+        # Append can only be used in combination with csv, txt and delim.
+        if( b.append & (any(v.rds) | any(v.fst) | any(v.xls) | any(v.sqlite) | any(v.parquet)) ) {
+
+                stop("Note, data can only be appended in case of csv, txt, and delim!")
+        }
+
 
 ##############################################################################
 # Save data.
@@ -307,6 +315,7 @@ f_write_data_to_file <- function(
 
                 # Initialize.
                 v.add.date.i <- ifelse(length(v.add.date) == 1, v.add.date, v.add.date[i])
+                v.add.time.i <- ifelse(length(v.add.time) == 1, v.add.time, v.add.time[i])
                 v.xls.i      <- ifelse(length(v.xls)      == 1, v.xls,      v.xls[i])
                 v.delim.i    <- ifelse(length(v.delim)    == 1, v.delim,    v.delim[i])
                 v.rds.i      <- ifelse(length(v.rds)      == 1, v.rds,      v.rds[i])
@@ -314,10 +323,15 @@ f_write_data_to_file <- function(
                 v.sqlite.i   <- ifelse(length(v.sqlite)   == 1, v.sqlite,   v.sqlite[i])
                 v.parquet.i  <- ifelse(length(v.parquet)  == 1, v.parquet,  v.parquet[i])
 
-                c.file         <- paste0(ifelse(v.add.date.i,
-                                              paste0(gsub("-", " ", Sys.Date()), " - "),
-                                              ""),
-                                       c.file.string)
+
+                c.file         <- paste0(
+
+                        ifelse(v.add.date.i, paste0(format(Sys.time(), "%Y %m %d"), " - "), ""),
+
+                        ifelse(v.add.time.i, paste0(format(Sys.time(), "%H %M %S"), " - "), ""),
+
+                        c.file.string
+                )
 
                 # Add dataframe to Excel workbook.
                 if (v.xls.i) {

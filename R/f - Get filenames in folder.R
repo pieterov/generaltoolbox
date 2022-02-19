@@ -26,6 +26,11 @@
         # b.recursive  = FALSE
         # c.file.type  = NULL
 
+        # c.path        = path.data
+        # b.recursive   = FALSE
+        # c.file.type   = "xls"
+        # b.return.md5  = TRUE
+
 
 #################################################################################
 # ERROR CHECK
@@ -95,19 +100,19 @@
                 mutate(
 
                         # Determine file and folder name.
-                        folder.name   = dirname(full.path),
-                        file.name     = basename(full.path),
+                        folder.name    = dirname(full.path),
+                        file.name      = gsub("\\.[a-zA-Z]*$", "", basename(full.path)),
+                        file.extension = str_extract(basename(full.path), "[a-zA-Z]*$"),
 
                         # Is observation a file or a folder?
-                        is.dir        = file.info(full.path)$isdir,
+                        is.dir         = file.info(full.path)$isdir,
 
                         # Is observation a hidden file?
-                        is.hidden     = grepl("^~", file.name),
+                        is.hidden      = grepl("^~", file.name),
 
                         # Get the last modified date for file.
-                        date.last.mod = file.info(full.path)$mtime
-
-                        )
+                        date.last.mod  = file.info(full.path)$mtime
+                )
 
 
         # Continue..

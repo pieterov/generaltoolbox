@@ -70,19 +70,19 @@
                 mutate(n.label = paste0("'", feature, "' (", n.unique, ")"))
 
 
-        # Comms.
-        cat(
-                "We observe features that do not contain unique values:",
-                f_paste(df.temp$n.label)
-        )
-
-
         ######################################################################################
         # ERROR CHECK
         ######################################################################################
 
         if(nrow(df.temp) > 0) {
 
+                # Comms.
+                cat(
+                        "We observe features that do not contain unique values:",
+                        f_paste(df.temp$n.label)
+                )
+
+                # Create label.
                 v.temp <- lapply(df.temp$feature, function(c.unique) { # c.unique <- df.temp$feature[1]
 
                         df.input %>%

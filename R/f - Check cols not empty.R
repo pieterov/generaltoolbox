@@ -56,18 +56,18 @@
                 mutate(n.label = paste0("'", feature, "' (", n.na, ")"))
 
 
-        # Comms.
-        cat(
-                "We observe features with empty cells:",
-                f_paste(df.temp$n.label)
-        )
-
-
         ######################################################################################
         # ERROR CHECK
         ######################################################################################
 
         if(nrow(df.temp) > 0) {
+
+                # Comms.
+                cat(
+                        "We observe features with empty cells:",
+                        f_paste(df.temp$n.label)
+                )
+
 
                 # Create label.
                 v.temp <- lapply(df.temp$feature, function(c.temp) { # c.temp = df.temp$feature[1]

@@ -6,7 +6,7 @@
         f_check_cols_unique <- function(
 
                 df.input,
-                v.unique,
+                v.col,
                 c.id
         ) {
 
@@ -17,21 +17,21 @@
 
         # Test!
         # df.input <- df.datachamp.baseline.source
-        # v.unique <- v.feature.must.be.unique
+        # v.col    <- v.feature.must.be.unique
         # c.id     <- "ID"
 
         # df.input <- tibble(ID = letters[1:6], `Variants: SKU` = c(seq(5), 5), dummy1 = c(seq(4), 4, 4), dummy2 = seq(6))
-        # v.unique <- c("Variants: SKU", "dummy1", "dummy2")
+        # v.col    <- c("Variants: SKU", "dummy1", "dummy2")
         # c.id     <- "ID"
-        # f_check_cols_unique(df.input, v.unique, c.id)
+        # f_check_cols_unique(df.input, v.col, c.id)
 
 
         ######################################################################################
         # INITIALIZE
         ######################################################################################
 
-        # Remove c.id from v.unique, if present.
-        v.unique <- v.unique[v.unique != c.id]
+        # Remove c.id from v.col, if present.
+        v.col <- v.col[v.col != c.id]
 
 
         ######################################################################################
@@ -40,7 +40,7 @@
 
         # Check presence of columns in df.input.
         f_check_cols_present(df.input, c.id)
-        f_check_cols_present(df.input, v.unique)
+        f_check_cols_present(df.input, v.col)
 
         # Check that c.id does not contain NA and is unique.
         f_check_col_not_empty(df.input, c.id)
@@ -55,7 +55,7 @@
         df.temp <- df.input %>%
 
                 # Select concerned columns
-                select(all_of(v.unique)) %>%
+                select(all_of(v.col)) %>%
 
                 # Determine number of NA per column
                 f_info_per_column() %>%

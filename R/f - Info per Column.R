@@ -38,7 +38,9 @@
 
                                                 length(unique(v.temp))
 
-                                        })
+                                        }),
+
+                                n.tot = nrow(df.input)
                         )
 
                 return(df.output)

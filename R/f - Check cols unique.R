@@ -70,6 +70,13 @@
                 mutate(n.label = paste0("'", feature, "' (", n.unique, ")"))
 
 
+        # Comms.
+        cat(
+                "We observe features that do not contain unique values:",
+                f_paste(df.temp$n.label)
+        )
+
+
         ######################################################################################
         # ERROR CHECK
         ######################################################################################

@@ -20,7 +20,7 @@
         # v.col    = v.feature.cannot.be.empty
         # v.col    = c("pieter", "bart")
         # c.id     = "ID"
-        # f_check_cols_empty_cells(df.input, v.col, c.id)
+        # f_check_cols_not_empty(df.input, v.col, c.id)
 
 
         ######################################################################################
@@ -34,6 +34,7 @@
         # Check that c.id does not contain NA and is unique
         f_check_col_not_empty(df.input, c.id)
         f_check_col_unique(df.input, c.id)
+
 
         ######################################################################################
         # PROCESS
@@ -52,7 +53,14 @@
                 filter(n.na > 0) %>%
 
                 # Create label.
-                mutate(n.label = paste0(feature, " (", n.na, ")"))
+                mutate(n.label = paste0("'", feature, "' (", n.na, ")"))
+
+
+        # Comms.
+        cat(
+                "We observe features with empty cells:",
+                f_paste(df.temp$n.label)
+        )
 
 
         ######################################################################################

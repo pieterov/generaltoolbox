@@ -29,9 +29,9 @@
 
         # Check presence of columns in df.input.
         f_check_cols_present(df.input, c.id)
-        f_check_cols_present(df.input, v.unique)
+        f_check_cols_present(df.input, v.col)
 
-        # Check that c.id does not contain NA and is unique.
+        # Check that c.id does not contain NA and is unique
         f_check_col_not_empty(df.input, c.id)
         f_check_col_unique(df.input, c.id)
 

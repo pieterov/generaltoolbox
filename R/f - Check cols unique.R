@@ -17,7 +17,7 @@
 
         # Test!
         # df.input <- df.datachamp.baseline.source
-        # v.col    <- v.feature.must.be.unique
+        # v.col    <- v.col.must.be.unique
         # c.id     <- "ID"
 
         # df.input <- tibble(ID = letters[1:6], `Variants: SKU` = c(seq(5), 5), dummy1 = c(seq(4), 4, 4), dummy2 = seq(6))

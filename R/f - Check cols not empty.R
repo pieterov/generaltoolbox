@@ -63,10 +63,10 @@
         if(nrow(df.temp) > 0) {
 
                 # Comms.
-                cat(
-                        "We observe features with empty cells:",
-                        f_paste(df.temp$n.label)
-                )
+                cat(paste0(
+                        "We observe features with empty values (out of ",
+                        nrow(df.input), "): ", f_paste(df.temp$n.label), ".\n\n"
+                ))
 
 
                 # Create label.

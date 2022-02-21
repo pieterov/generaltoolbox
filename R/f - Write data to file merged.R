@@ -1,9 +1,9 @@
 ##############################################################################################
-# NAME:         FUNCTION - MERGE WITH FILES IN PAST PERIOD
+# NAME:         FUNCTION - WRITE DATA TO FILE MERGED
 # AUTHOR:       Pieter Overdevest
 ##############################################################################################
 
-        f_merge_with_files_in_past_period <- function(
+        f_write_data_to_file_merged <- function(
 
                   df.input,
                   c.file.string,

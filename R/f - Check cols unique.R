@@ -16,9 +16,9 @@
         ######################################################################################
 
         # Test!
-        # df.input <- df.datachamp.baseline.source
-        # v.col    <- v.col.must.be.unique
-        # c.id     <- "ID"
+        # df.input = df.datachamp.baseline.source
+        # v.col    = v.col.must.be.unique
+        # c.id     = "ID"
 
         # df.input <- tibble(ID = letters[1:6], `Variants: SKU` = c(seq(5), 5), dummy1 = c(seq(4), 4, 4), dummy2 = seq(6))
         # v.col    <- c("Variants: SKU", "dummy1", "dummy2")
@@ -61,13 +61,16 @@
                 f_info_per_column() %>%
 
                 # Select columns that are not unique
-                filter(n.unique != n.tot) %>%
+                mutate(n.not.unique = n.tot - n.unique) %>%
+
+                # Select columns that are not unique.
+                filter(n.not.unique > 0) %>%
 
                 # Sort by non-uniqueness.
-                arrange(desc(n.unique)) %>%
+                arrange(n.not.unique) %>%
 
                 # Create label.
-                mutate(n.label = paste0("'", feature, "' (", n.unique, ")"))
+                mutate(n.label = paste0("'", feature, "' (", n.not.unique, ")"))
 
 
         ######################################################################################
@@ -77,10 +80,47 @@
         if(nrow(df.temp) > 0) {
 
                 # Comms.
-                cat(
-                        "We observe features that do not contain unique values:",
-                        f_paste(df.temp$n.label)
-                )
+                cat(paste0(
+                        "We observe features that do not contain unique values (out of ",
+                        nrow(df.input), "): ",
+                        f_paste(df.temp$n.label), ".\n\n"
+                ))
+
+
+                # Create label.
+                v.temp <- lapply(df.temp$feature, function(c.unique) { # c.unique <- df.temp$feature[1]
+
+                        v.temp <- df.input %>%
+
+                                # Select concerned columns
+                                select(all_of(c(c.id, c.unique))) %>%
+
+                                add_count(get(c.unique)) %>%
+
+                                filter(n > 1) %>%
+
+                                select(all_of(c.unique), n) %>%
+
+                                distinct() %>%
+
+                                mutate(n.label = paste0("'", get(c.unique), "' (", n, ")")) %>%
+
+                                pull(n.label)
+
+                        return(
+                                paste0("'", c.unique, "': ", f_paste(v.temp))
+                        )
+
+                }) %>% unlist()
+
+
+                # Comms.
+                cat(paste0(
+
+                        "The following features do not contain unique values (", c.id, "):\n",
+                        f_paste(v.temp, b.sort = FALSE), ".\n\n"
+                ))
+
 
                 # Create label.
                 v.temp <- lapply(df.temp$feature, function(c.unique) { # c.unique <- df.temp$feature[1]

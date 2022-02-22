@@ -14,6 +14,11 @@
 # TEST!
 #################################################################################
 
+        # ALTIJD
+        # b.recursive  = FALSE
+        # c.file.type  = NULL
+        # b.return.md5 = TRUE
+
         # c.path       = c.path.source
         # b.recursive  = FALSE
         # c.file.type  = NULL
@@ -38,7 +43,7 @@
 
         if(!dir.exists(c.path)) {
 
-                stop("The folder '", c.path, "' does not exist!\n")
+                stop("The folder '", c.path, "' does not exist!\n\n")
         }
 
 
@@ -88,7 +93,7 @@
 
                 cat(paste0(
 
-                        "No files found of ", ifelse(is.null(c.file.type), "any", c.file.type), " type in path '", c.path, "'!"
+                        "No files found of ", ifelse(is.null(c.file.type), "any", c.file.type), " type in path '", c.path, "'!\n\n"
                 ))
 
                 }
@@ -134,7 +139,11 @@
         # Voeg md5 toe, indien gevraagd.
         if(b.return.md5) {
 
-                df.output <- df.output %>% mutate(file.md5 = tools::md5sum(full.path))
+                df.output <- df.output %>%
+
+                        mutate(
+                                file.md5 = tools::md5sum(full.path)
+                        )
                 }
 
 
@@ -142,16 +151,10 @@
 # COMMUNICATION
 #################################################################################
 
-        if(nrow(df.output) == 0) {
-
-                cat(paste0("The folder '", c.path, "' contains no files.\n"))
-        }
-
-
         if(sum(df.output.source$is.dir) > 0) {
 
-                cat(paste0("The folder '", c.path, "' contains ", sum(df.output.source$is.dir), " subfolder(s). ",
-                    "Files in the subfolder(s) are not included, since b.recursive was set to FALSE:\n",
+                cat(paste0("The folder '", c.path, "' contains ", sum(df.output.source$is.dir), " subfolder(s).\n\n",
+                    "Files in the following subfolder(s) are not included, since b.recursive was set to FALSE:\n",
                     paste(df.output.source %>% filter(is.dir) %>% pull(full.path), collapse = "\n"), "\n\n"
                     ))
         }

@@ -28,10 +28,9 @@
         # b.overwrite                 = TRUE
 
         # # TESTEN
-        # c.path.source      <- path.documents
-        # c.path.destination <- paste0(path.documents, "_Archive/")
-        # v.file.to.move     <- "2022 02 22 - Test"
-
+        # v.file.to.move     = df.files.temp$file.name.ext
+        # c.path.source      = c.path
+        # c.path.destination = paste0(c.path, "Archive")
 
         # # TESTEN
         # c.path.source      <- paste0(path.prive, "Bieb/")
@@ -41,7 +40,6 @@
         # c.path.source      = path.data.rds
         # c.path.destination = paste0(path.data.source, "RDS/")
         # c.date.treshold    = (today() - 70)
-
 
         # Set 3
         # c.path.source      = paste0(path.prive, "Bieb/")
@@ -186,7 +184,7 @@
                                                 c.pre = "",
                                                 c.post = ""
                                         ),
-                                file.name
+                                file.name.ext
                                 )
                         )
                 }

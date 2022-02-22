@@ -24,6 +24,18 @@
         # c.file.type    = "xls"
         # n.day.max = 2
 
+        # df.input      = df.datachamp.increment.change
+        # c.file.string = "Increment Changes"
+        # c.path        = paste0(path.datachamp.dropbox, "Increment Changes - ", str_to_title(c.update.type), "/")
+        # c.file.type   = "xls"
+        # n.day.max     = 7
+
+        # df.input      = df.datachamp.change.log
+        # c.file.string = "Change Log"
+        # c.path        = paste0(path.datachamp.dropbox, "Change Log - ", str_to_title(c.update.type), "/")
+        # c.file.type   = "xls"
+        # n.day.max     = 7
+
 
 ##############################################################################################
 # PROCESS
@@ -36,7 +48,7 @@
                         c.file.type  = "xls"
                 ) %>%
 
-                filter(grepl("Test", file.name)) %>%
+                filter(grepl(c.file.string, file.name)) %>%
 
                 mutate(
                         # Add timestamp.
@@ -75,7 +87,7 @@
 
         # Move concerned source files to Archive.
         f_move_files(
-                v.file.to.move     = df.files.temp$file.name,
+                v.file.to.move     = df.files.temp$file.name.ext,
                 c.path.source      = c.path,
                 c.path.destination = paste0(c.path, "Archive")
         )

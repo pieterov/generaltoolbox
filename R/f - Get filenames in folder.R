@@ -101,8 +101,9 @@
 
                         # Determine file and folder name.
                         folder.name    = dirname(full.path),
-                        file.name      = gsub("\\.[a-zA-Z]*$", "", basename(full.path)),
-                        file.extension = str_extract(basename(full.path), "[a-zA-Z]*$"),
+                        file.name.ext  = basename(full.path),
+                        file.name      = gsub("\\.[a-zA-Z]*$", "", file.name.ext),
+                        file.ext       = str_extract(file.name.ext, "[a-zA-Z]*$"),
 
                         # Is observation a file or a folder?
                         is.dir         = file.info(full.path)$isdir,

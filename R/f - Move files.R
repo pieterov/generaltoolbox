@@ -28,6 +28,12 @@
         # b.overwrite                 = TRUE
 
         # # TESTEN
+        # c.path.source      <- path.documents
+        # c.path.destination <- paste0(path.documents, "_Archive/")
+        # v.file.to.move     <- "2022 02 22 - Test"
+
+
+        # # TESTEN
         # c.path.source      <- paste0(path.prive, "Bieb/")
         # c.path.destination <- paste0(path.prive, "Bieb/_Archive/")
         # c.date.treshold    <- (today() - 100)
@@ -63,7 +69,10 @@
 
         if(!dir.exists(c.path.destination)) {
 
-                stop("The destination folder '", c.path.destination, "' does not exist!\n")
+                # Create 'archive' folder when it does not already exist.
+                dir.create(c.path.destination, showWarnings = FALSE)
+
+                warning("The destination folder '", c.path.destination, "' does not exist, so it has been created.\n")
         }
 
 
@@ -74,7 +83,7 @@
 
         # Determine filename for df.file.to.move that will be saved in path.data,
         # for reference.
-        f_get_last_two_folders <- function(c.path) {
+        f_get_last_two_folders_in_path <- function(c.path) {
 
                 return(
                         c.path %>%
@@ -89,16 +98,14 @@
 
         c.file.name <- paste(
 
-                format(Sys.time(), "%H %M %S"),
+                f_get_last_two_folders_in_path(c.path.source),
                 "-",
-                f_get_last_two_folders(c.path.source),
-                "-",
-                f_get_last_two_folders(c.path.destination)
+                f_get_last_two_folders_in_path(c.path.destination)
                 )
 
 
         # Location where c.file.name will be saved.
-        c.folder.name <- ifelse(exists("path.data"), path.data, paste0(path.iwd, "Packages/_Archived files/"))
+        c.folder.name <- path.data
 
 
 #################################################################################
@@ -160,7 +167,9 @@
 
                 df.file.to.move <- df.file.to.move %>%
 
-                        filter(date.in.file.name < as_date(c.date.treshold))
+                        filter(
+                                date.in.file.name < as_date(c.date.treshold)
+                        )
                 }
 
 
@@ -169,11 +178,17 @@
 
                 df.file.to.move <- df.file.to.move %>%
 
-                        filter(grepl(f_paste_regex(v.file.to.move,
-                                                   c.pre = "",
-                                                   c.post = ""),
-                                     file.name)
-                               )
+                        filter(
+                                grepl(
+                                        f_paste_regex(
+
+                                                v.file.to.move,
+                                                c.pre = "",
+                                                c.post = ""
+                                        ),
+                                file.name
+                                )
+                        )
                 }
 
 
@@ -190,9 +205,9 @@
         # Flag files are already in the destination folder.
         df.file.to.move <- df.file.to.move %>%
 
-                mutate(in.destination.before = {file.name %in%
+                mutate(in.destination.before = {file.name.ext %in%
 
-                                df.file.destination.before$file.name})
+                                df.file.destination.before$file.name.ext})
 
 
         # Als een of meer bestanden al voorkomen in de destination folder
@@ -204,7 +219,7 @@
                         sum(df.file.to.move$in.destination.before),
                         "files already exist in the destination folder:\n\n",
                         c.path.destination, "\n\n",
-                        paste(df.file.to.move %>% filter(in.destination.before) %>% pull(file.name),
+                        paste(df.file.to.move %>% filter(in.destination.before) %>% pull(file.name.ext),
                               collapse = "\n")
                         )
 
@@ -234,7 +249,7 @@
 
                                 filter(n.md5.source > 1) %>%
 
-                                select(file.name, file.md5.source) %>%
+                                select(file.name.ext, file.md5.source) %>%
 
                                 arrange(file.md5.source) %>%
 
@@ -247,6 +262,7 @@
                                 x             = df.temp,
                                 v.path        = c.folder.name,
                                 c.file.string = paste0(c.file.name, " - dubbel md5 - source"),
+                                v.add.time    = TRUE
                                 )
 
 
@@ -264,7 +280,7 @@
 
                                 filter(n.md5.destination > 1) %>%
 
-                                select(file.name, file.md5.destination) %>%
+                                select(file.name.ext, file.md5.destination) %>%
 
                                 arrange(file.md5.destination) %>%
 
@@ -310,12 +326,12 @@
 
                 for (i in seq(nrow(df.temp))) { # i <- 1
 
-                        cat("\nCopying (", i, "of", nrow(df.temp), "): ", df.temp$file.name[i])
+                        cat("\nCopying (", i, "of", nrow(df.temp), "): ", df.temp$file.name.ext[i])
 
                         # Het maakt niet zo veel uit of we overwrite op TRUE/FALSE zetten.
                         # We kopieren bestanden die niet in de destination folder voorkomen.
                         file.copy(from      = df.temp$full.path.source[i],
-                                  to        = paste0(c.path.destination, "/", df.temp$file.name[i]),
+                                  to        = paste0(c.path.destination, "/", df.temp$file.name.ext[i]),
                                   copy.mode = TRUE,
                                   copy.date = TRUE)
                 }
@@ -338,12 +354,12 @@
 
                 for (i in seq(nrow(df.temp))) { # i <- 1
 
-                        cat("\nCopying (", i, "of", nrow(df.temp), "): ", df.temp$file.name[i])
+                        cat("\nCopying (", i, "of", nrow(df.temp), "): ", df.temp$file.name.ext[i])
 
                         # We overschrijven altijd, omdat we in het geval we dubbele files niet willen overschrijven, we deze
                         # hierboven verwijderen, zie b.overwrite.
                         file.copy(from      = df.temp$full.path.source[i],
-                                  to        = paste0(c.path.destination, "/", df.temp$file.name[i]),
+                                  to        = paste0(c.path.destination, "/", df.temp$file.name.ext[i]),
                                   copy.mode = TRUE,
                                   copy.date = TRUE,
                                   recursive = FALSE,
@@ -404,13 +420,13 @@
                                 )
         } else {
 
-                # Op basis van file.name
+                # Op basis van file.name.ext
                 df.file.to.move <- df.file.to.move %>%
 
                         mutate(
-                                in.destination.after = {file.name %in%
+                                in.destination.after = {file.name.ext %in%
 
-                                        (df.file.destination.after %>% pull(file.name))}
+                                        (df.file.destination.after %>% pull(file.name.ext))}
                                 )
         }
 
@@ -424,7 +440,7 @@
                         paste(
                                 df.file.to.move %>%
                                         filter(!in.destination.after) %>%
-                                        pull(file.name),
+                                        pull(file.name.ext),
 
                                 collapse = "\n")
                         )
@@ -439,7 +455,7 @@
                         paste(
                                 df.file.to.move %>%
                                         filter(!in.destination.before & !in.destination.after) %>%
-                                        pull(file.name),
+                                        pull(file.name.ext),
 
                                 collapse = "\n")
                         )
@@ -469,7 +485,7 @@
                         for (i in seq(nrow(df.file.to.move))) { # i <- 1
 
                                 cat("\nRemoving (", i, "of", nrow(df.file.to.move), "): ",
-                                    df.file.to.move$file.name[i])
+                                    df.file.to.move$file.name.ext[i])
 
                                 file.remove(
                                         from = df.file.to.move$full.path.source[i]
@@ -498,7 +514,7 @@
                                 for (i in seq(nrow(df.temp))) { # i <- 1
 
                                         cat("\nRemoving (", i, "of", nrow(df.temp), "): ",
-                                            df.temp$file.name[i])
+                                            df.temp$file.name.ext[i])
 
                                         file.remove(
                                                 from = df.temp$full.path.source[i]
@@ -523,7 +539,7 @@
                                 for (i in seq(nrow(df.temp))) { # i <- 1
 
                                         cat("\nNot removed (", i, "of", nrow(df.temp), "): ",
-                                            df.temp$file.name[i])
+                                            df.temp$file.name.ext[i])
                                 }
 
                                 cat("\n\n")
@@ -577,13 +593,13 @@
                         )
         } else {
 
-                # Op basis van file.name
+                # Op basis van file.name.ext
                 df.file.to.move <- df.file.to.move %>%
 
                         mutate(
-                                in.source.after = {file.name %in%
+                                in.source.after = {file.name.ext %in%
 
-                                                (df.file.source.after %>% pull(file.name))}
+                                                (df.file.source.after %>% pull(file.name.ext))}
                         )
         }
 
@@ -600,7 +616,7 @@
                         paste(
                                 df.file.to.move %>%
                                         filter(in.source.after) %>%
-                                        pull(file.name),
+                                        pull(file.name.ext),
 
                                 collapse = "\n\n")
                 )
@@ -621,7 +637,7 @@
                                 df.file.to.move %>%
                                         filter(!in.destination.before,
                                                in.source.after) %>%
-                                        pull(file.name),
+                                        pull(file.name.ext),
 
                                 collapse = "\n\n")
                 )
@@ -640,7 +656,7 @@
                         paste(
                                 df.file.to.move %>%
                                         filter(!in.source.after) %>%
-                                        pull(file.name),
+                                        pull(file.name.ext),
 
                                 collapse = "\n\n")
                 )
@@ -661,7 +677,7 @@
                                 df.file.to.move %>%
                                         filter(in.destination.before,
                                                !in.source.after) %>%
-                                        pull(file.name),
+                                        pull(file.name.ext),
 
                                 collapse = "\n\n")
                 )
@@ -672,7 +688,7 @@
 
                 cat(paste0("Alle bestanden zijn - waar van toepassing - correct verwijderd uit de source folder:\n\n",
                     c.path.source , "\n\nDe tabel met verplaatste bestanden is opgeslagen in Excel file '",
-                    gsub("-", " ", today()), " - ", c.file.name, "' in folder:\n\n", c.folder.name, "\n"))
+                    c.file.name, "' in folder:\n\n", c.folder.name, "\n"))
         }
 
 
@@ -687,13 +703,14 @@
 
                         x             = df.file.to.move,
                         v.path        = c.folder.name,
-                        c.file.string = c.file.name
+                        c.file.string = c.file.name,
+                        v.add.time    = TRUE
                 )
         }
 
         # Print
         cat("\n\n")
-        print(df.file.to.move %>% select(file.name, in.destination.after, in.source.after) %>% as.data.frame())
+        print(df.file.to.move %>% select(file.name.ext, in.destination.after, in.source.after) %>% as.data.frame())
 
 
 #################################################################################

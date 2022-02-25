@@ -22,7 +22,7 @@
         # c.file.string  = "Test"
         # c.path         = path.data
         # c.file.type    = "xls"
-        # n.day.max = 2
+        # n.day.max      = 7
 
         # df.input      = df.datachamp.increment.change
         # c.file.string = "Increment Changes"

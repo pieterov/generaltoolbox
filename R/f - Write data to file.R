@@ -34,6 +34,7 @@ f_write_data_to_file <- function(
                         v.fst               = FALSE,
                         v.sqlite            = FALSE,
                         v.parquet           = FALSE,
+                        v.xml               = FALSE,
 
                         # Needed in case v.delim is equal to TRUE.
                         c.delim             = NULL,
@@ -109,6 +110,7 @@ f_write_data_to_file <- function(
         # v.fst               = FALSE
         # v.sqlite            = FALSE
         # v.parquet           = FALSE
+        # v.xml               = FALSE
         # c.delim             = NULL
         # b.col.names         = TRUE
         # b.append            = FALSE
@@ -197,7 +199,7 @@ f_write_data_to_file <- function(
 
         # Maak v.xls gelijk aan TRUE, indien alle FALSE zijn.
         if( all(!v.csv) & all(!v.txt) & all(!v.delim) & all(!v.rds) & all(!v.fst) &
-            all(!v.xls) & all(!v.sqlite) & all(!v.parquet) ) {
+            all(!v.xls) & all(!v.sqlite) & all(!v.parquet) & all(!v.xml) ) {
 
                 v.xls = TRUE
         }
@@ -300,7 +302,7 @@ f_write_data_to_file <- function(
 ##############################################################################
 
         # Append can only be used in combination with csv, txt and delim.
-        if( b.append & (any(v.rds) | any(v.fst) | any(v.xls) | any(v.sqlite) | any(v.parquet)) ) {
+        if( b.append & (any(v.rds) | any(v.fst) | any(v.xls) | any(v.sqlite) | any(v.parquet) | any(v.xml)) ) {
 
                 stop("Note, data can only be appended in case of csv, txt, and delim!")
         }
@@ -322,6 +324,7 @@ f_write_data_to_file <- function(
                 v.fst.i      <- ifelse(length(v.fst)      == 1, v.fst,      v.fst[i])
                 v.sqlite.i   <- ifelse(length(v.sqlite)   == 1, v.sqlite,   v.sqlite[i])
                 v.parquet.i  <- ifelse(length(v.parquet)  == 1, v.parquet,  v.parquet[i])
+                v.xml.i      <- ifelse(length(v.xml)      == 1, v.xml,      v.xml[i])
 
 
                 c.file         <- paste0(
@@ -571,9 +574,12 @@ f_write_data_to_file <- function(
                         v.file <- c(v.file, c.file.i)
 
                         # Save workbook to disc.
-                        openxlsx::saveWorkbook(wb           = wb,
-                                               file         = paste0(v.path[i], c.file.i),
-                                               overwrite    = TRUE)
+                        openxlsx::saveWorkbook(
+
+                                wb           = wb,
+                                file         = paste0(v.path[i], c.file.i),
+                                overwrite    = TRUE
+                        )
                 }
 
 
@@ -587,8 +593,10 @@ f_write_data_to_file <- function(
                         v.file <- c(v.file, c.file.i)
 
                         # Write data to rds file.
-                        saveRDS(object = x,
-                                file   = paste0(v.path[i], c.file.i))
+                        saveRDS(
+                                object = x,
+                                file   = paste0(v.path[i], c.file.i)
+                        )
                 }
 
 
@@ -602,8 +610,10 @@ f_write_data_to_file <- function(
                         v.file <- c(v.file, c.file.i)
 
                         # Write data to rds file.
-                        write_fst(x    = x,
-                                  path = paste0(v.path[i], c.file.i))
+                        write_fst(
+                                x    = x,
+                                path = paste0(v.path[i], c.file.i)
+                        )
                 }
 
 
@@ -618,8 +628,10 @@ f_write_data_to_file <- function(
                         v.file <- c(v.file, c.file.i)
 
                         # Write data to rds file.
-                        write_parquet(x    = x,
-                                      sink = paste0(v.path[i], c.file.i))
+                        write_parquet(
+                                x    = x,
+                                sink = paste0(v.path[i], c.file.i)
+                        )
                 }
 
 
@@ -710,8 +722,11 @@ f_write_data_to_file <- function(
                         c.file.i <- paste0(c.file, ".sqlite")
 
                         # Create SQLITE file connection.
-                        db <- dbConnect(drv    = SQLite(),
-                                        dbname = paste0(v.path[i], c.file.i))
+                        db <- dbConnect(
+
+                                drv    = SQLite(),
+                                dbname = paste0(v.path[i], c.file.i)
+                        )
 
                         # Append filename to vector.
                         v.file <- c(v.file, c.file.i)
@@ -759,6 +774,46 @@ f_write_data_to_file <- function(
                         # Close connection.
                         dbDisconnect(db)
                 }
+
+
+                # Add dataframe to XML file(s).
+                if (v.xml.i) {
+
+                        # Create filename.
+                        c.file.i <- paste0(c.file, ".xml")
+
+                        # Append filename to vector.
+                        v.file <- c(v.file, c.file.i)
+
+                        # Function to add node data.
+                        convertToXML <- function(df.input) {
+
+                                # Create empty XML Tree.
+                                xml <- suppressWarnings( xmlTree(tag = "data_frame") )
+
+                                # Iterate through each data point.
+                                for (i in 1:nrow(df.input)) {
+
+                                        xml$addNode("record", close=FALSE)
+
+                                        for (j in names(df.input)) {
+
+                                                xml$addNode(j, df.input[i, j])
+                                        }
+
+                                        xml$closeTag()
+                                }
+
+                                xml$closeTag()
+
+                                return(xml)
+                        }
+
+                        saveXML(
+                                doc  = convertToXML(x),
+                                file = paste0(v.path[i], c.file.i)
+                        )
+                }
         }
 
 
@@ -768,7 +823,7 @@ f_write_data_to_file <- function(
 
         cat(paste0("\nWrite    : ", deparse(substitute(x))))
 
-        cat(paste0("\nAs       : ", paste(c("xls", "csv", "rds", "txt", "fst", "parquet")[c(any(v.xls), any(v.csv), any(v.rds), any(v.txt), any(v.fst), any(v.parquet))], collapse = ", ") ))
+        cat(paste0("\nAs       : ", paste(c("xls", "csv", "rds", "txt", "fst", "parquet", "xml")[c(any(v.xls), any(v.csv), any(v.rds), any(v.txt), any(v.fst), any(v.parquet), any(v.xml))], collapse = ", ") ))
 
         cat(paste0("\nName     : ", v.file))
 

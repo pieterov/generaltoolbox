@@ -44,6 +44,12 @@
         # c.caption = "Aantal borden per project (incl. historie):"
         # c.width   = "3cm"
 
+        # #28 in M6
+        # df.input  = df.dubbel.bord %>% f_table(c.ver = "bord.type")
+        # c.caption = "Aantal borden die mogelijk dubbele borden betreffen, per bord type:"
+        # c.width   = "2cm"
+        # n.top     = 20
+
 
 #########################################################################
 # Initialization.
@@ -84,6 +90,9 @@
 
 
         # Let op, als het dataframe meer dan n.top rijen bevat.
+        # Op 28 feb 2022 de '...' vervangen door '---' (zie hieronder),
+        # dit voorkomt de '...llcolor[HTML]E8E8E831' error in tabel,
+        # zie Slack (QC / 25 feb 2022 / Mary).
         if(
                 nrow(df.output) > n.top
         ) {
@@ -92,7 +101,7 @@
 
                         df.output %>% head(n.top),
 
-                        "...",
+                        "---",
 
                         df.total
                         )
@@ -141,13 +150,15 @@
                         background = "#E8E8E8"
                 ) %>%
 
-                # Deze actie hidden omdat we latex error kregen.
-                # column_spec(
-                #
-                #         column     = 1,
-                #         bold       = TRUE,
-                #         background = "#E8E8E8"
-                # ) %>%
+                # Deze actie eerder hidden omdat we latex error kregen. Echter, op 28 feb 2022 weer 'aan' gezet
+                # omdat de error veroorzaakt lijkt te worden door de '...' in regel 100. Als we deze vervangen
+                # door '---' gaat het goed.
+                column_spec(
+
+                        column     = 1,
+                        bold       = TRUE,
+                        background = "#E8E8E8"
+                ) %>%
 
                 column_spec(
 

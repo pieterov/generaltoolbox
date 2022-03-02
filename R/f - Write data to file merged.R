@@ -6,10 +6,13 @@
         f_write_data_to_file_merged <- function(
 
                   df.input,
-                  c.file.string,
                   c.path,
+                  c.file.string,
+                  c.sheet.name   = "Sheet1",
                   c.file.type,
-                  n.day.max = 100000
+                  v.add.date     = TRUE,
+                  v.add.time     = FALSE,
+                  n.day.max      = 1000000
                   ) {
 
 
@@ -18,11 +21,14 @@
 ##############################################################################################
 
         # TEST
-        # df.input       = data.frame(x =  c(11,11), y = c(11, 11))
-        # c.file.string  = "Test"
+        # df.input       = data.frame(x = c(11,11), y = c(11, 11))
         # c.path         = path.data
+        # c.file.string  = "Test"
+        # c.sheet.name   = "Sheet1"
         # c.file.type    = "xls"
-        # n.day.max      = 7
+        # v.add.date     = TRUE
+        # v.add.time     = FALSE
+        # n.day.max      = 100
 
         # df.input      = df.datachamp.increment.change
         # c.file.string = "Increment Changes"
@@ -38,6 +44,16 @@
 
 
 ##############################################################################################
+# ERROR CHECK!
+##############################################################################################
+
+        if(length(v.add.date) != length(v.add.time)) {
+
+                stop("Note, 'v.add.date' and 'v.add.time' must have the same length!")
+        }
+
+
+##############################################################################################
 # PROCESS
 ##############################################################################################
 
@@ -45,10 +61,10 @@
         df.files.temp <- f_get_filenames_in_folder(
 
                         c.path       = c.path,
-                        c.file.type  = "xls"
+                        c.file.type  = c.file.type
                 ) %>%
 
-                filter(grepl(c.file.string, file.name)) %>%
+                filter(grepl(paste0("- ", c.file.string), file.name)) %>%
 
                 mutate(
                         # Add timestamp.
@@ -74,6 +90,7 @@
 
                 v.file.string            = df.files.temp$file.name,
                 c.file.type              = c.file.type,
+                c.sheet.name             = c.sheet.name,
                 c.path                   = c.path,
                 b.exact.match            = TRUE,
                 b.clean.up.header.names  = FALSE
@@ -82,7 +99,7 @@
                 rbind(df.input)
 
 
-        # Create 'archive' folder when it does not already exist.
+        # Create 'Archive' folder when it does not already exist.
         dir.create(paste0(c.path, "Archive"), showWarnings = FALSE)
 
         # Move concerned source files to Archive.
@@ -108,21 +125,26 @@
 # WRITE DATA
 ##############################################################################################
 
-        f_write_data_to_file(
+        for(i in seq_along(v.add.date)) {
 
-                x             = df.data.temp,
-                v.path        = c.path,
-                c.file.string = c.file.string,
-                v.add.time    = TRUE,
+                f_write_data_to_file(
 
-                # Determine where to save the data to.
-                v.xls         = v.xls,
-                v.csv         = v.csv,
-                v.txt         = v.txt,
-                v.delim       = v.delim,
-                v.rds         = v.rds,
-                v.fst         = v.fst
-        )
+                        x             = df.data.temp,
+                        c.file.string = c.file.string,
+                        v.path        = c.path,
+                        v.sheet.name  = c.sheet.name,
+                        v.add.date    = v.add.date[i],
+                        v.add.time    = v.add.time[i],
+
+                        # Determine where to save the data to.
+                        v.xls         = v.xls,
+                        v.csv         = v.csv,
+                        v.txt         = v.txt,
+                        v.delim       = v.delim,
+                        v.rds         = v.rds,
+                        v.fst         = v.fst
+                )
+        }
 
         }
 

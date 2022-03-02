@@ -9,62 +9,62 @@ f_write_data_to_file <- function(
                         x,
 
                         # File name without date and without extension, like xlsx.
-                        c.file.string       = "Data Export",
+                        c.file.string                 = "Data Export",
 
                         # Vector of paths where file should be stored. Default saved in Downloads.
                         v.path,
 
                         # Vector of sheet names, in case of save to Excel.
-                        v.sheet.name        = NULL, # In case of XLS, CSV, TXT.
-                        v.table.name        = NULL, # In case of SQLITE
+                        v.sheet.name                  = NULL, # In case of XLS, CSV, TXT.
+                        v.table.name                  = NULL, # In case of SQLITE
 
                         # Logical to confirm whether date should be added to the filename
                         # v.add.date must be as long as v.path, allowing to set add.date per
                         # file location. If length is one, it will be used for all. Default
                         # is true.
-                        v.add.date          = TRUE,
-                        v.add.time          = FALSE,
+                        v.add.date                   = TRUE,
+                        v.add.time                   = FALSE,
 
                         # Determine where to save the data to.
-                        v.xls               = FALSE,
-                        v.csv               = FALSE,
-                        v.txt               = FALSE,
-                        v.delim             = FALSE,
-                        v.rds               = FALSE,
-                        v.fst               = FALSE,
-                        v.sqlite            = FALSE,
-                        v.parquet           = FALSE,
-                        v.xml               = FALSE,
+                        v.xls                        = FALSE,
+                        v.csv                        = FALSE,
+                        v.txt                        = FALSE,
+                        v.delim                      = FALSE,
+                        v.rds                        = FALSE,
+                        v.fst                        = FALSE,
+                        v.sqlite                     = FALSE,
+                        v.parquet                    = FALSE,
+                        v.xml                        = FALSE,
 
                         # Needed in case v.delim is equal to TRUE.
-                        c.delim             = NULL,
+                        c.delim                     = NULL,
 
                         # Should we write header names in first row?
-                        b.col.names         = TRUE,
+                        b.col.names                 = TRUE,
 
                         # Should data be appended?
-                        b.append            = FALSE,
+                        b.append                    = FALSE,
 
                         # Used for xls (Excel).
 
                         # Number of rows and columns to freeze.
                         # Default is first row and first column.
-                        v.freeze.row        = NULL,
-                        v.freeze.col        = NULL,
+                        v.freeze.row                = NULL,
+                        v.freeze.col                = NULL,
 
                         # Column numbers of headers to color.
-                        v.col.dark.blue     = NULL,
-                        v.col.light.blue    = NULL,
-                        v.col.green         = NULL,
-                        v.col.purple        = NULL,
-                        v.col.lila          = NULL,
-                        v.col.orange        = NULL,
-                        v.col.red           = NULL,
+                        v.col.dark.blue             = NULL,
+                        v.col.light.blue            = NULL,
+                        v.col.green                 = NULL,
+                        v.col.purple                = NULL,
+                        v.col.lila                  = NULL,
+                        v.col.orange                = NULL,
+                        v.col.red                   = NULL,
 
-                        c.conditional.eval  = NULL, # bijv. "$I2==0"
-                        c.conditional.color = "#ABB2B9",
+                        c.conditional.eval          = NULL, # bijv. "$I2==0"
+                        c.conditional.color         = "#ABB2B9",
 
-                        b.banded.rows       = TRUE
+                        b.banded.rows               = TRUE
                         )
 
                         {
@@ -156,6 +156,11 @@ f_write_data_to_file <- function(
         # c.file.string = "Data Export"
         # v.add.time    = FALSE
 
+        # x             = df.datachamp.baseline.updated
+        # c.file.string = "Oletti Productfeed - Baseline"
+        # v.path        = rep(paste0(path.datachamp.dropbox, "Baseline - ", str_to_title(c.update.type), "/"), 2)
+        # v.add.date    = c(TRUE, FALSE)
+        # v.add.time    = c(TRUE, FALSE)
 
 
 ##############################################################################
@@ -184,6 +189,29 @@ f_write_data_to_file <- function(
                 ))
         }
 
+
+        # Check that v.path, v.sheet.name, v.table.name, v.add.date, v.add.time,
+        # v.xls, v.csv, v.txt, v.delim, v.rds, v.fst, v.sqlite, v.parquet, v.xml, all have same length
+        v.input <- c("v.add.date", "v.add.time", "v.xls", "v.csv", "v.txt", "v.delim",
+                     "v.rds", "v.fst", "v.sqlite", "v.parquet", "v.xml")
+
+        v.temp1 <- v.input %>%
+
+                lapply(function(x) length(get(x))) %>%
+
+                unlist()
+
+        v.temp2 <- v.input[which(v.temp1 > length(v.path))]
+        v.temp3 <- v.temp1[which(v.temp1 > length(v.path))]
+
+        if(length(v.temp2) > 0) {
+
+                stop(paste0(
+
+                        "Note,", f_paste(paste(paste0("'", v.temp2, "'"), paste0("(", v.temp3, ")"))),
+                        ", cannot have more elements than v.path (", length(v.path), ")!"
+                ))
+        }
 
 
 ##############################################################################

@@ -9,7 +9,7 @@
                 # String to search for in the filename. In case of Google Sheet this can be kept NULL.
                 v.file.string            = NULL,
 
-                # Options: 'xls', 'csv', 'txt', 'delim', 'rds', 'fst', 'parquet', 'sqlite', 'shp', 'dbf', 'gs'.
+                # Options: 'xls', 'csv', 'tsv', 'txt', 'delim', 'rds', 'fst', 'parquet', 'sqlite', 'shp', 'dbf', 'gs'.
                 c.file.type,
 
                 # Path where file should be searched for.
@@ -36,7 +36,8 @@
                 # c = character, i = integer, n = number, d = double,
                 # l = logical, D = date, T = date time, t = time,
                 # ? = guess, or _/- to skip the column.
-                # Or put everything on character, using cols(.default = "c")
+                #
+                # Or put everything on character, using: cols(.default = "c")
                 l.col.type               = NULL,
 
                 # In case of SQLite file.
@@ -115,12 +116,12 @@
                 ##############################################################################
 
                 # Does c.file.type have a valid value?
-                if(!c.file.type %in% c("xls", "csv", "txt", "delim", "rds", "fst", "parquet", "sqlite", "shp", "dbf", "gs")) {
+                if(!c.file.type %in% c("xls", "csv", "tsv", "txt", "delim", "rds", "fst", "parquet", "sqlite", "shp", "dbf", "gs")) {
 
                         stop(paste0(
 
                                 "Note, the value for c.file.type ('", c.file.type, "') is invalid. It must be one of, ",
-                                "'xls', 'csv', 'txt', 'delim', 'rds', 'fst', 'parquet', 'sqlite', 'shp', 'dbf', or 'gs'. In case you ",
+                                "'xls', 'csv', 'tsv', 'txt', 'delim', 'rds', 'fst', 'parquet', 'sqlite', 'shp', 'dbf', or 'gs'. In case you ",
                                 "gave the value 'csv', use 'delim' instead!"
                         ))
                 }
@@ -141,13 +142,14 @@
                 ##############################################################################
 
                 # Define c.file.category and c.delim in case of c.file.type to be 'csv' or 'txt'.
-                if(c.file.type %in% c("csv", "txt")) {
+                if(c.file.type %in% c("csv", "tsv", "txt")) {
 
                         c.file.category <- "delim"
 
                         c.delim <- case_when(
 
                                 c.file.type == "csv" ~ ",",
+                                c.file.type == "tsv" ~ "\t",
                                 c.file.type == "txt" ~ " "
                         )
 

@@ -16,6 +16,13 @@
                 df.output <- tibble(feature = names(df.input)) %>%
 
                         mutate(
+                                class = sapply(
+
+                                        df.input, function(v.temp) {
+
+                                                paste(class(v.temp), collapse = "|")
+                                        }),
+
                                 n.na = sapply(
 
                                         df.input, function(v.temp) {
@@ -40,7 +47,21 @@
 
                                         }),
 
-                                n.tot = nrow(df.input)
+                                n.tot = nrow(df.input),
+
+                                min = sapply(
+
+                                        df.input, function(v.temp) {
+
+                                                ifelse("numeric" %in% class(v.temp), min(v.temp), NA)
+                                        }),
+
+                                max = sapply(
+
+                                        df.input, function(v.temp) {
+
+                                                ifelse("numeric" %in% class(v.temp), max(v.temp), NA)
+                                        })
                         )
 
                 return(df.output)

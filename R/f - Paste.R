@@ -81,7 +81,14 @@
 
         } else if(length(v.string) == 2) {
 
-                c.and.updated <- paste0(" ", c.and, " ")
+                if(c.and == "") {
+
+                        c.and.updated <- paste0(", ")
+
+                } else {
+
+                        c.and.updated <- paste0(" ", c.and, " ")
+                }
 
         } else {
                 c.and.updated <- paste0(c.collapse, " ", c.and, " ")

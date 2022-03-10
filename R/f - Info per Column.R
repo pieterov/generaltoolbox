@@ -4,7 +4,15 @@
 # DESCRIPTION:  Give basic info on columns in data frame.
 #################################################################################
 
-        f_info_per_column <- function(df.input) {
+        f_info_per_column <- function(
+
+                df.input,
+                b.view   = TRUE,
+                b.return = FALSE,
+                n.char   = "all",
+                n.freq   = 3
+
+                ) {
 
                 # Error check.
                 if(!"data.frame" %in% class(df.input)) {
@@ -13,7 +21,7 @@
                 }
 
                 # Get info per column.
-                df.output <- tibble(feature = names(df.input)) %>%
+                `Info per Column` <- data.frame(feature = names(df.input)) %>%
 
                         mutate(
                                 class = sapply(
@@ -61,9 +69,22 @@
                                         df.input, function(v.temp) {
 
                                                 ifelse("numeric" %in% class(v.temp), max(v.temp), NA)
-                                        })
-                        )
+                                        }),
 
-                return(df.output)
+                                example = sapply(
+
+                                        df.input, function(v.temp) { # v.temp = df.input[["approver"]]
+
+                                                n.freq.used <- min(n.freq, v.temp %>% unique() %>% length())
+
+                                                v.temp %>% f_unique(b.freq = TRUE, n.char = n.char) %>% .[1:n.freq.used] %>% f_paste(c.and = "")
+                                        })
+                        ) %>%
+
+                        arrange(class, n.unique)
+
+                if(b.view & !b.return) {View(`Info per Column`)}
+                if(b.return)           {return(`Info per Column`)}
+
         }
 

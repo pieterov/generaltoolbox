@@ -21,7 +21,7 @@
                 }
 
                 # Get info per column.
-                `Info per Column` <- data.frame(feature = names(df.input)) %>%
+                Info_per_Column <- data.frame(feature = names(df.input)) %>%
 
                         mutate(
                                 class = sapply(
@@ -83,8 +83,8 @@
 
                         arrange(class, n.unique)
 
-                if(b.view & !b.return) {View(`Info per Column`)}
-                if(b.return)           {return(`Info per Column`)}
+                if(b.view & !b.return) {View(Info_per_Column)}
+                if(b.return)           {return(Info_per_Column)}
 
         }
 

@@ -4,13 +4,13 @@
 # DESCRIPTION:  Return sorted unique elements.
 #################################################################################
 
-
         f_unique <- function(
 
                 v.vector,
                 b.freq = FALSE,
                 c.sort = "alphabetical",  # Alternative 'freq'
                 n.char = "all") {
+
 
         #########################################################################
         # Testing

@@ -47,7 +47,7 @@
                 select(all_of(v.col)) %>%
 
                 # Determine number of NA per column
-                f_info_per_column() %>%
+                f_info_per_column(b.view = FALSE, b.return = TRUE) %>%
 
                 # Select columns with NA
                 filter(n.na > 0) %>%

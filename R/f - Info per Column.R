@@ -81,7 +81,7 @@
                                         })
                         ) %>%
 
-                        arrange(class, n.unique)
+                        arrange(class, desc(n.unique))
 
                 if(b.view & !b.return) {View(Info_per_Column)}
                 if(b.return)           {return(Info_per_Column)}

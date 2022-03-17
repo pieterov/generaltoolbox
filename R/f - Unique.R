@@ -39,7 +39,7 @@
 
         df.result <- tibble(x = v.vector) %>%
 
-                count(x) %>%
+                dplyr::count(x) %>%
 
                 mutate(
                         x = ifelse(is.na(x), "NA", x),

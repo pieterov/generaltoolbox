@@ -9,7 +9,7 @@
                 # String to search for in the filename. In case of Google Sheet this can be kept NULL.
                 v.file.string            = NULL,
 
-                # Options: 'xls', 'csv', 'tsv', 'txt', 'delim', 'rds', 'fst', 'parquet', 'sqlite', 'shp', 'dbf', 'gs'.
+                # Options: 'xls', 'csv', 'tsv', 'txt', 'delim', 'rds', 'fst', 'xml', 'parquet', 'sqlite', 'shp', 'dbf', 'gs'.
                 c.file.type,
 
                 # Path where file should be searched for.
@@ -116,13 +116,12 @@
                 ##############################################################################
 
                 # Does c.file.type have a valid value?
-                if(!c.file.type %in% c("xls", "csv", "tsv", "txt", "delim", "rds", "fst", "parquet", "sqlite", "shp", "dbf", "gs")) {
+                if(!c.file.type %in% c("xls", "csv", "tsv", "txt", "delim", "rds", "fst", "xml", "parquet", "sqlite", "shp", "dbf", "gs")) {
 
                         stop(paste0(
 
                                 "Note, the value for c.file.type ('", c.file.type, "') is invalid. It must be one of, ",
-                                "'xls', 'csv', 'tsv', 'txt', 'delim', 'rds', 'fst', 'parquet', 'sqlite', 'shp', 'dbf', or 'gs'. In case you ",
-                                "gave the value 'csv', use 'delim' instead!"
+                                "'xls', 'csv', 'tsv', 'txt', 'delim', 'rds', 'fst', 'xml', 'parquet', 'sqlite', 'shp', 'dbf', or 'gs'!"
                         ))
                 }
 
@@ -361,6 +360,51 @@
                                                        function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
                                                                df.temp <- read_fst(path = c.path.file)
+
+
+                                                               # Clean up header names when requested.
+                                                               if(b.clean.up.header.names) {
+
+                                                                       df.temp <- df.temp %>%
+
+                                                                               # Clean-up header names.
+                                                                               f_clean_up_header_names()
+                                                               }
+
+
+                                                               # Add column with path name and date of modification.
+                                                               if(b.add.mod.date.path.file) {
+
+                                                                       df.temp <- df.temp %>%
+
+                                                                               mutate(
+                                                                                       path.file = c.path.file,
+                                                                                       mod.date  = file.mtime(c.path.file)
+                                                                               )
+                                                               }
+
+
+                                                               # Show header names, if needed.
+                                                               if (b.show.header.names) {
+
+                                                                       cat(basename(c.path.file), "\n")
+                                                                       cat(names(df.temp), "\n\n")
+
+                                                               }
+
+                                                               return(df.temp)
+                                                       }
+                               )
+                       },
+
+                       "xml" = {
+
+                               # Read data from XML file.
+                               l.data.object <- lapply(l.path.file,
+
+                                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
+
+                                                               df.temp <- xmlParse(file = c.path.file) %>% xmlToDataFrame()
 
 
                                                                # Clean up header names when requested.

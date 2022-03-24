@@ -75,9 +75,23 @@
 
                                         df.input, function(v.temp) { # v.temp = df.input[["approver"]]
 
-                                                n.freq.used <- min(n.freq, v.temp %>% unique() %>% length())
+                                                n.freq.used <- min(
 
-                                                v.temp %>% f_unique(b.freq = TRUE, n.char = n.char) %>% .[1:n.freq.used] %>% f_paste(c.and = "")
+                                                        n.freq,
+
+                                                        v.temp %>% unique() %>% length()
+                                                )
+
+                                                v.temp %>%
+
+                                                        f_unique(
+                                                                b.freq = TRUE,
+                                                                n.char = n.char
+                                                        ) %>%
+
+                                                        .[1:n.freq.used] %>%
+
+                                                        f_paste(c.and = "", b.sort = FALSE)
                                         })
                         ) %>%
 

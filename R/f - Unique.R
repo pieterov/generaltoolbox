@@ -8,7 +8,6 @@
 
                 v.vector,
                 b.freq = FALSE,
-                c.sort = "alphabetical",  # Alternative 'freq'
                 n.char = "all") {
 
 
@@ -56,30 +55,31 @@
 
                                 } else {x},
 
-                        y = paste0(x, " (", n, ")")
+                        x = as.character(x),
+
+                        y = paste0(x, " (", n, ")"),
+
+                        y = as.character(y)
 
                 )
 
 
-        # Sort.
-        if(b.freq | c.sort != "alphabetical") {
-
-                df.result <- df.result %>% arrange(desc(n))
-
-        } else {
-
-                df.result <- df.result %>% arrange(x)
-        }
-
-
-        # Add frequency?
+        # Sort based b.freq
         if(b.freq) {
 
-                v.result <- df.result %>% pull(y)
+                v.result <- df.result %>%
+
+                        arrange(desc(n)) %>%
+
+                        pull(y)
 
         } else {
 
-                v.result <- df.result %>% pull(x)
+                v.result <- df.result %>%
+
+                        arrange(x) %>%
+
+                        pull(x)
         }
 
 

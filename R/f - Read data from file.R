@@ -203,56 +203,55 @@
 
                        "xls" = {
 
-                               # Check whether a sheetname is provided.
-                               # if (is.null(c.sheet.name)) stop(paste0("Missing c.sheet.name in function input."))
+                               v.sheet.name <- readxl::excel_sheets(c.path.file)
+
+                               if(is.null(c.sheet.name)) {
+
+                                       if(length(v.sheet.name) > 1) {
+
+                                               c.sheet.name <- v.sheet.name[1]
+
+                                               warning(paste0(
+
+                                                       "Note, you did not supply a value for 'c.sheet.name' and we found more than ",
+                                                       "one sheet in the workbook: ", f_paste(v.sheet.name, b.quotation = TRUE),
+                                                       ". We read the data from the first sheet: '", c.sheet.name, "'."
+                                               ))
+                                       }
+
+                               } else {
+
+                                       b.sheet.name <- grepl(c.sheet.name, v.sheet.name)
+
+                                       if(sum(b.sheet.name) == 0) {
+
+                                               stop(paste0(
+
+                                                       "Note, we found no sheet that contains the string: '",
+                                                       c.sheet.name, "'. We found the following sheets in the workbook: ",
+                                                       f_paste(v.sheet.name), "!"
+                                               ))
+                                       }
+
+                                       if(sum(b.sheet.name) > 1) {
+
+                                               stop(paste0(
+
+                                                       "Note, we found more than one sheet that contains the string: '",
+                                                       c.sheet.name, "'. We found the following sheets in the workbook: ",
+                                                       f_paste(v.sheet.name), "!"
+                                               ))
+                                       }
+
+                                       c.sheet.name <- v.sheet.name[b.sheet.name]
+
+                               }
+
+                               cat(paste0("\nRead data from sheet: '", c.sheet.name, "'.\n"))
+
 
                                # Read data from Excel file. Suppress warnings for not being able to match the right format.
                                suppressWarnings(
-
-                                       v.sheet.name <- readxl::excel_sheets(c.path.file)
-
-                                       if(is.null(c.sheet.name)) {
-
-                                               if(length(v.sheet.name) > 1) {
-
-                                                       c.sheet.name <- v.sheet.name[1]
-
-                                                       warning(paste0(
-
-                                                               "Note, you did not supply a value for 'c.sheet.name' and we found more than ",
-                                                               "one sheet in the workbook: ", f_paste(v.sheet.name, b.quotation = TRUE),
-                                                               ". We read the first sheet: ", c.sheet.name
-                                                       ))
-                                               }
-
-                                       } else {
-
-                                               b.sheet.name <- grepl(c.sheet.name, v.sheet.name)
-
-                                               if(sum(b.sheet.name) == 0) {
-
-                                                       stop(paste0(
-
-                                                               "Note, we found no sheet that contains the string: '",
-                                                               c.sheet.name, "'. We found the following sheets in the workbook: ",
-                                                               f_paste(v.sheet.name), "!"
-                                                       ))
-                                               }
-
-                                               if(sum(b.sheet.name) > 1) {
-
-                                                       stop(paste0(
-
-                                                               "Note, we found more than one sheet that contains the string: '",
-                                                               c.sheet.name, "'. We found the following sheets in the workbook: ",
-                                                               f_paste(v.sheet.name), "!"
-                                                       ))
-                                               }
-
-                                               c.sheet.name <- v.sheet.name[b.sheet.name]
-
-                                       }
-
 
                                        l.data.object <- lapply(l.path.file,
 

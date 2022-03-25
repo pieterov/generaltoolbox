@@ -23,7 +23,7 @@
                 b.show.header.names      = FALSE,
 
                 # In case of Excel file.
-                c.sheet.name             = "Sheet1", # Was NULL
+                c.sheet.name             = NULL, # was "Sheet1"
                 n.slice.rows             = 0,
 
                 # Needed in case c.file.type is equal to 'delim'.
@@ -63,7 +63,7 @@
                 # b.exact.match            = FALSE
                 # c.file.string.exclude    = NULL
                 # b.show.header.names      = FALSE
-                # c.sheet.name             = "Sheet1"
+                # c.sheet.name             = NULL
                 # n.slice.rows             = 0
                 # c.delim                  = ","
                 # b.col.names              = TRUE
@@ -109,6 +109,12 @@
                 # c.file.type             = "delim"
                 # c.path                  = path.data
                 # b.clean.up.header.names = FALSE
+
+                # Developing f_read_data in case of xls and unknown sheet name.
+                # v.file.string            = "10699885"
+                # c.file.type              = "xls"
+                # c.path                   = path.data
+                # c.sheet.name             = "data"
 
 
                 ##############################################################################
@@ -202,6 +208,51 @@
 
                                # Read data from Excel file. Suppress warnings for not being able to match the right format.
                                suppressWarnings(
+
+                                       v.sheet.name <- readxl::excel_sheets(c.path.file)
+
+                                       if(is.null(c.sheet.name)) {
+
+                                               if(length(v.sheet.name) > 1) {
+
+                                                       c.sheet.name <- v.sheet.name[1]
+
+                                                       warning(paste0(
+
+                                                               "Note, you did not supply a value for 'c.sheet.name' and we found more than ",
+                                                               "one sheet in the workbook: ", f_paste(v.sheet.name, b.quotation = TRUE),
+                                                               ". We read the first sheet: ", c.sheet.name
+                                                       ))
+                                               }
+
+                                       } else {
+
+                                               b.sheet.name <- grepl(c.sheet.name, v.sheet.name)
+
+                                               if(sum(b.sheet.name) == 0) {
+
+                                                       stop(paste0(
+
+                                                               "Note, we found no sheet that contains the string: '",
+                                                               c.sheet.name, "'. We found the following sheets in the workbook: ",
+                                                               f_paste(v.sheet.name), "!"
+                                                       ))
+                                               }
+
+                                               if(sum(b.sheet.name) > 1) {
+
+                                                       stop(paste0(
+
+                                                               "Note, we found more than one sheet that contains the string: '",
+                                                               c.sheet.name, "'. We found the following sheets in the workbook: ",
+                                                               f_paste(v.sheet.name), "!"
+                                                       ))
+                                               }
+
+                                               c.sheet.name <- v.sheet.name[b.sheet.name]
+
+                                       }
+
 
                                        l.data.object <- lapply(l.path.file,
 

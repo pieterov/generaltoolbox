@@ -109,6 +109,54 @@
                 # Communicate stats to the user.
                 c.path.file <- as.character(df.type$path.file)
 
+                # If filetype is 'xls''
+                if (c.file.type == "xls") {
+
+                        v.sheet.name <- readxl::excel_sheets(c.path.file)
+
+                        if(is.null(c.sheet.name)) {
+
+                                c.sheet.name.read <- v.sheet.name[1]
+
+                                if(length(v.sheet.name) > 1) {
+
+                                        warning(paste0(
+
+                                                "Note, you did not supply a value for 'c.sheet.name' and we found more than ",
+                                                "one sheet in the workbook: ", f_paste(v.sheet.name, b.quotation = TRUE),
+                                                ". We read the data from the first sheet: '", c.sheet.name.read, "'."
+                                        ))
+                                }
+
+                        } else {
+
+                                b.sheet.name <- grepl(c.sheet.name, v.sheet.name)
+
+                                if(sum(b.sheet.name) == 0) {
+
+                                        stop(paste0(
+
+                                                "Note, we found no sheet that contains the string: '",
+                                                c.sheet.name, "'. We found the following sheets in the workbook: ",
+                                                f_paste(v.sheet.name), "!"
+                                        ))
+                                }
+
+                                if(sum(b.sheet.name) > 1) {
+
+                                        stop(paste0(
+
+                                                "Note, we found more than one sheet that contains the string: '",
+                                                c.sheet.name, "'. We found the following sheets in the workbook: ",
+                                                f_paste(v.sheet.name), "!"
+                                        ))
+                                }
+
+                                c.sheet.name.read <- v.sheet.name[b.sheet.name]
+                        }
+                }
+
+
                 if (c.show.report != "none") {
 
                         if(c.show.report == "all") {
@@ -119,11 +167,10 @@
 
                                 cat(paste0("\nFile     : ", df.type$files))
 
-                                if (!is.null(c.sheet.name) & c.file.type == "xls") {
+                                if (c.file.type == "xls") {
 
-                                        cat(paste0("\nSheet    : ", c.sheet.name))
-
-                                        }
+                                        cat(paste0("\nSheet    : '", c.sheet.name, "' (requested), '", c.sheet.name.read, "' (read)"))
+                                }
 
                                 cat(paste0("\nPath     : ", c.path))
 

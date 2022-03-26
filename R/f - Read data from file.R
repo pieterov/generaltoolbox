@@ -203,102 +203,66 @@
 
                        "xls" = {
 
-                               v.sheet.name <- readxl::excel_sheets(c.path.file)
-
-                               if(is.null(c.sheet.name)) {
-
-                                       if(length(v.sheet.name) > 1) {
-
-                                               c.sheet.name <- v.sheet.name[1]
-
-                                               warning(paste0(
-
-                                                       "Note, you did not supply a value for 'c.sheet.name' and we found more than ",
-                                                       "one sheet in the workbook: ", f_paste(v.sheet.name, b.quotation = TRUE),
-                                                       ". We read the data from the first sheet: '", c.sheet.name, "'."
-                                               ))
-                                       }
-
-                               } else {
-
-                                       b.sheet.name <- grepl(c.sheet.name, v.sheet.name)
-
-                                       if(sum(b.sheet.name) == 0) {
-
-                                               stop(paste0(
-
-                                                       "Note, we found no sheet that contains the string: '",
-                                                       c.sheet.name, "'. We found the following sheets in the workbook: ",
-                                                       f_paste(v.sheet.name), "!"
-                                               ))
-                                       }
-
-                                       if(sum(b.sheet.name) > 1) {
-
-                                               stop(paste0(
-
-                                                       "Note, we found more than one sheet that contains the string: '",
-                                                       c.sheet.name, "'. We found the following sheets in the workbook: ",
-                                                       f_paste(v.sheet.name), "!"
-                                               ))
-                                       }
-
-                                       c.sheet.name <- v.sheet.name[b.sheet.name]
-
-                               }
-
-                               cat(paste0("\nRead data from sheet: '", c.sheet.name, "'.\n"))
-
-
                                # Read data from Excel file. Suppress warnings for not being able to match the right format.
                                suppressWarnings(
 
                                        l.data.object <- lapply(l.path.file,
 
-                                                               function(c.path.file) { # c.path.file <- l.path.file[[1]]
+                                               function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                                                       df.temp <- readxl::read_xlsx(
+                                                       v.sheet.name <- readxl::excel_sheets(c.path.file)
 
-                                                                               path      = c.path.file,
-                                                                               sheet     = c.sheet.name,
-                                                                               skip      = n.slice.rows,
-                                                                               col_names = b.col.names,
-                                                                               col_types = l.col.type)
+                                                       if(is.null(c.sheet.name)) {
 
+                                                                c.sheet.name <- v.sheet.name[1]
 
-                                                                       # Clean up header names when requested.
-                                                                       if(b.clean.up.header.names) {
-
-                                                                               df.temp <- df.temp %>%
-
-                                                                                       # Clean-up header names.
-                                                                                       f_clean_up_header_names()
-                                                                       }
+                                                       } else {
+                                                                c.sheet.name <- v.sheet.name[grepl(c.sheet.name, v.sheet.name)]
+                                                       }
 
 
-                                                                       # Add column with path name and date of modification.
-                                                                       if(b.add.mod.date.path.file) {
+                                                       df.temp <- readxl::read_xlsx(
 
-                                                                               df.temp <- df.temp %>%
-
-                                                                                       mutate(
-                                                                                                path.file = c.path.file,
-                                                                                                mod.date  = file.mtime(c.path.file)
-                                                                                               )
-                                                                       }
+                                                               path      = c.path.file,
+                                                               sheet     = c.sheet.name,
+                                                               skip      = n.slice.rows,
+                                                               col_names = b.col.names,
+                                                               col_types = l.col.type)
 
 
-                                                                       # Show header names, if needed.
-                                                                       if (b.show.header.names) {
+                                                       # Clean up header names when requested.
+                                                       if(b.clean.up.header.names) {
 
-                                                                               cat(basename(c.path.file), "\n")
-                                                                               cat(names(df.temp), "\n\n")
+                                                               df.temp <- df.temp %>%
 
-                                                                       }
+                                                                       # Clean-up header names.
+                                                                       f_clean_up_header_names()
+                                                       }
 
 
-                                                                       return(df.temp)
-                                                               })
+                                                       # Add column with path name and date of modification.
+                                                       if(b.add.mod.date.path.file) {
+
+                                                               df.temp <- df.temp %>%
+
+                                                                       mutate(
+                                                                                path.file = c.path.file,
+                                                                                mod.date  = file.mtime(c.path.file)
+                                                                               )
+                                                       }
+
+
+                                                       # Show header names, if needed.
+                                                       if (b.show.header.names) {
+
+                                                               cat(basename(c.path.file), "\n")
+                                                               cat(names(df.temp), "\n\n")
+
+                                                       }
+
+
+                                                       return(df.temp)
+                                               })
                                        )
                        },
 

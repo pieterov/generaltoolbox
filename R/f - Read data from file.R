@@ -116,6 +116,12 @@
                 # c.path                   = path.data
                 # c.sheet.name             = "data"
 
+                # UL-Reg-Aff
+                # v.file.string = "GPC SDS Tracker"
+                # c.sheet.name  = "Tracker"
+                # c.file.type   = "xls"
+                # c.path        = path.data
+
 
                 ##############################################################################
                 # ERRROR CHECK

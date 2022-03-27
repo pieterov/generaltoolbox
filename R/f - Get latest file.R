@@ -110,7 +110,7 @@
                 c.path.file <- as.character(df.type$path.file)
 
                 # If filetype is 'xls''
-                if (c.file.type == "xls") {
+                if(c.file.type == "xls") {
 
                         v.sheet.name <- readxl::excel_sheets(c.path.file)
 
@@ -137,8 +137,8 @@
                                         stop(paste0(
 
                                                 "Note, we found no sheet that contains the string: '",
-                                                c.sheet.name, "'. We found the following sheets in the workbook: ",
-                                                f_paste(v.sheet.name), "!"
+                                                c.sheet.name, "'. We did find the following sheets in the workbook: ",
+                                                f_paste(v.sheet.name, b.quotation = TRUE), "!"
                                         ))
                                 }
 
@@ -147,8 +147,9 @@
                                         stop(paste0(
 
                                                 "Note, we found more than one sheet that contains the string: '",
-                                                c.sheet.name, "'. We found the following sheets in the workbook: ",
-                                                f_paste(v.sheet.name), "!"
+                                                c.sheet.name, "', namely: ",
+                                                f_paste(v.sheet.name[b.sheet.name], b.quotation = TRUE),
+                                                ". Please better specify c.sheet.name and/or use regex ('^', '$')!"
                                         ))
                                 }
 

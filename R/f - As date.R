@@ -52,7 +52,7 @@
 
         if(length(v.temp) > 0) {
 
-                stop(paste0(
+                warning(paste0(
 
                         "Note, the following 'dates' could not be converted to a valid date format: ",
                         f_paste(v.temp, b.quotation = TRUE)

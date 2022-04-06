@@ -68,9 +68,11 @@
 
 
                 # Check whether a file was found.
-                if (nrow(df.file) == 0)
+                if (nrow(df.file) == 0) {
+
                         stop(paste0("There was no file found with string '", c.file.string,
                                     "' and of type '", c.file.type, "' in path '", c.path, ".'"))
+                }
 
                 # Clean up the file names and get the concerned file name.
                 df.type <- df.file %>%

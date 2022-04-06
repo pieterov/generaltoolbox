@@ -27,64 +27,37 @@
 # TEST ONLY!
 ##############################################################################
 
-        # Testing
-        # df.input                  = df.temp
-        # v.coord.point             = c("bord.x.rnd", "bord.y.rnd")
-        # c.value                   = "polygon.result"
-        # c.leaflet.title           = "TEST"
-        # n.layer                   = 8
-        # n.round                   = -3
-        # n.dig.lab                 = 5
-        # v.info.tag.polygon.label  = c("Count")
-        # v.info.veld.polygon.label = c("polygon.result")
-        # v.info.tag.polygon.popup  = c("Count")
-        # v.info.veld.polygon.popup = c("polygon.result")
-        # b.save.leaflet            = TRUE
-
         # M7 - Delivery
-        # df.input                  = df.bord.hl.final.vl.final.dlv.actualisation
+        # df.input                  = df.del.act.by.cell
         # c.id.polygon              = "cell.id"
-        # v.coord.point             = c("bord.x.rnd", "bord.y.rnd")
+        # v.coord.point             = c("bord.x.cell.mid", "bord.y.cell.mid")
         # c.value                   = "perc.delivered"
-        # c.leaflet.title           = paste0("Delivery percentage of final signs in ", n.delivery.year,
-        #                                    " out of all final signs delivered in delivery year ", n.delivery.year-1,
-        #                                    " (cells ", n.step/1000,"km by ", n.step/1000,"km)")
+        # c.leaflet.title           = paste0("Sign delivery percentage in ", n.step/1000, "km-by-", n.step/1000, "km cells")
         # n.layer                   = NULL
-        # v.layer                   = c(0, 1, 50, 75, 90, 95, 99, 100)
+        # v.layer                   = c(0, 0.001, 1, 50, 75, 90, 95, 99.999, 100)
         # n.round                   = 1
         # n.dig.lab                 = 3
-        # v.info.tag.polygon.label  = c("Delivered", "RD_x", "RD_y")
-        # v.info.veld.polygon.label = c("perc.delivered", "bord.x.rnd", "bord.y.rnd")
-        # v.info.tag.polygon.popup  = c("Total in vl", "Not yet delivered in hl", "Delivered in hl",
-        #                               "Delivered in hl (current year)", "Delivered in hl (not current year)",
-        #                               "Delivered (%)", "Projects (vl)", "Projects (hl)",
-        #                               "RD_x", "RD_y")
-        # v.info.veld.polygon.popup = c("n.bord.total.vl", "n.bord.not.yet.delivered", "n.bord.delivered",
-        #                               "n.bord.delivered.current.year", "n.bord.delivered.not.current.year",
-        #                               "perc.delivered", "cell.label.vl", "cell.label.hl",
-        #                               "bord.x.rnd", "bord.y.rnd")
+        # v.info.tag.polygon.label  = v.info.tag.polygon.label.
+        # v.info.veld.polygon.label = v.info.veld.polygon.label.
+        # v.info.tag.polygon.popup  = v.info.tag.polygon.popup.
+        # v.info.veld.polygon.popup = v.info.veld.polygon.popup.
         # b.save.leaflet            = TRUE
 
 
         # M7 - Actualisatie
-        # df.input                  = df.bord.hl.final.vl.final.dlv.actualisation %>% filter(!is.na(perc.actualisation))
+        # df.input                  = df.del.act.by.cell
         # c.id.polygon              = "cell.id"
-        # v.coord.point             = c("bord.x.rnd", "bord.y.rnd")
-        # c.value                   = "perc.actualisation"
-        # c.leaflet.title           = paste0("Percentage 2021 borden op de geleverde borden (cellen ",
-        #                                    n.step/1000,"km bij ", n.step/1000,"km)")
+        # v.coord.point             = c("bord.x.cell.mid", "bord.y.cell.mid")
+        # c.value                   = "n.bord.not.delivered.gemeente.is.delivered"
+        # c.leaflet.title           = paste0("Lost sign FIDs - i.e., sign FID not delivered while municipality is - in ", n.step/1000, "km-by-", n.step/1000, "km cells")
         # n.layer                   = NULL
-        # v.layer                   = c(0, 50, 75, 90, 95, 99, 100)
+        # v.layer                   = c(0, 0.5, 25, 50, 100, 300, 800, 3000)
         # n.round                   = 1
-        # n.dig.lab                 = 3
-        # v.info.tag.polygon.label  = c("Actualisation", "RD_x", "RD_y"),
-        # v.info.veld.polygon.label = c("perc.actualisation", "bord.x.rnd", "bord.y.rnd,"),
-        # v.info.tag.polygon.popup  = c("Totaal in vl", "Nog niet geleverd in hl", "Geleverd in hl",
-        #                               "Geleverd in hl (huidige jaar)", "Geleverd in hl (niet huidig jaar)",
-        #                               "Conversie (%)", "Nog te leveren (%)", "Projecten (vl)", "Projecten (hl)")
-        # v.info.veld.polygon.popup = c("n.bord.totaal.vl", "n.bord.nog.niet.geleverd", "n.bord.geleverd",
-        #                               "n.bord.geleverd.huidige.jaar", "n.bord.geleverd.niet.huidige.jaar",
-        #                               "perc.actualisation", "perc.nog.te.leveren", "cell.label.vl", "cell.label.hl")
+        # n.dig.lab                 = 4
+        # v.info.tag.polygon.label  = v.info.tag.polygon.label.
+        # v.info.veld.polygon.label = v.info.veld.polygon.label.
+        # v.info.tag.polygon.popup  = v.info.tag.polygon.popup.
+        # v.info.veld.polygon.popup = v.info.veld.polygon.popup.
         # b.save.leaflet            = TRUE
 
 
@@ -125,7 +98,8 @@
         ######################################################################
 
         # Bereken n.step (lokaal).
-        n.step.local <- median(diff(f_unique(df.input[[v.coord.point[1]]])))
+        n.step.local     <- df.input %>% pull(get(v.coord.point[1])) %>% unique() %>% sort() %>% diff() %>% median()
+        n.step.local.alt <- df.input %>% pull(get(v.coord.point[2])) %>% unique() %>% sort() %>% diff() %>% median()
 
         # Hernoem kolommen.
         df.input <- df.input %>%
@@ -137,15 +111,11 @@
                         polygon.col   = polygon.value^(n.step.local/30000)
                 )
 
-
         # Error check
-        if(
-                n.step.local != median(diff(f_unique(df.input$polygon.x.mid))) |
-                n.step.local != median(diff(f_unique(df.input$polygon.y.mid)))
-           ) {
+        if(n.step.local != n.step.local.alt) {
 
                 stop(paste0("Let op, n.step zijn verschillend in x (", n.step.local,
-                     ") en y (", median(diff(f_unique(df.input$polygon.x.mid))), ") richting!"))
+                     ") en y (", n.step.local.alt, ") richting!"))
         }
 
 

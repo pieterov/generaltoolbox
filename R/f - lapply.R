@@ -70,21 +70,26 @@
         # PROCESS
         ######################################################################################
 
-        if (
-                (
-                        is.null(mc.cores) &
+        if (!is.null(mc.cores)) {
 
-                        f_who_am_i() %in% c("Pieters-MacBook-Pro.local", "Pieters-MBP.home")
-                ) |
+                l.output <- mclapply(
 
-                mc.cores > 1
-        ) {
+                        X        = l.input,
 
-                l.output <- mclapply(l.input, f.input, mc.cores = mc.cores)
+                        FUN      = f.input,
+
+                        mc.cores = mc.cores
+                )
+
 
         } else {
 
-                l.output <- lapply(l.input, f.input)
+                l.output <- lapply(
+
+                        X        = l.input,
+
+                        FUN      = f.input
+                )
         }
 
 

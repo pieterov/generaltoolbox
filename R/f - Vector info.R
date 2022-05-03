@@ -13,18 +13,25 @@
     # Error check.
     ##############################################################################
 
-    # v         = df.dictionary$bord.type
-    # name      = "df.dictionary$bord.type"
-    # n.top     = 3
+    # v         = df.discount.too.low$discount
+    # name      = "df.discount.too.low$discount"
+    # n.top     = 10
     # show.freq = TRUE
+
+    # v <- c(0, 2, 2, NA, NA, NA, 0/0, 0/0, 0/0, 0/0, 6/0, 7/0, 8/0, 9/0, 10/0)
+    # v <- c(NA, NA, NA)
+    # v <- c(0/0, 0/0, 0/0, 0/0)
+    # v <- c(6/0, 7/0, 8/0, 9/0, 10/0)
 
 
     ##############################################################################
     # Error check.
     ##############################################################################
 
-    if(!is.numeric(n.top) & n.top != "all")
+    if(!is.numeric(n.top) & n.top != "all") {
+
         stop("n.top moet valide waarde bevatten: integer of 'all'")
+    }
 
 
     ##############################################################################
@@ -35,19 +42,33 @@
     df.basic.info <- data.frame(x  = c("Total elements:",
                                        "Unique elements:",
                                        "NA:",
+                                       "NaN:",
+                                       "Inf:",
                                        "0:",
                                        "Empty:"),
 
                                 y = c(length(v),
                                       length(unique(v)),
-                                      sum(is.na(v)),
+                                      sum(v %in% NA),
+                                      sum(v %in% NaN),
+                                      sum(v %in% Inf),
                                       sum(v == 0, na.rm = TRUE),
                                       sum(v == "", na.rm = TRUE)),
 
                                 z = c("",
                                       "",
                                       paste(round(
-                                              sum(is.na(v)) / length(v) * 100,
+                                              sum(v %in% NA) / length(v) * 100,
+                                              digits = 1),
+                                            "%"),
+
+                                      paste(round(
+                                              sum(v %in% NaN) / length(v) * 100,
+                                              digits = 1),
+                                            "%"),
+
+                                      paste(round(
+                                              sum(v %in% Inf) / length(v) * 100,
                                               digits = 1),
                                             "%"),
 
@@ -79,8 +100,10 @@
     # Show frequency table.
     if (show.freq) {
 
-            # Replace any NA by "NA"
-            v[is.na(v)] <- "NA"
+            # Replace any NA by "NA", and NaN by "NaN"
+            v[v %in% NA]  <- "NA "
+            v[v %in% NaN] <- "NaN "
+            v[v %in% Inf] <- "Inf "
 
             # Calculate frequency of levels in vector.
             df.freq.source <- as.data.frame(table(v)) %>%
@@ -108,9 +131,12 @@
 
                     head(n.top)
 
+
             # Puntjes toevoegen als n.top een getal is.
-            if(is.numeric(n.top))
+            if(is.numeric(n.top)) {
+
                 df.freq <- rbind(df.freq, df.dots)
+            }
 
             # Total toevoegen.
             df.freq <- rbind(df.freq, df.total)

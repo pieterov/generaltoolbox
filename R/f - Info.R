@@ -10,7 +10,7 @@
 
 
 
-                #x <- df.gemeentenaam.na$gemeentenaam.nwb
+                #x <- df.discount.too.low$discount
 
                 #print(x)
                 #print(n.top)

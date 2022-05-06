@@ -70,7 +70,7 @@
         # PROCESS
         ######################################################################################
 
-        if (!is.null(mc.cores)) {
+        if (!is.null(mc.cores) & f_who_am_i() %in% c("Pieters-MacBook-Pro.local", "Pieters-MBP.home")) {
 
                 l.output <- mclapply(
 

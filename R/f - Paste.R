@@ -10,7 +10,9 @@
                             b.capitalize = FALSE,
                             b.quotation  = FALSE,
                             b.sort       = TRUE,
-                            b.unique     = FALSE) {
+                            b.unique     = FALSE,
+                            n.top        = NULL
+                            ) {
 
 
 #########################################################################
@@ -99,16 +101,28 @@
 # Concatenate
 #########################################################################
 
-        c.string <- paste0(
+        # Create concatenated string based on n.top.
+        if(is.null(n.top)) {
 
-                paste(head(v.string, -1), collapse = paste0(c.collapse, " ")),
+                c.string <- paste0(
 
-                c.and.updated,
+                        paste(head(v.string, -1), collapse = paste0(c.collapse, " ")),
 
-                tail(v.string, 1)
+                        c.and.updated,
 
+                        tail(v.string, 1)
                 )
 
+        } else {
+
+                c.string <- paste0(
+
+                        paste(v.string[1:n.top], collapse = paste0(c.collapse, " ")),
+
+                        ", ... and ", length(v.string)-n.top, " more ..."
+
+                )
+        }
 
 #########################################################################
 # Return xxxxx.

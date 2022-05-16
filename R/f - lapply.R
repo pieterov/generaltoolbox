@@ -34,9 +34,9 @@
         # ERROR CHECKS
         ######################################################################################
 
-        if(!"list" %in% class(l.input)) {
+        if(!any(c("list", "numeric", "integer", "character") %in% class(l.input))) {
 
-                stop("Note, input to f_lapply - l.input - must be a list!")
+                stop("Note, input to f_lapply - l.input - must be a list or vector of numeric or character values!")
         }
 
 

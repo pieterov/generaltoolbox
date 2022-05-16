@@ -108,6 +108,7 @@
                         folder.name    = dirname(full.path),
                         file.name.ext  = basename(full.path),
                         file.name      = gsub("\\.[a-zA-Z]*$", "", file.name.ext),
+                        file.name.core = gsub("^[0-9]{4} [0-9]{2} [0-9]{2} - ", "", file.name),
                         file.ext       = str_extract(file.name.ext, "[a-zA-Z]*$"),
 
                         # Is observation a file or a folder?
@@ -117,7 +118,7 @@
                         is.hidden      = grepl("^~", file.name),
 
                         # Get the last modified date for file.
-                        date.last.mod  = file.info(full.path)$mtime
+                        date.last.mod  = as.Date(file.info(full.path)$mtime)
                 )
 
 

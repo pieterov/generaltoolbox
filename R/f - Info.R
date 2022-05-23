@@ -10,7 +10,7 @@
 
 
 
-                #x <- df.discount.too.low$discount
+                #x <- df.dbf.wegvak$wegvak.id
 
                 #print(x)
                 #print(n.top)

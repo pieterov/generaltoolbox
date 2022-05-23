@@ -52,78 +52,94 @@
                         "Inf(+):"
                 ),
 
-                y = c(
-                        length(v),
-                        length(unique(v)),
-                        sum(v == 0, na.rm = TRUE),
-                        sum(v == "", na.rm = TRUE),
-                        sum(v %in% NA),
-                        sum(v %in% NaN),
-                        sum(v %in% -Inf),
-                        sum(v %in% Inf)
+                y = format(
+
+                        c(
+                                length(v),
+                                length(unique(v)),
+                                sum(v == 0, na.rm = TRUE),
+                                sum(v == "", na.rm = TRUE),
+                                sum(v %in% NA),
+                                sum(v %in% NaN),
+                                sum(v %in% -Inf),
+                                sum(v %in% Inf)
+                        ),
+
+                        big.mark = ","
                 ),
 
                 z = c(
-                        "",
-                        "",
+                        "", "",
 
-                        paste(
-                                round(
-                                        sum(v == 0, na.rm = TRUE) / length(v) * 100,
-                                        digits = 1
-                                ),
-                                "%"
-                        ),
+                        paste0(
+                                format(
 
-                        paste(
-                                round(
-                                        sum(v == "", na.rm = TRUE) / length(v) * 100,
-                                        digits = 1
-                                ),
-                                "%"
-                        ),
+                                c(
 
-                        paste(
-                                round(
-                                        sum(v %in% NA) / length(v) * 100,
-                                        digits = 1
-                                ),
-                                "%"
-                        ),
+                                        round(
+                                                sum(v == 0, na.rm = TRUE) / length(v) * 100,
+                                                digits = 1
+                                        ),
 
-                        paste(
-                                round(
-                                        sum(v %in% NaN) / length(v) * 100,
-                                        digits = 1
-                                ),
-                                "%"
-                        ),
+                                        round(
+                                                sum(v == "", na.rm = TRUE) / length(v) * 100,
+                                                digits = 1
+                                        ),
 
-                        paste(
-                                round(
-                                        sum(v %in% -Inf) / length(v) * 100,
-                                        digits = 1
-                                ),
-                                "%"
-                        ),
+                                        round(
+                                                sum(v %in% NA) / length(v) * 100,
+                                                digits = 1
+                                        ),
 
-                        paste(
-                                round(
-                                        sum(v %in% Inf) / length(v) * 100,
-                                        digits = 1
+                                        round(
+                                                sum(v %in% NaN) / length(v) * 100,
+                                                digits = 1
+                                        ),
+
+                                        round(
+                                                sum(v %in% -Inf) / length(v) * 100,
+                                                digits = 1
+                                        ),
+
+                                        round(
+                                                sum(v %in% Inf) / length(v) * 100,
+                                                digits = 1
+                                        )
                                 ),
+
+                                width = 4
+
+                                ),
+
                                 "%"
                         )
                 )
         )
 
-
-        names(df.basic.info) <- c("============================", "======", "======")
+        # Initialization
+        n.count <- nchar(df.basic.info$y[1])
 
         # Print header.
         cat(paste0("\n ", name, "\n"))
 
-        cat(paste0(rep(" ", 29), collapse = ""), "n      perc\n")
+        cat(
+                strrep(" ", 29),
+
+                "n",
+
+                strrep(" ", n.count - 2),
+
+                "perc\n"
+        )
+
+        names(df.basic.info) <- c(
+
+                "============================",
+
+                strrep("=", n.count),
+
+                strrep("=", 5)
+        )
 
         # Show in console, left align.
         print(
@@ -146,30 +162,42 @@
 
                         arrange(desc(Freq), v) %>%
 
-                        mutate(perc = Freq / sum(Freq) * 100)
+                        mutate(
+                                Freq2 = format(Freq, big.mark = ",", width = n.count-1),
+                                perc  = Freq / sum(Freq) * 100,
+                                perc2 = paste0(format(round(perc, digits = 1), width = 4), "%")
+                        )
 
+                c.total1 <-
 
                 df.dots <- data.frame(
 
                         v    = "...",
-                        Freq = "...",
-                        perc = "..."
+                        Freq = paste0(strrep(" ", n.count - 3), "..."),
+                        perc = paste0(strrep(" ", 5       - 3), "...")
                 )
-
 
                 df.total <- data.frame(
 
-                        v    = c("----------------", "TOTAL"),
-                        Freq = c("------", sum(df.freq.source$Freq)),
-                        perc = c("------", paste(round(sum(df.freq.source$perc), digits = 1), "%"))
+                        v    = c("----------------------------", "TOTAL"),
+
+                        Freq = c(
+                                strrep("-", n.count),
+                                format(length(v), big.mark = ",")
+                                ),
+
+                        perc = c(
+                                strrep("-", 5),
+                                " 100%"
+                                )
                 )
 
 
                 df.freq <- df.freq.source %>%
 
-                        mutate(
-                                perc = paste(round(df.freq.source$perc, digits = 1), "%")
-                        ) %>%
+                        select(-Freq, -perc) %>%
+
+                        rename(Freq = Freq2, perc = perc2) %>%
 
                         head(n.top)
 
@@ -180,10 +208,18 @@
                         df.freq <- rbind(df.freq, df.dots)
                 }
 
+
                 # Total toevoegen.
                 df.freq <- rbind(df.freq, df.total)
 
-                names(df.freq) <- c("============================", "======", "======")
+                names(df.freq) <- c(
+
+                        "============================",
+
+                        strrep("=", n.count),
+
+                        strrep("=", 5)
+                )
 
 
                 # Header frequency table.
@@ -208,7 +244,11 @@
                                         "(all items): "
                                 },
 
-                                "n      perc\n"
+                                "n",
+
+                                strrep(" ", n.count),
+
+                                "perc\n"
                         )
                 )
 

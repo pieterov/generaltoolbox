@@ -4,26 +4,35 @@
 # DESCRIPTION:  Print Kable in R-Markdown.
 #################################################################################
 
-        f_kable <- function(df.input,
-                            c.caption           = "Add nice caption through 'c.caption'",
-                            c.position          = "center",
-                            c.width             = "2cm",
-                            n.angle             = NULL,
-                            n.font.size         = 8,
-                            c.latex_options     = "basic",
-                            n.top               = 35        # Optional, number of rows to print. Default print all.
-                            ) {
+        f_kable <- function(
+
+                df.input,
+                c.caption           = "Add nice caption through 'c.caption'",
+                c.position          = "center",
+                v.align             = NULL,     # Vector containing "l", "c", "r" indicating how to align each column
+                c.width             = "2cm",
+                c.width.col.1       = NULL,
+                n.angle             = NULL,
+                n.font.size         = 8,
+                c.latex_options     = "basic",
+                v.grey.col          = NULL,
+                n.top               = 35        # Optional, number of rows to print. Default print all.
+        ) {
 
 #########################################################################
 # Test Only!
 #########################################################################
 
         # Altijd!
-        # c.position  = "center"
-        # c.width     = "2cm"
-        # n.angle     = NULL
-        # n.font.size = 8
-        # n.top       = 35
+        # c.caption           = "Add nice caption through 'c.caption'"
+        # c.position          = "center"
+        # c.width             = "2cm"
+        # n.angle             = NULL
+        # n.font.size         = 8
+        # c.latex_options     = "basic"
+        # v.grey.col          = NULL
+        # n.top               = 35
+
 
         # Set 1
         # df.input  = df.temp
@@ -51,6 +60,35 @@
         # c.width   = "2cm"
         # n.top     = 20
 
+        # c.caption   = NULL
+        # c.position  = "left"
+        # c.width     = "2.5cm"
+        # n.angle     = NULL
+        # n.font.size = 10
+        # v.grey.col  = NULL
+
+#########################################################################
+# Error Checks.
+#########################################################################
+
+        if(!is.null(v.align)) {
+
+                if(length(v.align) != ncol(df.input)) {
+
+                        stop(paste0(
+
+                                "Note, v.align must have the same number of values (like: 'l', 'c', 'r') as columns in df.input!"
+                        ))
+                }
+
+                if(!all(v.align %in% c("l", "c", "r"))) {
+
+                        stop(paste0(
+
+                                "Note, v.align can only contain values like,  'l', 'c', 'r'!"
+                        ))
+                }
+        }
 
 #########################################################################
 # Initialization.
@@ -126,7 +164,8 @@
                 # Do not show row names.
                 kbl(
                         row.names = FALSE,
-                        caption   = c.caption
+                        caption   = c.caption,
+                        align     = v.align
                 ) %>%
 
                 kable_styling(
@@ -151,16 +190,6 @@
                         background = "#E8E8E8"
                 ) %>%
 
-                # Deze actie eerder hidden omdat we latex error kregen. Echter, op 28 feb 2022 weer 'aan' gezet
-                # omdat de error veroorzaakt lijkt te worden door de '...' in regel 100. Als we deze vervangen
-                # door '---' gaat het goed.
-                column_spec(
-
-                        column     = 1,
-                        bold       = TRUE,
-                        background = "#E8E8E8"
-                ) %>%
-
                 column_spec(
 
                         column     = grep("tot[a]{1,2}l", names(df.output),  ignore.case = TRUE),
@@ -169,14 +198,45 @@
                 )
 
 
-        # Pas kolombreedte aan van kolom 2 t/m n, indien df.output meer dan 1 kolom bevat.
-        if(ncol(df.output) > 1) {
+        # Add grey color to left column.
+        if(!is.null(v.grey.col)) {
+
+                kable.output <- kable.output %>%
+
+                        # Deze actie eerder hidden omdat we latex error kregen. Echter, op 28 feb 2022 weer 'aan' gezet
+                        # omdat de error veroorzaakt lijkt te worden door de '...' in regel 100. Als we deze vervangen
+                        # door '---' gaat het goed.
+                        column_spec(
+
+                                column     = v.grey.col,
+                                bold       = TRUE,
+                                background = "#E8E8E8"
+                        )
+
+
+        }
+
+        # Pas kolombreedte aan van kolom 1.
+        if(!is.null(c.width.col.1)) {
 
                 kable.output <- kable.output %>%
 
                         column_spec(
 
-                                column = seq_along(names(df.output))[2:ncol(df.output)],
+                                column = 1,
+                                width  = c.width.col.1
+                        )
+        }
+
+
+        # Pas kolombreedte aan van kolom 2 t/m n, indien df.output meer dan 1 kolom bevat.
+        if(ncol(df.output) > 1 & !is.null(c.width)) {
+
+                kable.output <- kable.output %>%
+
+                        column_spec(
+
+                                column = seq(from = 2, to = ncol(df.output)),
                                 width  = c.width
                         )
                 }

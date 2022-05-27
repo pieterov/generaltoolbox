@@ -5,12 +5,13 @@
 #################################################################################
 
         f_kable <- function(df.input,
-                            c.caption   = "Add nice caption through 'c.caption'",
-                            c.position  = "center",
-                            c.width     = "2cm",
-                            n.angle     = NULL,
-                            n.font.size = 8,
-                            n.top       = 35        # Optional, number of rows to print. Default print all.
+                            c.caption           = "Add nice caption through 'c.caption'",
+                            c.position          = "center",
+                            c.width             = "2cm",
+                            n.angle             = NULL,
+                            n.font.size         = 8,
+                            c.latex_options     = "basic",
+                            n.top               = 35        # Optional, number of rows to print. Default print all.
                             ) {
 
 #########################################################################
@@ -130,10 +131,10 @@
 
                 kable_styling(
 
-                        full_width    = F,
-                        position      = c.position,
-                        font_size     = n.font.size,
-                        latex_options = "hold_position"
+                        full_width        = F,
+                        position          = c.position,
+                        font_size         = n.font.size,
+                        latex_options     = c("HOLD_position", c.latex_options)
                 ) %>%
 
                 row_spec(

@@ -147,8 +147,8 @@
         # c.stroke.factor.point   = NULL
         # c.stroke.numeric.point  = NULL
         #
-        # df.stroke.weight.point  = NULL,
-        # c.stroke.weight.point   = NULL,
+        # df.stroke.weight.point  = NULL
+        # c.stroke.weight.point   = NULL
         #
         #
         # ##############################################
@@ -305,6 +305,12 @@
         # df.polygon              = df.buffer
         # v.coord.polygon         = c("buffer.lon", "buffer.lat")
         # c.id.polygon            = "wegsegment.id"
+
+        # KAIOS
+        # df.point            = df.bord.kaios
+        # v.coord.point       = c("bord.x", "bord.y")
+        # c.id.point          = "bord.id"
+        # c.fill.factor.point = "bord.flag"
 
 
 ##############################################################################
@@ -631,7 +637,7 @@
                 # Rename headers of formatting data frames.
                 if(!is.null(df.fill.point)) {
 
-                        names(df.fill.point)         <- c("fill.point.label", "fill.point.value")
+                        names(df.fill.point)         <- c("fill.color.point.label", "fill.color.point.value")
                 }
 
                 if(!is.null(df.weight.point)) {
@@ -1744,8 +1750,8 @@
 
                         f.color.point.fill     <- colorFactor(
 
-                                palette = df.fill.point$fill.point.value,
-                                levels  = df.fill.point$fill.point.label,
+                                palette = df.fill.point$fill.color.point.value,
+                                levels  = df.fill.point$fill.color.point.label,
                                 ordered = TRUE
                         )
                 }

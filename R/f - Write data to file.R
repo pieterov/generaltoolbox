@@ -837,13 +837,17 @@ f_write_data_to_file <- function(
                                 return(xml)
                         }
 
+                        #c.time.stamp <- gsub("[:-]", " ", Sys.time())
+
                         saveXML(
-                                doc  = convertToXML(x),
-                                file = paste0(v.path[i], c.file.i)
+                                doc    = convertToXML(x),
+                                file   = paste0(v.path[i], c.file.i)
                         )
                 }
         }
 
+        # prefix = paste0('<?xml version ="', gsub(":", "-", Sys.time()), '"?>\n')
+        # '<?xml version="1.0"?>\n'
 
 ##############################################################################
 # Communicate stats to the user.

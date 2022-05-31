@@ -18,6 +18,11 @@
         # n.top     = 10
         # show.freq = TRUE
 
+        # v         = l.result$bord.type
+        # name      = "l.result$bord.type"
+        # n.top     = 10
+        # show.freq = TRUE
+
         # v <- c(0, 2, 2, NA, NA, NA, 0/0, -0/0, -0/0, 0/0, 6/0, -7/0, -8/0, 9/0, 10/0)
         # v <- c(NA, NA, NA)
         # v <- c(0/0, 0/0, 0/0, 0/0)
@@ -116,8 +121,8 @@
                 )
         )
 
-        # Initialization
-        n.count <- nchar(df.basic.info$y[1])
+        # Initialization. We take max of nchar and 3 to prevent count errors below. Width is at least 3.
+        n.count <- max(3, nchar(df.basic.info$y[1]))
 
         # Print header.
         cat(paste0("\n ", name, "\n"))

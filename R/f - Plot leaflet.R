@@ -1695,7 +1695,7 @@
         # TITLE
         ######################################################################
 
-        # Definieer 'c.title.append'.
+        # Definieer 'c.title.append' (placeholder).
         c.title.append <- ""
 
         if(!is.null(df.point)) {
@@ -1703,6 +1703,10 @@
                 if(!is.null(c.fill.factor.point)) {
 
                         df.count <- df.point %>%
+
+                                # Remove dummy poins, lines, polygons from count in title. Dummies are
+                                # placed around 0,0.
+                                filter(point.y > 100000) %>%
 
                                 count(fill.factor = get(c.fill.factor.point), name = "n.fill.factor") %>%
 

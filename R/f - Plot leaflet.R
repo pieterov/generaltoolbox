@@ -49,6 +49,9 @@
                 df.stroke.weight.point  = NULL,
                 c.stroke.weight.point   = NULL,
 
+                n.opacity.fill          = 0.9,
+                n.opacity.stroke        = 0.9,
+
 
                 ##############################################
                 # LINES
@@ -150,6 +153,8 @@
         # df.stroke.weight.point  = NULL
         # c.stroke.weight.point   = NULL
         #
+        # n.opacity.fill          = 0.9
+        # n.opacity.stroke        = 0.9
         #
         # ##############################################
         # # LINES
@@ -290,6 +295,8 @@
         # c.stroke.factor.point   = "stroke.type"
         # df.stroke.weight.point  = df.stroke.weight.point.
         # c.stroke.weight.point   = "stroke.type"
+        # n.opacity.fill          = 0.9
+        # n.opacity.stroke        = 0.9
         # v.info.tag.point.label  = v.tag.label
         # v.info.veld.point.label = v.veld.label
         # v.info.tag.point.popup  = v.tag.popup
@@ -2277,10 +2284,11 @@
                                                 lat         = ~ point.lat,
                                                 lng         = ~ point.lon,
                                                 fillColor   = ~ f.color.point.fill(fill.point.label),
+                                                fillOpacity = n.opacity.fill,
                                                 radius      = ~ weight.point.value,
                                                 color       = ~ f.color.point.stroke(stroke.color.point.label),
                                                 weight      = ~ stroke.weight.point.value,
-                                                fillOpacity = 0.9,
+                                                opacity     = n.opacity.stroke,
                                                 popup       = ~ point.popup,
                                                 label       = ~ point.label,
                                                 group       = v.keys[i]
@@ -2317,10 +2325,11 @@
                                                 lat         = ~ point.lat,
                                                 lng         = ~ point.lon,
                                                 fillColor   = ~ f.color.point.fill(fill.point.label),
+                                                fillOpacity = n.opacity.fill,
                                                 radius      = ~ weight.point.value,
                                                 color       = "darkblue",
                                                 weight      = ~ stroke.weight.point.value,
-                                                fillOpacity = 0.9,
+                                                opacity     = n.opacity.stroke,
                                                 popup       = ~ point.popup,
                                                 label       = ~ point.label,
                                                 group       = v.keys[i]
@@ -2357,10 +2366,11 @@
                                                 lat         = ~ point.lat,
                                                 lng         = ~ point.lon,
                                                 fillColor   = "blue",
+                                                fillOpacity = n.opacity.fill,
                                                 radius      = ~ weight.point.value,
                                                 color       = ~ f.color.point.stroke(stroke.color.point.label),
                                                 weight      = ~ stroke.weight.point.value,
-                                                fillOpacity = 0.9,
+                                                opacity     = n.opacity.stroke,
                                                 popup       = ~ point.popup,
                                                 label       = ~ point.label,
                                                 group       = v.keys[i]
@@ -2396,10 +2406,11 @@
                                                 lat         = ~ point.lat,
                                                 lng         = ~ point.lon,
                                                 fillColor   = "blue",
+                                                fillOpacity = n.opacity.fill,
                                                 radius      = ~ weight.point.value,
                                                 color       = "darkblue",
                                                 weight      = ~ stroke.weight.point.value,
-                                                fillOpacity = 0.9,
+                                                opacity     = n.opacity.stroke,
                                                 popup       = ~ point.popup,
                                                 label       = ~ point.label,
                                                 group       = v.keys[i]

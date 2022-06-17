@@ -26,10 +26,14 @@
         # b.quotation  = FALSE
         # b.sort       = TRUE
         # b.unique     = FALSE
+        # n.top        = NULL
 
         # Set1
         # v.string    = df.temp$ID
         # b.quotation = TRUE
+
+        # v.string = "Unexpected zero value in Variant Price (12)"
+        # n.top    = 10
 
 
 #########################################################################
@@ -113,6 +117,17 @@
                         tail(v.string, 1)
                 )
 
+        } else if (length(v.string) <= n.top) {
+
+                c.string <- paste0(
+
+                        paste(head(v.string, -1), collapse = paste0(c.collapse, " ")),
+
+                        c.and.updated,
+
+                        tail(v.string, 1)
+                )
+
         } else {
 
                 c.string <- paste0(
@@ -123,6 +138,7 @@
 
                 )
         }
+
 
 #########################################################################
 # Return xxxxx.

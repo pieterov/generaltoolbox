@@ -16,6 +16,7 @@
                 n.font.size         = 8,
                 c.latex_options     = "basic",
                 v.grey.col          = NULL,
+                b.grey.col          = TRUE,     # Add grey column to columns with total in header?
                 n.top               = 35        # Optional, number of rows to print. Default print all.
         ) {
 
@@ -188,14 +189,22 @@
                         row        = grep("tot[a]{1,2}l", df.output %>% pull(1), ignore.case = TRUE),
                         bold       = TRUE,
                         background = "#E8E8E8"
-                ) %>%
-
-                column_spec(
-
-                        column     = grep("tot[a]{1,2}l", names(df.output),  ignore.case = TRUE),
-                        bold       = TRUE,
-                        background = "#E8E8E8"
                 )
+
+
+        # Add grey color to columns containing total in the header, if b.grey.col is TRUE.
+        if(b.grey.col) {
+
+
+                kable.output <- kable.output %>%
+
+                        column_spec(
+
+                                column     = grep("tot[a]{1,2}l", names(df.output),  ignore.case = TRUE),
+                                bold       = TRUE,
+                                background = "#E8E8E8"
+                        )
+        }
 
 
         # Add grey color to left column.

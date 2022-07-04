@@ -101,8 +101,18 @@
                 c.stroke.color.polygon    = "black",
                 n.stroke.weight.polygon   = 1,
 
-                b.show.stroke.polygon     = TRUE
-                ) {
+                b.show.stroke.polygon     = TRUE,
+
+
+                ##############################################
+                # PERMANENT TEXT LABEL.
+                ##############################################
+
+                df.text                 = NULL,
+                v.coord.text            = c("text.lon", "text.lat"),
+                c.text.label            = "text.label"
+
+        ) {
 
 
 ###############################################################################
@@ -205,9 +215,15 @@
         # n.stroke.weight.polygon   = 1
         #
         # b.show.stroke.polygon     = TRUE
-
-
-
+        #
+        #
+        # ##############################################
+        # # PERMANENT TEXT LABEL.
+        # ##############################################
+        #
+        # df.text                 = NULL
+        # v.coord.text            = c("text.lon", "text.lat")
+        # c.text.label            = "text.label"
 
 
 
@@ -312,6 +328,9 @@
         # df.polygon              = df.buffer
         # v.coord.polygon         = c("buffer.lon", "buffer.lat")
         # c.id.polygon            = "wegsegment.id"
+        # df.text                 = df.leak.cluster.id
+        # v.coord.text            = c("center.x", "center.y")
+        # c.text.label            = "leak.cluster.id"
 
         # KAIOS
         # df.point            = df.bord.kaios
@@ -627,6 +646,25 @@
 
                         stop("Let op, '", c.layer, "' is aanwezig in meer dan 1 van df.point, df.line, of df.polygon. ",
                              "Dit attribuut mag maar in 1 van de drie data frames aanwezig zijn!")
+                }
+        }
+
+
+
+        ######################################################################
+        # PERMANENT TEXT LABEL
+        ######################################################################
+
+        if(!is.null(df.text)) {
+
+                if(!all(v.coord.text %in% names(df.text))) {
+
+                        stop("Let op, ", f_paste(v.coord.text, c.and = "en", b.quotation = TRUE), " zijn niet aanwezig in df.text!")
+                }
+
+                if(!c.text.label %in% names(df.text)) {
+
+                        stop("Let op, '", c.text.label, "' is niet aanwezig in df.text!")
                 }
         }
 
@@ -1297,6 +1335,51 @@
         }
 
 
+        ######################################################################
+        # PERMANENT TEXT LABEL
+        ######################################################################
+
+        if(!is.null(df.text)) {
+
+                # CONVERSIE COORDINAAT LABELS.
+                c.coord.text.x      <- gsub("lon$", "x", v.coord.text[1])
+                c.coord.text.y      <- gsub("lat$", "y", v.coord.text[2])
+                c.coord.text.lon    <- gsub("x$", "lon", v.coord.text[1])
+                c.coord.text.lat    <- gsub("y$", "lat", v.coord.text[2])
+                v.coord.text.xy     <- c(c.coord.text.x,   c.coord.text.y)
+                v.coord.text.lonlat <- c(c.coord.text.lon, c.coord.text.lat)
+
+
+                # Hernoem x,y naar text.x en text.y, en voeg text.lon en text.lat toe.
+                if( all(all_of(v.coord.text.xy) %in% names(df.text)) ) {
+
+                        df.text$text.x <- as.numeric(df.text[[c.coord.text.x]])
+                        df.text$text.y <- as.numeric(df.text[[c.coord.text.y]])
+
+                        # Voeg lon en lat toe.
+                        df.text <- df.text %>%
+
+                                mutate(text.lon = f_rd_to_wgs84_longitude(text.x, text.y),
+                                       text.lat = f_rd_to_wgs84_latitude(text.x, text.y)
+                                )
+                }
+
+                # Hernoem lon,lat naar text.lon en text.lat, en voeg text.x en text.y toe.
+                if( all(all_of(v.coord.text.lonlat) %in% names(df.text)) ) {
+
+                        df.text$text.lat <- as.numeric(df.text[[c.coord.text.lat]])
+                        df.text$text.lon <- as.numeric(df.text[[c.coord.text.lon]])
+
+                        # Voeg x en y toe. Let op f_wgs84_to_rd_x heeft 'lat' als eerste input en 'lon' als tweede input.
+                        df.text <- df.text %>%
+
+                                mutate(text.x = f_wgs84_to_rd_x(text.lat, text.lon),
+                                       text.y = f_wgs84_to_rd_y(text.lat, text.lon)
+                                )
+                }
+        }
+
+
 ##############################################################################
 # POINTS - BOUW LABEL TEXT
 ##############################################################################
@@ -1841,6 +1924,21 @@
                                 domain  = df.polygon[[c.fill.numeric.polygon]]
                         )
                 }
+        }
+
+
+        ######################################################################
+        # PERMANENT TEXT LABEL.
+        ######################################################################
+
+        if(!is.null(df.text)) {
+
+                df.text <- df.text %>%
+
+                        rename(
+                                text.label := !!c.text.label
+                        )
+
         }
 
 
@@ -2452,6 +2550,39 @@
                         )
         }
 
+
+        ######################################################################
+        # TEXT
+        ######################################################################
+
+        if(!is.null(df.text)) {
+
+                # Add permanent text on the map.
+                plot.leaflet <- plot.leaflet %>%
+
+                        addLabelOnlyMarkers(
+
+                                data         = df.text,
+                                lng          = ~text.lon,
+                                lat          = ~text.lat,
+                                label        = ~text.label,
+                                labelOptions = labelOptions(
+
+                                        noHide    = T,
+
+                                        direction = 'left',
+
+                                        style     = list(
+
+                                                "color"        = "black",
+                                                "font-size"     = "25px",
+                                                "font-style"   = "bold",
+                                                "box-shadow"   = "5px 5px rgba(0,0,0,0.25)",
+                                                "border-color" = "rgba(0,0,0,0.5)"
+                                        )
+                                )
+                        )
+        }
 
 ##############################################################################
 # PRINT LEAFLET.

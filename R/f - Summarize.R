@@ -1,10 +1,10 @@
 #################################################################################
-# NAME:         FUNCTION - INFO PER COLUMN
+# NAME:         FUNCTION - SUMMARIZE
 # AUTHOR:       Pieter Overdevest.
 # DESCRIPTION:  Give basic info on columns in data frame.
 #################################################################################
 
-        f_info_per_column <- function(
+        f_summarize <- function(
 
                 df.input,
                 b.view   = TRUE,
@@ -14,14 +14,47 @@
 
                 ) {
 
+                # Testing
+                # df.input = df.source #%>% select(23) %>% head(10)
+                # b.view   = TRUE
+                # b.return = FALSE
+                # n.char   = "all"
+                # n.freq   = 3
+
                 # Error check.
                 if(!"data.frame" %in% class(df.input)) {
 
                         stop("Note, the input must be a data frame!")
                 }
 
+
+                v.temp1 <- sapply(df.input, class)
+                v.temp2 <- names(v.temp1[v.temp1 %in% c("list")])
+
+                if(length(v.temp2) > 0) {
+
+                        for (c.temp in v.temp2) { # c.temp <- v.temp2[1]
+
+                                df.input <- df.input %>%
+
+                                        mutate(
+                                                !!c.temp := c.temp %>% get() %>% unlist() %>% paste(collapse = ",")
+                                        )
+                        }
+
+
+
+                        warning(glue(
+
+                                "De volgende {length(v.temp2)} kolommen zijn van het type 'list'. De waarden ",
+                                "in deze kolommen zijn aan elkaar geplakt om f_summary te voltooien:\n",
+                                "{f_paste(v.temp2)}"
+                        ))
+                }
+
+
                 # Get info per column.
-                Info_per_Column <- data.frame(feature = names(df.input)) %>%
+                df.info.per.column <- tibble(feature = names(df.input)) %>%
 
                         mutate(
                                 class = sapply(
@@ -41,7 +74,7 @@
 
                                 n.zero = sapply(
 
-                                        df.input, function(v.temp) {
+                                        df.input, function(v.temp) { # v.temp <- df.input[1]
 
                                                 sum(v.temp == 0, na.rm = TRUE)
 
@@ -98,8 +131,8 @@
                         arrange(class, desc(n.unique))
 
 
-                if(b.view & !b.return) {View(Info_per_Column)}
-                if(b.return)           {return(Info_per_Column)}
+                if(b.view & !b.return) {View(df.info.per.column)}
+                if(b.return)           {return(df.info.per.column)}
 
         }
 

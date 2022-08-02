@@ -1,10 +1,10 @@
 #################################################################################
-# NAME:         FUNCTION - Contain the same value
+# NAME:         FUNCTION - COMPARE TWO VECTORS
 # AUTHOR:       Pieter Overdevest.
 # DESCRIPTION:  Assess similarity between two vectors.
 #################################################################################
 
-        f_contain_the_same_value <- function(v1, v2) {
+        f_compare_two_vectors <- function(v1, v2) {
 
 
 ##############################################################################

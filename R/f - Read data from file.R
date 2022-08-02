@@ -65,7 +65,7 @@
                 # b.show.header.names      = FALSE
                 # c.sheet.name             = NULL
                 # n.slice.rows             = 0
-                # c.delim                  = ","
+                # c.delim                  = NULL
                 # b.col.names              = TRUE
                 # l.col.type               = NULL
                 # c.table.name             = NULL
@@ -122,6 +122,14 @@
                 # c.file.type   = "xls"
                 # c.path        = path.data
 
+                # BLC
+                # v.file.string            = c.file.name
+                # c.file.type              = "xls"
+                # c.path                   = c.folder
+                # c.sheet.name             = "^Sheet"
+                # b.exact.match            = TRUE
+                # b.col.names              = FALSE
+
 
                 ##############################################################################
                 # ERRROR CHECK
@@ -167,6 +175,13 @@
                 } else {
 
                         c.file.category <- c.file.type
+                }
+
+
+                # Add '/' at end of c.path of not there.
+                if(!grepl("/$", c.path)) {
+
+                        c.path <- paste0(c.path, "/")
                 }
 
 

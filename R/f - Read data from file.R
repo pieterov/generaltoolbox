@@ -73,25 +73,11 @@
                 # b.add.mod.date.path.file = FALSE
                 # b.clean.up.header.names  = TRUE
 
-                # # SHAPEFILES
-                # v.file.string       = "D1"
-                # c.file.type         = "shp"
-                # c.path              = paste0(path.data, "2021 06 24 - Data van Eric vd Ster - D01 borden/")
-                # b.exact.match       = TRUE
-                # b.show.header.names = TRUE
-                # c.show.report       = "all"
-
-                # v.file.string = y %>%
-                #
-                #         gsub("\\(", "\\\\(", .) %>%
-                #         gsub("\\)", "\\\\)", .)
-                #
-                # c.file.type         = "sqlite"
-                # c.path              = paste0(c.rootfolder.read, x, "/")
-                # b.exact.match       = TRUE
-                # c.table.name        = "dragers"
-                # b.show.header.names = b.show.header.names
-                # c.show.report       = c.show.report
+                # Milatonie
+                # c.path                  = c.url.source
+                # c.file.type             = "csv"
+                # l.col.type              = cols(.default = "c")
+                # b.clean.up.header.names = FALSE
 
                 # Google Sheet
                 # c.file.type             = "gs"
@@ -178,8 +164,8 @@
                 }
 
 
-                # Add '/' at end of c.path of not there.
-                if(!grepl("/$", c.path)) {
+                # Add '/' at end of c.path if not there and c.path is not url.
+                if(!grepl("/$", c.path) & grepl("$http", c.path)) {
 
                         c.path <- paste0(c.path, "/")
                 }

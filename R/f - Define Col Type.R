@@ -64,7 +64,7 @@
         # Comms to the user.
         cat(
                 "The following columns will be read as character:\n",
-                f_paste(setdiff(v.names.new, c(v.double, v.integer, v.date.time)), b.quotation = TRUE)
+                f_paste(setdiff(v.names, c(v.double, v.integer, v.date.time)), b.quotation = TRUE)
         )
 
 

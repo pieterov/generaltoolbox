@@ -1,9 +1,9 @@
 ##############################################################################################
-# NAME:         FUNCTION - QUARTO RENDER
+# NAME:         FUNCTION - RENDER QUARTO
 # AUTHOR:       Pieter Overdevest
 ##############################################################################################
 
-        f_quarto_render <- function(
+        f_render_quarto <- function(
 
                 c.folder.source,
                 c.file.source,
@@ -21,6 +21,11 @@
         # c.file.source        = "Quarto demonstration - test.qmd"
         # c.folder.destination = path.deliverables
         # c.file.destination   = NULL
+
+        # c.folder.source      = path.code
+        # c.file.source        = "Verkoopoverzicht.qmd"
+        # c.folder.destination = paste0(path.deliverables, "Verkoopoverzichten/")
+        # c.file.destination   = glue("Verkoopoverzicht - {c.period.new} - {c.partner.order}")
 
 
         #################################################################################
@@ -64,19 +69,21 @@
         setwd(c.folder.source)
 
         # Destination file.
-        c.file.destination <- ifelse(
+        c.file.destination <- paste0(
 
-                is.null(c.file.destination),
+                format(Sys.time(), "%Y %m %d"), " - ",
 
-                paste0(
-                        format(Sys.time(), "%Y %m %d"), " - ",
+                format(Sys.time(), "%H %M %S"), " - ",
 
-                        format(Sys.time(), "%H %M %S"), " - ",
+                ifelse(
+                        is.null(c.file.destination),
 
-                        gsub("qmd$", "html", c.file.source)
+                        gsub("\\.qmd$", "", c.file.source),
+
+                        c.file.destination
                 ),
 
-                paste0(c.file.destination, ".html")
+                ".html"
         )
 
 

@@ -6,7 +6,8 @@
         f_check_cols_unique <- function(
 
                 df.input,
-                v.col,
+                v.col.include = NULL,
+                v.col.exclude = NULL,
                 c.id
         ) {
 
@@ -17,21 +18,13 @@
 
         # Test!
         # df.input = df.datachamp.baseline.source
-        # v.col    = v.col.must.be.unique
+        # v.col.include    = v.col.include.must.be.unique
         # c.id     = "ID"
 
         # df.input <- tibble(ID = letters[1:6], `Variants: SKU` = c(seq(5), 5), dummy1 = c(seq(4), 4, 4), dummy2 = seq(6))
-        # v.col    <- c("Variants: SKU", "dummy1", "dummy2")
+        # v.col.include    <- c("Variants: SKU", "dummy1", "dummy2")
         # c.id     <- "ID"
-        # f_check_cols_unique(df.input, v.col, c.id)
-
-
-        ######################################################################################
-        # INITIALIZE
-        ######################################################################################
-
-        # Remove c.id from v.col, if present.
-        v.col <- v.col[v.col != c.id]
+        # f_check_cols_unique(df.input, v.col.include, c.id)
 
 
         ######################################################################################
@@ -40,11 +33,24 @@
 
         # Check presence of columns in df.input.
         f_check_cols_present(df.input, c.id)
-        f_check_cols_present(df.input, v.col)
+
+        if(!is.null(v.col.include)) f_check_cols_present(df.input, v.col.include)
+        if(!is.null(v.col.exclude)) f_check_cols_present(df.input, v.col.exclude)
 
         # Check that c.id does not contain NA and is unique.
         f_check_col_not_empty(df.input, c.id)
         f_check_col_unique(df.input, c.id)
+
+
+        ######################################################################################
+        # INITIALIZE
+        ######################################################################################
+
+        if(is.null(v.col.include))  v.col.include <- names(df.input)
+        if(!is.null(v.col.exclude)) v.col.include <- setdiff(v.col.include, v.col.exclude)
+
+        # Remove c.id from v.col.include, if present.
+        v.col.include <- v.col.include[v.col.include != c.id]
 
 
         ######################################################################################
@@ -55,7 +61,7 @@
         df.temp <- df.input %>%
 
                 # Select concerned columns
-                select(all_of(v.col)) %>%
+                select(all_of(v.col.include)) %>%
 
                 # Determine number of NA per column
                 f_summarize(b.view = FALSE, b.return = TRUE) %>%

@@ -6,7 +6,8 @@
         f_check_cols_not_empty <- function(
 
                 df.input,
-                v.col,
+                v.col.include = NULL,
+                v.col.exclude = NULL,
                 c.id
         ) {
 
@@ -17,10 +18,10 @@
 
         # df.input = data.frame(ID = c(1,2,3,4), pieter = c(1,2,NA,NA), bart = c(NA,NA,NA,4))
         # df.input = df.datachamp.baseline.source %>% filter(Status == "ACTIVE")
-        # v.col    = v.feature.cannot.be.empty
-        # v.col    = c("pieter", "bart")
+        # v.col.include    = v.feature.cannot.be.empty
+        # v.col.include    = c("pieter", "bart")
         # c.id     = "ID"
-        # f_check_cols_not_empty(df.input, v.col, c.id)
+        # f_check_cols_not_empty(df.input, v.col.include, c.id)
 
 
         ######################################################################################
@@ -29,11 +30,21 @@
 
         # Check presence of columns in df.input.
         f_check_cols_present(df.input, c.id)
-        f_check_cols_present(df.input, v.col)
+
+        if(!is.null(v.col.include)) f_check_cols_present(df.input, v.col.include)
+        if(!is.null(v.col.exclude)) f_check_cols_present(df.input, v.col.exclude)
 
         # Check that c.id does not contain NA and is unique
         f_check_col_not_empty(df.input, c.id)
         f_check_col_unique(df.input, c.id)
+
+
+        ######################################################################################
+        # INITIALIZE
+        ######################################################################################
+
+        if(is.null(v.col.include))  v.col.include <- names(df.input)
+        if(!is.null(v.col.exclude)) v.col.include <- setdiff(v.col.include, v.col.exclude)
 
 
         ######################################################################################
@@ -44,7 +55,7 @@
         df.temp <- df.input %>%
 
                 # Select concerned columns
-                select(all_of(v.col)) %>%
+                select(all_of(v.col.include)) %>%
 
                 # Determine number of NA per column
                 f_summarize(b.view = FALSE, b.return = TRUE) %>%

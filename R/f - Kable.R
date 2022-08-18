@@ -17,7 +17,7 @@
                 c.latex_options     = "basic",
                 v.grey.col          = NULL,
                 b.grey.col          = TRUE,     # Add grey column to columns with total in header?
-                n.top               = 35        # Optional, number of rows to print. Default print all.
+                n.top               = "all"     # Optional, number of rows to print. Default print all.
         ) {
 
 #########################################################################
@@ -133,23 +133,35 @@
         # Op 28 feb 2022 de '...' vervangen door '---' (zie hieronder),
         # dit voorkomt de '...llcolor[HTML]E8E8E831' error in tabel,
         # zie Slack (QC / 25 feb 2022 / Mary).
-        if(
-                nrow(df.output) > n.top
-        ) {
+        if(n.top != "all") {
 
-                df.output <- rbind(
+                if(
+                        nrow(df.output) > n.top
+                ) {
 
-                        df.output %>% head(n.top),
+                        df.output <- rbind(
 
-                        "---",
+                                df.output %>% head(n.top),
 
-                        df.total
+                                "---",
+
+                                df.total
+                                )
+                } else {
+
+                        df.output <- rbind(
+
+                                df.output %>% head(n.top),
+
+                                df.total
                         )
+                }
+
         } else {
 
                 df.output <- rbind(
 
-                        df.output %>% head(n.top),
+                        df.output,
 
                         df.total
                 )
@@ -166,7 +178,8 @@
                 kbl(
                         row.names = FALSE,
                         caption   = c.caption,
-                        align     = v.align
+                        align     = v.align,
+                        longtable = TRUE
                 ) %>%
 
                 kable_styling(
@@ -174,7 +187,7 @@
                         full_width        = F,
                         position          = c.position,
                         font_size         = n.font.size,
-                        latex_options     = c("HOLD_position", c.latex_options)
+                        latex_options     = c("HOLD_position", "repeat_header", c.latex_options)
                 ) %>%
 
                 row_spec(

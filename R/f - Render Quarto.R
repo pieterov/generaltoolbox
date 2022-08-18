@@ -27,6 +27,11 @@
         # c.folder.destination = paste0(path.deliverables, "Verkoopoverzichten/")
         # c.file.destination   = glue("Verkoopoverzicht - {c.period.new} - {c.partner.order}")
 
+        # c.folder.source      = path.code
+        # c.file.source        = "Verkoopoverzicht - Per Partner - PDF.qmd"
+        # c.folder.destination = paste0(path.deliverables, "Verkoopoverzichten/")
+        # c.file.destination   = glue("Verkoopoverzicht - {c.period.new} - {c.partner.order}")
+
 
         #################################################################################
         # ERROR CHECK
@@ -35,7 +40,19 @@
         # Does c.file.source end with '.qmd'?
         if(!grepl("\\.qmd$", c.file.source)) {
 
-                stop("The source file (c.file.source) '", c.file.source, "' must end with '.qmd'!\n")
+                f_stop(
+                        "The source file (c.file.source) '{c.file.source}' must end with '.qmd'!\n"
+                )
+        }
+
+
+        # Does c.file.source contain 'HTML' or 'PDF'?
+        if(!(grepl("HTML", c.file.source) | grepl("PDF", c.file.source))) {
+
+                f_stop(
+                        "The source file (c.file.source) '{c.file.source}' does not contain
+                        'HTML' or 'PDF'!\n"
+                )
         }
 
 
@@ -53,8 +70,10 @@
                 pull(file.name.ext)
         )) {
 
-                stop("The source file (c.file.source), '", c.file.source, "', does not occur ",
-                     "in the source folder (c.folder.source), '", c.folder.source, "'!")
+                f_stop(
+                        "The source file (c.file.source), '{c.file.source}', does not occur
+                        in the source folder (c.folder.source), '{c.folder.source}'!"
+                )
         }
 
 
@@ -83,7 +102,13 @@
                         c.file.destination
                 ),
 
-                ".html"
+                ".",
+
+                case_when(
+                        grepl("HTML", c.file.source) ~ "html",
+                        grepl("PDF", c.file.source)  ~ "pdf",
+                        TRUE                         ~ "unknown extension"
+                )
         )
 
 

@@ -7,7 +7,7 @@
         f_get_filenames_in_folder = function(c.path,
                                              b.recursive  = FALSE,
                                              c.file.type  = NULL,
-                                             b.return.md5 = TRUE) {
+                                             b.return.md5 = FALSE) {
 
 
 #################################################################################
@@ -31,10 +31,13 @@
         # b.recursive  = FALSE
         # c.file.type  = NULL
 
-        # c.path        = path.data
-        # b.recursive   = FALSE
-        # c.file.type   = "xls"
-        # b.return.md5  = TRUE
+        # c.path       = path.data
+        # b.recursive  = FALSE
+        # c.file.type  = "xls"
+        # b.return.md5 = TRUE
+
+        # c.path       = path.datachamp.dropbox
+        # c.file.type  = "csv"
 
 
 #################################################################################
@@ -79,12 +82,14 @@
 
                 full.path = list.files(
 
-                        path         = c.path,
+                        # We remove the '/' to prevent a double '/' in the full.path.
+                        path         = gsub("/$", "", c.path),
                         recursive    = b.recursive,
                         full.names   = TRUE,
                         ignore.case  = TRUE,
-                        pattern      = c.pattern)
+                        pattern      = c.pattern
                 )
+        )
 
 
 
@@ -105,20 +110,24 @@
                 mutate(
 
                         # Determine file and folder name.
-                        folder.name    = dirname(full.path),
-                        file.name.ext  = basename(full.path),
-                        file.name      = gsub("\\.[a-zA-Z]*$", "", file.name.ext),
-                        file.name.core = gsub("^[0-9]{4} [0-9]{2} [0-9]{2} - ", "", file.name),
-                        file.ext       = str_extract(file.name.ext, "[a-zA-Z]*$"),
+                        folder.name       = dirname(full.path),
+                        file.name.ext     = basename(full.path),
+                        file.name         = gsub("\\.[a-zA-Z]*$", "", file.name.ext),
+                        file.name.core    = gsub("^[0-9]{4} [0-9]{2} [0-9]{2} - ", "", file.name),
+                        file.name.core    = gsub("^[0-9]{2} [0-9]{2} [0-9]{2} - ", "", file.name.core),
+                        file.ext          = str_extract(file.name.ext, "[a-zA-Z]*$"),
 
                         # Is observation a file or a folder?
-                        is.dir         = file.info(full.path)$isdir,
+                        is.dir            = file.info(full.path)$isdir,
 
                         # Is observation a hidden file?
-                        is.hidden      = grepl("^~", file.name),
+                        is.hidden         = grepl("^~", file.name),
 
                         # Get the last modified date for file.
-                        date.last.mod  = as.Date(file.info(full.path)$mtime)
+                        date.last.mod     = as_date(file.info(full.path)$mtime),
+
+                        # Get the last modified datetime for file.
+                        datetime.last.mod = as_datetime(file.info(full.path)$mtime)
                 )
 
 
@@ -130,11 +139,22 @@
 
                 mutate(
                         # Extract date from file name.
-                        date.in.file.name = ymd(str_extract(file.name, "^[0-9]{4} [0-9]{2} [0-9]{2}")),
-                        contains.date     = !is.na(date.in.file.name)
+                        date.in.file.name = file.name %>%
+
+                                str_extract("^[0-9]{4} [0-9]{2} [0-9]{2}") %>%
+                                ymd(),
+
+                        time.in.file.name = file.name %>%
+
+                                gsub("^[0-9]{4} [0-9]{2} [0-9]{2} - ", "", .) %>%
+                                str_extract("^[0-9]{2} [0-9]{2} [0-9]{2}") %>%
+                                hms(),
+
+                        contains.date     = !is.na(date.in.file.name),
+                        contains.time     = !is.na(time.in.file.name)
                         ) %>%
 
-                arrange(date.in.file.name)
+                arrange(date.in.file.name, time.in.file.name)
 
 
         # Voeg md5 toe, indien gevraagd.
@@ -175,10 +195,17 @@
 
                 cat(paste0("The folder '", c.path, "' contains ", sum(!df.output$contains.date),
                     " case(s) of missing, incomplete, or incorrect dates in filenames. ",
-                    "These are considered in the listed output.\n\n"
-                    # "These are included in the listed output:\n\n",
-                    # paste(df.output %>% filter(!contains.date) %>% pull(file.name), collapse = "\n"), "\n"
+                    "They are included in the listed output.\n\n"
                     ))
+        }
+
+
+        if(sum(!df.output$contains.time) > 0) {
+
+                cat(paste0("The folder '", c.path, "' contains ", sum(!df.output$contains.time),
+                           " case(s) of missing, incomplete, or incorrect times in filenames. ",
+                           "They are included in the listed output.\n\n"
+                ))
         }
 
 

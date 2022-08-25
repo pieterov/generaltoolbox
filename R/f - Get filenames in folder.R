@@ -39,6 +39,10 @@
         # c.path       = path.datachamp.dropbox
         # c.file.type  = "csv"
 
+        # c.path       = c.folder.source
+        # b.recursive  = FALSE
+        # c.file.type  = "qmd"
+        # b.return.md5 = FALSE
 
 #################################################################################
 # ERROR CHECK
@@ -147,8 +151,9 @@
                         time.in.file.name = file.name %>%
 
                                 gsub("^[0-9]{4} [0-9]{2} [0-9]{2} - ", "", .) %>%
-                                str_extract("^[0-9]{2} [0-9]{2} [0-9]{2}") %>%
-                                hms(),
+                                str_extract("^[0-9]{2} [0-9]{2} [0-9]{2}"),
+
+                        time.in.file.name = ifelse(is.na(time.in.file.name), NA, hms(time.in.file.name)),
 
                         contains.date     = !is.na(date.in.file.name),
                         contains.time     = !is.na(time.in.file.name)

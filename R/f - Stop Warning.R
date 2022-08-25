@@ -5,7 +5,7 @@
 
         f_stop <- function(...) {
 
-                stop(glue::glue(...))
+                stop(glue::glue(...)),
         }
 
         f_warning <- function(...) {

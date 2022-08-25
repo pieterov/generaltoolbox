@@ -30,7 +30,7 @@
         # c.folder.source      = path.code
         # c.file.source        = "Verkoopoverzicht - Per Partner - PDF.qmd"
         # c.folder.destination = paste0(path.deliverables, "Verkoopoverzichten/")
-        # c.file.destination   = glue("Verkoopoverzicht - {c.period.new} - {c.partner.order}")
+        # c.file.destination   = glue("Verkoopoverzicht - {c.period.report} - {c.partner.order}")
 
 
         #################################################################################

@@ -153,13 +153,22 @@
                                 gsub("^[0-9]{4} [0-9]{2} [0-9]{2} - ", "", .) %>%
                                 str_extract("^[0-9]{2} [0-9]{2} [0-9]{2}"),
 
-                        time.in.file.name = ifelse(is.na(time.in.file.name), NA, hms(time.in.file.name)),
-
                         contains.date     = !is.na(date.in.file.name),
                         contains.time     = !is.na(time.in.file.name)
+                        )
+
+
+        # Added suppresswarnings because hms() gives warning when it cannot parse time.
+        suppressWarnings(
+
+                df.output <- df.output %>%
+
+                        mutate(
+                                time.in.file.name = hms(time.in.file.name)
                         ) %>%
 
-                arrange(date.in.file.name, time.in.file.name)
+                        arrange(date.in.file.name, time.in.file.name)
+        )
 
 
         # Voeg md5 toe, indien gevraagd.

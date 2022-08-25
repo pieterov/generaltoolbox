@@ -86,7 +86,7 @@
 
                 full.path = list.files(
 
-                        # We remove the '/' to prevent a double '/' in the full.path.
+                        # We remove the '/' at the end to prevent a double '/' in the full.path.
                         path         = gsub("/$", "", c.path),
                         recursive    = b.recursive,
                         full.names   = TRUE,
@@ -96,16 +96,15 @@
         )
 
 
-
         # Check whether a file was found.
         if (nrow(df.file) == 0) {
 
-                cat(paste0(
+                glue(
+                        "No files found of {ifelse(is.null(c.file.type), 'any', c.file.type)} type in path '{c.path}'!\n\n"
+                )
 
-                        "No files found of ", ifelse(is.null(c.file.type), "any", c.file.type), " type in path '", c.path, "'!\n\n"
-                ))
+        }
 
-                }
 
         # Clean up the file names and get the concerned file name.
         df.output.source <- df.file %>%
@@ -186,40 +185,13 @@
 # COMMUNICATION
 #################################################################################
 
-        if(sum(df.output.source$is.dir) > 0) {
-
-                cat(paste0("The folder '", c.path, "' contains ", sum(df.output.source$is.dir), " subfolder(s).\n\n",
-                    "Files in the following subfolder(s) are not included, since b.recursive was set to FALSE:\n",
-                    paste(df.output.source %>% filter(is.dir) %>% pull(full.path), collapse = "\n"), "\n\n"
-                    ))
-        }
-
-
         if(sum(df.output$is.hidden) > 0) {
 
-                cat(paste0("The folder '", c.path, "' contains ", sum(df.output$is.hidden),
-                    " case(s) of hidden files. ",
-                    "These are included in the listed output:\n",
-                    paste(df.output %>% filter(is.hidden) %>% pull(file.name), collapse = "\n"), "\n\n"
-                    ))
-        }
-
-
-        if(sum(!df.output$contains.date) > 0) {
-
-                cat(paste0("The folder '", c.path, "' contains ", sum(!df.output$contains.date),
-                    " case(s) of missing, incomplete, or incorrect dates in filenames. ",
-                    "They are included in the listed output.\n\n"
-                    ))
-        }
-
-
-        if(sum(!df.output$contains.time) > 0) {
-
-                cat(paste0("The folder '", c.path, "' contains ", sum(!df.output$contains.time),
-                           " case(s) of missing, incomplete, or incorrect times in filenames. ",
-                           "They are included in the listed output.\n\n"
-                ))
+                glue(
+                        "The folder '{c.path}' contains {sum(df.output$is.hidden)} case(s) of hidden files. These are ",
+                        "included in the listed output:\n {paste(df.output %>% filter(!is.hidden) %>% pull(file.name),
+                        collapse = '\n')}\n\n"
+                )
         }
 
 

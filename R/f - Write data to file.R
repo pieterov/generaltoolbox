@@ -389,7 +389,7 @@ f_write_data_to_file <- function(
 
                                 # Check that all columns are of acceptable class.
                                 v.class.observed          <- lapply(lapply(x.object.j, class), function(xx) {paste(xx, collapse = "|")}) %>% unlist()
-                                v.class.scope             <- c("character", "factor", "numeric", "integer", "logical", "Date", "POSIXct", "POSIXt", "difftime", "list")
+                                v.class.scope             <- c("character", "factor", "numeric", "integer", "logical", "Date", "POSIXct", "POSIXt", "difftime", "Period", "list")
                                 v.class.observed.in.scope <- lapply(v.class.observed, function(xx) {any(grepl(xx, v.class.scope))}) %>% unlist()
 
                                 if(!all(v.class.observed.in.scope)) {

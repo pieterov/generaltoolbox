@@ -10,8 +10,7 @@
                 c.caption           = "Add nice caption through 'c.caption'",
                 c.position          = "center",
                 v.align             = NULL,     # Vector containing "l", "c", "r" indicating how to align each column
-                c.width             = "2cm",
-                c.width.col.1       = NULL,
+                v.width.cm          = 2,
                 n.angle             = NULL,
                 n.font.size         = 8,
                 c.latex_options     = "basic",
@@ -27,46 +26,33 @@
         # Altijd!
         # c.caption           = "Add nice caption through 'c.caption'"
         # c.position          = "center"
-        # c.width             = "2cm"
+        # v.width.cm          = 2
         # n.angle             = NULL
         # n.font.size         = 8
         # c.latex_options     = "basic"
         # v.grey.col          = NULL
+        # b.grey.col          = TRUE
         # n.top               = 35
-
-
-        # Set 1
-        # df.input  = df.temp
-        # c.caption = "Test"
-
-        # Set 2
-        # df.input  = df.analyse.1 %>% filter(!in.imagelist, image.type == "streetsmart") %>% f_table(c.ver = "bord.type.rood") %>% head(15)
-        # df.input  = df.input %>% tail(-1)
-        # c.caption = "Borden zonder image op picture server en met link naar StreetSmart (bord type rood):"
-        # n.max     = 10
-
-        # Set 3
-        # n.angle     = 45
-        # df.input    = df.dummy
-        # c.caption   = "test"
-
-        # Set 4
-        # df.input  = df.temp
-        # c.caption = "Aantal borden per project (incl. historie):"
-        # c.width   = "3cm"
-
-        # #28 in M6
-        # df.input  = df.dubbel.bord %>% f_table(c.ver = "bord.type")
-        # c.caption = "Aantal borden die mogelijk dubbele borden betreffen, per bord type:"
-        # c.width   = "2cm"
-        # n.top     = 20
 
         # c.caption   = NULL
         # c.position  = "left"
-        # c.width     = "2.5cm"
+        # v.width.cm  = 2
         # n.angle     = NULL
         # n.font.size = 10
         # v.grey.col  = NULL
+
+        # df.input        = df.input.for.kable %>%
+        #
+        #         mutate(
+        #                 across(c(5, 6, 8, 9, 10), format, nsmall = 2, big.mark = ".", decimal.mark = ","),
+        #                 across(c(7),              format, nsmall = 1, big.mark = ".", decimal.mark = ",")
+        #         )
+        # c.caption       = NULL
+        # c.position      = "left"
+        # v.align         = c(rep("c", 4), rep("r", 2), rep("c", 1), rep("r", 3))
+        # v.width.cm      = c(rep(2, 4), NA, rep(5, 5))
+        # n.font.size     = 8
+        # c.latex_options = "striped"
 
 #########################################################################
 # Error Checks.
@@ -76,20 +62,32 @@
 
                 if(length(v.align) != ncol(df.input)) {
 
-                        stop(paste0(
-
-                                "Note, v.align must have the same number of values (like: 'l', 'c', 'r') as columns in df.input!"
-                        ))
+                        f_stop(
+                                "Note, v.align must have the same number of values (like: 'l', 'c', 'r') as columns",
+                                "in df.input!"
+                        )
                 }
 
                 if(!all(v.align %in% c("l", "c", "r"))) {
 
-                        stop(paste0(
-
+                        f_stop(
                                 "Note, v.align can only contain values like,  'l', 'c', 'r'!"
-                        ))
+                        )
                 }
         }
+
+
+        if(!is.null(v.width.cm)) {
+
+                if(length(v.width.cm) > ncol(df.input)) {
+
+                        f_stop(
+                                "Note, v.width.cm cannot have more values ({length(v.width.cm)}), than columns ",
+                                "in df.input ({ncol(df.input)})!"
+                        )
+                }
+        }
+
 
 #########################################################################
 # Initialization.
@@ -107,7 +105,7 @@
         df.total <- df.input %>% tail(1)
 
 
-        # Remove total from df.output if present.
+        # Remove total from df.input if present.
         if(
                 any(
                         grepl(
@@ -167,6 +165,13 @@
                 )
         }
 
+
+        # Add 'cm' to each non-NA value in v.width.cm.
+        if(!is.null(v.width.cm)) {
+
+                v.width <- sapply(v.width.cm, function(x) {ifelse(!is.na(x), paste0(x, "cm"), NA)})
+
+        }
 
 #########################################################################
 # Processing
@@ -234,34 +239,38 @@
                                 bold       = TRUE,
                                 background = "#E8E8E8"
                         )
-
-
-        }
-
-        # Pas kolombreedte aan van kolom 1.
-        if(!is.null(c.width.col.1)) {
-
-                kable.output <- kable.output %>%
-
-                        column_spec(
-
-                                column = 1,
-                                width  = c.width.col.1
-                        )
         }
 
 
-        # Pas kolombreedte aan van kolom 2 t/m n, indien df.output meer dan 1 kolom bevat.
-        if(ncol(df.output) > 1 & !is.null(c.width)) {
+        # Pas kolombreedte aan.
+        if(!is.null(v.width.cm)) {
 
-                kable.output <- kable.output %>%
+                if(length(v.width.cm) == 1) {
 
-                        column_spec(
+                        kable.output <- kable.output %>%
 
-                                column = seq(from = 2, to = ncol(df.output)),
-                                width  = c.width
-                        )
+                                column_spec(
+
+                                        column = seq(from = 1, to = ncol(df.output)),
+                                        width  = v.width
+                                )
+                } else {
+
+                        for(i in seq_along(v.width)) { # i = 1
+
+                                if(!is.na(v.width.cm[i])) {
+
+                                        kable.output <- kable.output %>%
+
+                                                column_spec(
+
+                                                        column = i,
+                                                        width  = v.width[i]
+                                                )
+                                }
+                        }
                 }
+        }
 
 
         # Rotate headers.
@@ -271,7 +280,7 @@
 
                         row_spec(0, angle = n.angle)
 
-                }
+        }
 
 
 #########################################################################

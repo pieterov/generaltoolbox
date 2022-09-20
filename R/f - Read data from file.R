@@ -716,7 +716,7 @@
                                                                # Open dbf file.
                                                                df.temp <- read_sheet(
 
-                                                                       ss        = f_gs_url(c.file.string, c.sheet.name),
+                                                                       ss        = c.file.string,
                                                                        sheet     = c.sheet.name,
                                                                        col_names = b.col.names,
                                                                        col_types = l.col.type

@@ -127,6 +127,18 @@
                 # c.sheet.name            = "Google Product Category Taxonomy"
                 # b.clean.up.header.names = FALSE
 
+                # c.path                  = c.url.source
+                # c.file.type             = "csv"
+                # l.col.type              = cols(.default = "c")
+                # b.clean.up.header.names = FALSE
+
+                # c.file.type             = "gs"
+                # v.file.string           = c.gs.code.destination
+                # c.sheet.name            = c.sheet.destination
+                # l.col.type              = strrep("c", f_gs_col_number(c.gs.code.destination, c.sheet.destination))
+                # b.clean.up.header.names = FALSE
+
+
                 ##############################################################################
                 # ERRROR CHECK
                 ##############################################################################
@@ -174,35 +186,36 @@
                 }
 
 
-                # Add '/' at end of c.path if not there and c.path is not  NULL and not url.
+                # Update c.path when it is not NULL.
                 if(!is.null(c.path)) {
 
-                        if(!grepl("/$", c.path) & grepl("$http", c.path)) {
+                        #  Append '/' if not there and it is not an url.
+                        if(!grepl("/$", c.path) & !grepl("^http", c.path)) {
 
                                 c.path <- paste0(c.path, "/")
                         }
-                }
 
-                # Get latest file in case other file than Google Sheet is read.
-                if(c.file.type != "gs") {
+                        # Get latest file in case the file is not read by URL (like Channable).
+                        if(!grepl("^http", c.path)) {
 
-                        l.path.file <- lapply(v.file.string, function(c.file.string) {# c.file.string <- v.file.string[1]
+                                l.path.file <- lapply(v.file.string, function(c.file.string) {# c.file.string <- v.file.string[1]
 
-                                f_get_latest_file(
+                                        f_get_latest_file(
 
-                                        c.file.string         = c.file.string,
-                                        c.file.type           = c.file.type,
-                                        c.path                = c.path,
-                                        b.exact.match         = b.exact.match,
-                                        c.file.string.exclude = c.file.string.exclude,
-                                        c.sheet.name          = c.sheet.name,
-                                        c.show.report         = c.show.report
-                                )
-                        })
+                                                c.file.string         = c.file.string,
+                                                c.file.type           = c.file.type,
+                                                c.path                = c.path,
+                                                b.exact.match         = b.exact.match,
+                                                c.file.string.exclude = c.file.string.exclude,
+                                                c.sheet.name          = c.sheet.name,
+                                                c.show.report         = c.show.report
+                                        )
+                                })
 
-                } else {
+                        } else {
 
-                        l.path.file <- list(c.path)
+                                l.path.file <- list(c.path)
+                        }
                 }
 
 

@@ -338,6 +338,10 @@
         # c.id.point          = "bord.id"
         # c.fill.factor.point = "bord.flag"
 
+        # df.point       = df.cell %>% select(point.x = cell.x.mid, point.y = cell.y.mid) %>% mutate(id = seq(n()))
+        # c.id.point     = "id"
+        # v.coord.point  = c("cell.x", "cell.y")
+        # b.save.leaflet = TRUE
 
 ##############################################################################
 # ERROR CHECKS
@@ -350,8 +354,12 @@
         # Check in het geval df.point ongelijk is aan NULL.
         if(!is.null(df.point)) {
 
-
                 # Check aanwezigheid van kolommen.
+                if(!all(v.coord.point %in% names(df.point))) {
+
+                        stop("De velden - ", f_paste(v.coord.point), " (v.coord.point) - moeten aanwezig zijn in df.point!")
+                }
+
                 if(!c.id.point %in% names(df.point)) {
 
                         stop("Het veld - ", c.id.point, " (c.id.point) - moeten aanwezig zijn in df.point!")

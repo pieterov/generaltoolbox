@@ -32,6 +32,10 @@
         # c.folder.destination = paste0(path.deliverables, "Verkoopoverzichten/")
         # c.file.destination   = glue("Verkoopoverzicht - {c.period.report} - {c.partner.order}")
 
+        # c.folder.source      = path.code
+        # c.file.source        = "Q - Data Understanding Clickstream - HTML.qmd"
+        # c.folder.destination = path.deliverables
+        # c.file.destination   = "Clickstream Data Understanding"
 
         #################################################################################
         # ERROR CHECK

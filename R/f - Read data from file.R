@@ -13,7 +13,7 @@
                 c.file.type,
 
                 # Path where file should be searched for.
-                c.path,
+                c.path                   = NULL,
 
                 # Exact match or not.
                 b.exact.match            = FALSE,
@@ -60,6 +60,7 @@
 
                 # DEFAULT WAARDEN - HOUDEN!!
                 # v.file.string            = NULL
+                # c.path                   = NULL
                 # b.exact.match            = FALSE
                 # c.file.string.exclude    = NULL
                 # b.show.header.names      = FALSE
@@ -116,6 +117,15 @@
                 # b.exact.match            = TRUE
                 # b.col.names              = FALSE
 
+                # Partner address
+                # v.file.string           = "1TkOM0agRxseJ6km8R6Fd6u7_rhJXvl8VD8ZPITp8M6Q"
+                # l.col.type              = strrep("c", f_gs_col_number("1TkOM0agRxseJ6km8R6Fd6u7_rhJXvl8VD8ZPITp8M6Q"))
+                # c.file.type             = "gs"
+
+                # v.file.string           = f_oletti_dictionary(c.update.type)
+                # c.file.type             = "gs"
+                # c.sheet.name            = "Google Product Category Taxonomy"
+                # b.clean.up.header.names = FALSE
 
                 ##############################################################################
                 # ERRROR CHECK
@@ -164,15 +174,17 @@
                 }
 
 
-                # Add '/' at end of c.path if not there and c.path is not url.
-                if(!grepl("/$", c.path) & grepl("$http", c.path)) {
+                # Add '/' at end of c.path if not there and c.path is not  NULL and not url.
+                if(!is.null(c.path)) {
 
-                        c.path <- paste0(c.path, "/")
+                        if(!grepl("/$", c.path) & grepl("$http", c.path)) {
+
+                                c.path <- paste0(c.path, "/")
+                        }
                 }
 
-
                 # Get latest file in case other file than Google Sheet is read.
-                if(!is.null(v.file.string)) {
+                if(c.file.type != "gs") {
 
                         l.path.file <- lapply(v.file.string, function(c.file.string) {# c.file.string <- v.file.string[1]
 
@@ -191,13 +203,6 @@
                 } else {
 
                         l.path.file <- list(c.path)
-                }
-
-
-                # Define l.col.type in case c.file.type is 'gs' and l.col.type is NULL.
-                if(c.file.type == "gs" & is.null(l.col.type)) {
-
-                        l.col.type <- strrep("c", f_gs_col_number(c.path, c.sheet.name))
                 }
 
 
@@ -704,14 +709,14 @@
                        "gs" = {
 
                                # Read data from Google Sheet.
-                               l.data.object <- lapply(l.path.file,
+                               l.data.object <- lapply(v.file.string,
 
-                                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
+                                                       function(c.file.string) { # c.file.string <- v.file.string[[1]]
 
                                                                # Open dbf file.
                                                                df.temp <- read_sheet(
 
-                                                                       ss        = c.path.file,
+                                                                       ss        = f_gs_url(c.file.string, c.sheet.name),
                                                                        sheet     = c.sheet.name,
                                                                        col_names = b.col.names,
                                                                        col_types = l.col.type

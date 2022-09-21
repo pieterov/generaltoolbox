@@ -17,7 +17,7 @@
         # ALTIJD
         # b.recursive  = FALSE
         # c.file.type  = NULL
-        # b.return.md5 = TRUE
+        # b.return.md5 = FALSE
 
         # c.path       = c.path.source
         # b.recursive  = FALSE
@@ -43,6 +43,9 @@
         # b.recursive  = FALSE
         # c.file.type  = "qmd"
         # b.return.md5 = FALSE
+
+        # c.path      = paste0(path.images, "PRODUCT PICTURES KOKOON")
+        # b.recursive = TRUE
 
 #################################################################################
 # ERROR CHECK
@@ -107,11 +110,15 @@
 
 
         # Clean up the file names and get the concerned file name.
-        df.output.source <- df.file %>%
+        df.output <- df.file %>%
 
-                # Check version number in the filename.
+                # Is observation a file or a folder?
+                mutate(is.dir = file.info(full.path)$isdir) %>%
+
+                # Verwijder directories
+                filter(!is.dir) %>%
+
                 mutate(
-
                         # Determine file and folder name.
                         folder.name       = dirname(full.path),
                         file.name.ext     = basename(full.path),
@@ -120,9 +127,6 @@
                         file.name.core    = gsub("^[0-9]{2} [0-9]{2} [0-9]{2} - ", "", file.name.core),
                         file.ext          = str_extract(file.name.ext, "[a-zA-Z]*$"),
 
-                        # Is observation a file or a folder?
-                        is.dir            = file.info(full.path)$isdir,
-
                         # Is observation a hidden file?
                         is.hidden         = grepl("^~", file.name),
 
@@ -130,17 +134,11 @@
                         date.last.mod     = as_date(file.info(full.path)$mtime),
 
                         # Get the last modified datetime for file.
-                        datetime.last.mod = as_datetime(file.info(full.path)$mtime)
-                )
+                        datetime.last.mod = as_datetime(file.info(full.path)$mtime),
 
+                        # File size (kB).
+                        file.size.kb      = file.info(full.path)$size / 1024,
 
-        # Continue..
-        df.output <- df.output.source %>%
-
-                # Verwijder directories
-                filter(!is.dir) %>%
-
-                mutate(
                         # Extract date from file name.
                         date.in.file.name = file.name %>%
 

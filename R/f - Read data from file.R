@@ -19,14 +19,14 @@
                 b.exact.match            = FALSE,
                 c.file.string.exclude    = NULL,
 
-                # Show header names
-                b.show.header.names      = FALSE,
+                # Show info
+                b.show.info              = FALSE,
 
                 # In case of Excel file.
                 c.sheet.name             = NULL, # was "Sheet1"
                 n.slice.rows             = 0,
 
-                # Needed in case c.file.type is equal to 'delim'.
+                # Set to NULL, so we know when set by user.
                 c.delim                  = NULL,
 
                 # Do the data contain header names?
@@ -63,7 +63,7 @@
                 # c.path                   = NULL
                 # b.exact.match            = FALSE
                 # c.file.string.exclude    = NULL
-                # b.show.header.names      = FALSE
+                # b.show.info              = FALSE
                 # c.sheet.name             = NULL
                 # n.slice.rows             = 0
                 # c.delim                  = NULL
@@ -138,28 +138,27 @@
                 # l.col.type              = strrep("c", f_gs_col_number(c.gs.code.destination, c.sheet.destination))
                 # b.clean.up.header.names = FALSE
 
+                # v.file.string           = "QAVAILABLE"
+                # c.path                  = path.data
+                # c.file.type             = "csv"
+                # c.delim                 = ";"
+                # l.col.type              = cols(.default = "c")
+                # b.clean.up.header.names = FALSE
+                # b.col.names             = FALSE
+                # b.show.info             = TRUE
+
 
                 ##############################################################################
                 # ERRROR CHECK
                 ##############################################################################
 
                 # Does c.file.type have a valid value?
-                if(!c.file.type %in% c("xls", "csv", "tsv", "txt", "delim", "rds", "fst", "xml", "parquet", "sqlite", "shp", "dbf", "gs")) {
+                if(!c.file.type %in% c("xls", "csv", "tsv", "txt", "rds", "fst", "xml", "parquet", "sqlite", "shp", "dbf", "gs")) {
 
                         stop(paste0(
 
                                 "Note, the value for c.file.type ('", c.file.type, "') is invalid. It must be one of, ",
-                                "'xls', 'csv', 'tsv', 'txt', 'delim', 'rds', 'fst', 'xml', 'parquet', 'sqlite', 'shp', 'dbf', or 'gs'!"
-                        ))
-                }
-
-
-                # Does c.delim have a value when needed?
-                if(c.file.type == "delim" & is.null(c.delim)) {
-
-                        stop(paste0(
-
-                                "Note, you must provide a value for 'c.delim' in case you have chosen 'c.file.type' to be 'delim'!"
+                                "'xls', 'csv', 'tsv', 'txt', 'rds', 'fst', 'xml', 'parquet', 'sqlite', 'shp', 'dbf', or 'gs'!"
                         ))
                 }
 
@@ -173,12 +172,20 @@
 
                         c.file.category <- "delim"
 
-                        c.delim <- case_when(
+                        c.delim <- ifelse(
 
-                                c.file.type == "csv" ~ ",",
-                                c.file.type == "tsv" ~ "\t",
-                                c.file.type == "txt" ~ " "
+                                is.null(c.delim),
+
+                                case_when(
+
+                                        c.file.type == "csv" ~ ",",
+                                        c.file.type == "tsv" ~ "\t",
+                                        c.file.type == "txt" ~ " "
+                                ),
+
+                                c.delim
                         )
+
 
                 } else {
 
@@ -252,39 +259,8 @@
                                                                sheet     = c.sheet.name,
                                                                skip      = n.slice.rows,
                                                                col_names = b.col.names,
-                                                               col_types = l.col.type)
-
-
-                                                       # Clean up header names when requested.
-                                                       if(b.clean.up.header.names) {
-
-                                                               df.temp <- df.temp %>%
-
-                                                                       # Clean-up header names.
-                                                                       f_clean_up_header_names()
-                                                       }
-
-
-                                                       # Add column with path name and date of modification.
-                                                       if(b.add.mod.date.path.file) {
-
-                                                               df.temp <- df.temp %>%
-
-                                                                       mutate(
-                                                                                path.file = c.path.file,
-                                                                                mod.date  = file.mtime(c.path.file)
-                                                                               )
-                                                       }
-
-
-                                                       # Show header names, if needed.
-                                                       if (b.show.header.names) {
-
-                                                               cat(basename(c.path.file), "\n")
-                                                               cat(names(df.temp), "\n\n")
-
-                                                       }
-
+                                                               col_types = l.col.type
+                                                       )
 
                                                        return(df.temp)
                                                })
@@ -299,49 +275,19 @@
 
                                        l.data.object <- lapply(l.path.file,
 
-                                                               function(c.path.file) { # c.path.file <- l.path.file[[1]]
+                                               function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                                                       df.temp <- readr::read_delim(
+                                                       df.temp <- readr::read_delim(
 
-                                                                               file      = c.path.file,
-                                                                               delim     = c.delim,
-                                                                               trim_ws   = TRUE,
-                                                                               col_names = b.col.names,
-                                                                               col_types = l.col.type
-                                                                               )
+                                                               file      = c.path.file,
+                                                               delim     = c.delim,
+                                                               trim_ws   = TRUE,
+                                                               col_names = b.col.names,
+                                                               col_types = l.col.type
+                                                       )
 
-
-                                                                       # Clean up header names when requested.
-                                                                       if(b.clean.up.header.names) {
-
-                                                                               df.temp <- df.temp %>%
-
-                                                                                       # Clean-up header names.
-                                                                                       f_clean_up_header_names()
-                                                                       }
-
-                                                                       # Add column with path name and date of modification.
-                                                                       if(b.add.mod.date.path.file) {
-
-                                                                               df.temp <- df.temp %>%
-
-                                                                                       mutate(
-                                                                                               path.file = c.path.file,
-                                                                                               mod.date  = file.mtime(c.path.file)
-                                                                                       )
-                                                                       }
-
-
-                                                                       # Show header names, if needed.
-                                                                       if (b.show.header.names) {
-
-                                                                               cat(basename(c.path.file), "\n")
-                                                                               cat(names(df.temp), "\n\n")
-
-                                                                       }
-
-                                                                       return(df.temp)
-                                                               })
+                                                       return(df.temp)
+                                               })
                                        )
                        },
 
@@ -351,43 +297,12 @@
                                # Read data from RDS file.
                                l.data.object <- lapply(l.path.file,
 
-                                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
+                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                                               df.temp <- readRDS(file = c.path.file)
+                                               df.temp <- readRDS(file = c.path.file)
 
-
-                                                               # Clean up header names when requested.
-                                                               if(b.clean.up.header.names) {
-
-                                                                       df.temp <- df.temp %>%
-
-                                                                               # Clean-up header names.
-                                                                               f_clean_up_header_names()
-                                                               }
-
-
-                                                               # Add column with path name and date of modification.
-                                                               if(b.add.mod.date.path.file) {
-
-                                                                       df.temp <- df.temp %>%
-
-                                                                               mutate(
-                                                                                       path.file = c.path.file,
-                                                                                       mod.date  = file.mtime(c.path.file)
-                                                                               )
-                                                               }
-
-
-                                                               # Show header names, if needed.
-                                                               if (b.show.header.names) {
-
-                                                                       cat(basename(c.path.file), "\n")
-                                                                       cat(names(df.temp), "\n\n")
-
-                                                               }
-
-                                                               return(df.temp)
-                                                       }
+                                               return(df.temp)
+                                       }
                                )
                        },
 
@@ -396,43 +311,12 @@
                                # Read data from FST file.
                                l.data.object <- lapply(l.path.file,
 
-                                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
+                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                                               df.temp <- read_fst(path = c.path.file)
+                                               df.temp <- read_fst(path = c.path.file)
 
-
-                                                               # Clean up header names when requested.
-                                                               if(b.clean.up.header.names) {
-
-                                                                       df.temp <- df.temp %>%
-
-                                                                               # Clean-up header names.
-                                                                               f_clean_up_header_names()
-                                                               }
-
-
-                                                               # Add column with path name and date of modification.
-                                                               if(b.add.mod.date.path.file) {
-
-                                                                       df.temp <- df.temp %>%
-
-                                                                               mutate(
-                                                                                       path.file = c.path.file,
-                                                                                       mod.date  = file.mtime(c.path.file)
-                                                                               )
-                                                               }
-
-
-                                                               # Show header names, if needed.
-                                                               if (b.show.header.names) {
-
-                                                                       cat(basename(c.path.file), "\n")
-                                                                       cat(names(df.temp), "\n\n")
-
-                                                               }
-
-                                                               return(df.temp)
-                                                       }
+                                               return(df.temp)
+                                       }
                                )
                        },
 
@@ -441,43 +325,14 @@
                                # Read data from XML file.
                                l.data.object <- lapply(l.path.file,
 
-                                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
+                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                                               df.temp <- xmlParse(file = c.path.file) %>% xmlToDataFrame()
+                                               df.temp <- xmlParse(file = c.path.file) %>%
 
+                                                       xmlToDataFrame()
 
-                                                               # Clean up header names when requested.
-                                                               if(b.clean.up.header.names) {
-
-                                                                       df.temp <- df.temp %>%
-
-                                                                               # Clean-up header names.
-                                                                               f_clean_up_header_names()
-                                                               }
-
-
-                                                               # Add column with path name and date of modification.
-                                                               if(b.add.mod.date.path.file) {
-
-                                                                       df.temp <- df.temp %>%
-
-                                                                               mutate(
-                                                                                       path.file = c.path.file,
-                                                                                       mod.date  = file.mtime(c.path.file)
-                                                                               )
-                                                               }
-
-
-                                                               # Show header names, if needed.
-                                                               if (b.show.header.names) {
-
-                                                                       cat(basename(c.path.file), "\n")
-                                                                       cat(names(df.temp), "\n\n")
-
-                                                               }
-
-                                                               return(df.temp)
-                                                       }
+                                               return(df.temp)
+                                       }
                                )
                        },
 
@@ -487,43 +342,12 @@
                                # Read data from PARQUET file.
                                l.data.object <- lapply(l.path.file,
 
-                                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
+                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                                               df.temp <- read_parquet(file = c.path.file)
+                                               df.temp <- read_parquet(file = c.path.file)
 
-
-                                                               # Clean up header names when requested.
-                                                               if(b.clean.up.header.names) {
-
-                                                                       df.temp <- df.temp %>%
-
-                                                                               # Clean-up header names.
-                                                                               f_clean_up_header_names()
-                                                               }
-
-
-                                                               # Add column with path name and date of modification.
-                                                               if(b.add.mod.date.path.file) {
-
-                                                                       df.temp <- df.temp %>%
-
-                                                                               mutate(
-                                                                                       path.file = c.path.file,
-                                                                                       mod.date  = file.mtime(c.path.file)
-                                                                               )
-                                                               }
-
-
-                                                               # Show header names, if needed.
-                                                               if (b.show.header.names) {
-
-                                                                       cat(basename(c.path.file), "\n")
-                                                                       cat(names(df.temp), "\n\n")
-
-                                                               }
-
-                                                               return(df.temp)
-                                                       }
+                                               return(df.temp)
+                                       }
                                )
                        },
 
@@ -533,80 +357,54 @@
                                # Check whether a table name is provided.
                                if (is.null(c.table.name)) stop(paste0("Missing c.table.name in function input."))
 
-                               l.data.object <- lapply(l.path.file,
+                               l.data.object <- lapply(
 
-                                                       function(c.path.file) {
+                                       l.path.file,
 
-                                                               # c.path.file <- l.path.file[[2]]
-                                                               #c.table.name <- "borden"
-                                                               #c.path.file <- "D:/SQLITE MIN1/Wassenaar.sqlite"
-                                                               #print(c.path.file)
+                                       function(c.path.file) {
 
-                                                               # Connect to sqlite file.
-                                                               con <- dbConnect(drv    = RSQLite::SQLite(),
-                                                                                dbname = c.path.file)
+                                               # c.path.file <- l.path.file[[2]]
+                                               #c.table.name <- "borden"
+                                               #c.path.file <- "D:/SQLITE MIN1/Wassenaar.sqlite"
+                                               #print(c.path.file)
 
-                                                               # Check whether c.table.name is in the list of tables.
-                                                               if (!c.table.name %in% dbListTables(con)) {
+                                               # Connect to sqlite file.
+                                               con <- dbConnect(drv    = RSQLite::SQLite(),
+                                                                dbname = c.path.file)
 
-                                                                       # Disconnect from database.
-                                                                       dbDisconnect(con)
+                                               # Check whether c.table.name is in the list of tables.
+                                               if (!c.table.name %in% dbListTables(con)) {
 
-                                                                       df.temp <- NULL
+                                                       # Disconnect from database.
+                                                       dbDisconnect(con)
 
-                                                                       warning(paste0(
+                                                       df.temp <- NULL
 
-                                                                               c.path.file," does not contain table '",
-                                                                               c.table.name, "', the rest was read."
-                                                                               ))
+                                                       warning(paste0(
 
-                                                               } else {
+                                                               c.path.file," does not contain table '",
+                                                               c.table.name, "', the rest was read."
+                                                               ))
 
-                                                                       # Extract table c.table.name and add column with path name and date
-                                                                       # of modification.
-                                                                       df.temp <- dbGetQuery(con, paste("select * from", c.table.name))
+                                               } else {
 
+                                                       # Extract table c.table.name and add column with path name and date
+                                                       # of modification.
+                                                       df.temp <- dbGetQuery(
 
-                                                                       # Clean up header names when requested.
-                                                                       if(b.clean.up.header.names) {
+                                                                       con,
+                                                                       paste("select * from", c.table.name)
+                                                               )
 
-                                                                               df.temp <- df.temp %>%
+                                                       # Disconnect from database.
+                                                       dbDisconnect(con)
 
-                                                                                       # Clean-up header names.
-                                                                                       f_clean_up_header_names()
-                                                                       }
+                                                       }
 
+                                               return(df.temp)
 
-                                                                       # Add column with path name and date of modification.
-                                                                       if(b.add.mod.date.path.file) {
-
-                                                                               df.temp <- df.temp %>%
-
-                                                                                       mutate(
-                                                                                               path.file = c.path.file,
-                                                                                               mod.date  = file.mtime(c.path.file)
-                                                                                       )
-                                                                       }
-
-
-                                                                       # Disconnect from database.
-                                                                       dbDisconnect(con)
-
-                                                                       }
-
-
-                                                               # Show header names, if needed.
-                                                               if (b.show.header.names) {
-
-                                                                       cat(basename(c.path.file), "\n")
-                                                                       cat(names(df.temp), "\n\n")
-
-                                                               }
-
-                                                               return(df.temp)
-
-                                                               }
-                                                       )
+                                               }
+                                )
                        },
 
 
@@ -615,56 +413,24 @@
                                # Read data from SHAPE file.
                                l.data.object <- lapply(l.path.file,
 
-                                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
+                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                                               # Open shapefile.
-                                                               sf.temp <- readOGR(
+                                               # Open shapefile.
+                                               sf.temp <- readOGR(
 
-                                                                       dsn   = dirname(c.path.file),
-                                                                       layer = gsub("\\.shp$", "", basename(c.path.file)
-                                                                                    )
-                                                                       )
-
-
-                                                               # Open shapefile.
-                                                               df.temp <- sf.temp %>%
-
-                                                                       # Converteer shapefile in dataframe.
-                                                                       as.data.frame(.)
+                                                       dsn   = dirname(c.path.file),
+                                                       layer = gsub("\\.shp$", "", basename(c.path.file))
+                                               )
 
 
-                                                               # Clean up header names when requested.
-                                                               if(b.clean.up.header.names) {
+                                               # Open shapefile.
+                                               df.temp <- sf.temp %>%
 
-                                                                       df.temp <- df.temp %>%
+                                                       # Converteer shapefile in dataframe.
+                                                       as.data.frame(.)
 
-                                                                               # Clean-up header names.
-                                                                               f_clean_up_header_names()
-                                                               }
-
-
-                                                               # Add column with path name and date of modification.
-                                                               if(b.add.mod.date.path.file) {
-
-                                                                       df.temp <- df.temp %>%
-
-                                                                               mutate(
-                                                                                       path.file = c.path.file,
-                                                                                       mod.date  = file.mtime(c.path.file)
-                                                                               )
-                                                               }
-
-
-                                                               # Show header names, if needed.
-                                                               if (b.show.header.names) {
-
-                                                                       cat(basename(c.path.file), "\n")
-                                                                       cat(names(df.temp), "\n\n")
-
-                                                               }
-
-                                                               return(df.temp)
-                                                       }
+                                               return(df.temp)
+                                       }
                                )
                        },
 
@@ -674,47 +440,13 @@
                                # Read data from DBF file.
                                l.data.object <- lapply(l.path.file,
 
-                                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
+                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                                               # Open dbf file.
-                                                               df.temp <- read.dbf(
+                                               # Open dbf file.
+                                               df.temp <- read.dbf(file = c.path.file, as.is = TRUE)
 
-                                                                       file = c.path.file,
-                                                                       as.is = TRUE)
-
-
-                                                               # Clean up header names when requested.
-                                                               if(b.clean.up.header.names) {
-
-                                                                       df.temp <- df.temp %>%
-
-                                                                               # Clean-up header names.
-                                                                               f_clean_up_header_names()
-                                                               }
-
-
-                                                               # Add column with path name and date of modification.
-                                                               if(b.add.mod.date.path.file) {
-
-                                                                       df.temp <- df.temp %>%
-
-                                                                               mutate(
-                                                                                       path.file = c.path.file,
-                                                                                       mod.date  = file.mtime(c.path.file)
-                                                                               )
-                                                               }
-
-
-                                                               # Show header names, if needed.
-                                                               if(b.show.header.names) {
-
-                                                                       cat(basename(c.path.file), "\n")
-                                                                       cat(names(df.temp), "\n\n")
-
-                                                               }
-
-                                                               return(df.temp)
-                                                       }
+                                               return(df.temp)
+                                       }
                                )
                        },
 
@@ -724,57 +456,60 @@
                                # Read data from Google Sheet.
                                l.data.object <- lapply(v.file.string,
 
-                                                       function(c.file.string) { # c.file.string <- v.file.string[[1]]
+                                       function(c.file.string) { # c.file.string <- v.file.string[[1]]
 
-                                                               # Open dbf file.
-                                                               df.temp <- read_sheet(
+                                               # Open dbf file.
+                                               df.temp <- read_sheet(
 
-                                                                       ss        = c.file.string,
-                                                                       sheet     = c.sheet.name,
-                                                                       col_names = b.col.names,
-                                                                       col_types = l.col.type
-                                                                )
+                                                               ss        = c.file.string,
+                                                               sheet     = c.sheet.name,
+                                                               col_names = b.col.names,
+                                                               col_types = l.col.type
+                                                        )
 
-                                                               # Clean up header names when requested.
-                                                               if(b.clean.up.header.names) {
-
-                                                                       df.temp <- df.temp %>%
-
-                                                                               # Clean-up header names.
-                                                                               f_clean_up_header_names()
-                                                               }
-
-                                                               # Add column with path name and date of modification.
-                                                               if(b.add.mod.date.path.file) {
-
-                                                                       df.temp <- df.temp %>%
-
-                                                                               mutate(
-                                                                                       path.file = c.path.file,
-                                                                                       mod.date  = file.mtime(c.path.file)
-                                                                               )
-                                                               }
-
-
-                                                               # Show header names, if needed.
-                                                               if(b.show.header.names) {
-
-                                                                       cat(basename(c.path.file), "\n")
-                                                                       cat(names(df.temp), "\n\n")
-
-                                                               }
-
-                                                               return(df.temp)
-                                                       }
+                                               return(df.temp)
+                                       }
                                )
                        })
 
 
 
                 # Bind list of data frames in one data frame.
-                df.data.object <- suppressWarnings(
+                df.data.object <- suppressWarnings(bind_rows(l.data.object))
 
-                        bind_rows(l.data.object))
+                # Clean up header names when requested.
+                if(b.clean.up.header.names) {
+
+                        df.data.object <- df.data.object %>%
+
+                                # Clean-up header names.
+                                f_clean_up_header_names()
+                }
+
+
+                # Add column with path name and date of modification.
+                if(b.add.mod.date.path.file) {
+
+                        df.data.object <- df.data.object %>%
+
+                                mutate(
+                                        path.file = c.path.file,
+                                        mod.date  = file.mtime(c.path.file)
+                                )
+                }
+
+
+                # Show header names, if needed.
+                if (b.show.info) {
+
+                        cat(paste0("\nFile name:    '", basename(c.path.file), "'"), "\n")
+                        cat(paste0("Column names: ", f_paste(names(df.data.object), b.quotation = TRUE)), "\n")
+
+                        if(!is.null(c.delim)) {
+
+                                cat(paste0("Delimiter:    '", c.delim, "'"))
+                        }
+                }
 
 
                 # Convert to tibble.

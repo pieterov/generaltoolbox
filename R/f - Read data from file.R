@@ -226,6 +226,42 @@
                 }
 
 
+                ########################################################################################################
+                # Functions
+                ########################################################################################################
+
+                f_post_processing <- function(df.input, c.path.file, c.delim, b.add.mod.date.path.file, b.show.info) {
+
+
+                        # Add column with path name and date of modification.
+                        if(b.add.mod.date.path.file) {
+
+                                df.input <- df.input %>%
+
+                                        mutate(
+                                                path.file = c.path.file,
+                                                mod.date  = file.mtime(c.path.file)
+                                        )
+                        }
+
+
+                        # Show header names, if needed.
+                        if (b.show.info) {
+
+                                cat(paste0("\nFile name:    '", basename(c.path.file), "'"), "\n")
+                                cat(paste0("Column names: ",    f_paste(names(df.input), b.quotation = TRUE)), "\n")
+
+                                if(!is.null(c.delim)) {
+
+                                        cat(paste0("Delimiter:    '", c.delim, "'"))
+                                }
+                        }
+
+                        # Return updated input
+                        return(df.input)
+                }
+
+
                 ##############################################################################
                 # Read data based on file type.
                 ##############################################################################
@@ -253,14 +289,24 @@
                                                        }
 
 
-                                                       df.temp <- readxl::read_xlsx(
+                                                       df.temp <-
+                                                               readxl::read_xlsx(
 
-                                                               path      = c.path.file,
-                                                               sheet     = c.sheet.name,
-                                                               skip      = n.slice.rows,
-                                                               col_names = b.col.names,
-                                                               col_types = l.col.type
-                                                       )
+                                                                       path      = c.path.file,
+                                                                       sheet     = c.sheet.name,
+                                                                       skip      = n.slice.rows,
+                                                                       col_names = b.col.names,
+                                                                       col_types = l.col.type
+                                                               ) %>%
+
+                                                               f_post_processing(
+
+                                                                       c.path.file,
+                                                                       c.delim,
+                                                                       b.add.mod.date.path.file,
+                                                                       b.show.info
+                                                               )
+
 
                                                        return(df.temp)
                                                })
@@ -277,14 +323,25 @@
 
                                                function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                                       df.temp <- readr::read_delim(
+                                                       df.temp <-
 
-                                                               file      = c.path.file,
-                                                               delim     = c.delim,
-                                                               trim_ws   = TRUE,
-                                                               col_names = b.col.names,
-                                                               col_types = l.col.type
-                                                       )
+                                                               readr::read_delim(
+
+                                                                       file      = c.path.file,
+                                                                       delim     = c.delim,
+                                                                       trim_ws   = TRUE,
+                                                                       col_names = b.col.names,
+                                                                       col_types = l.col.type
+                                                               )  %>%
+
+                                                               f_post_processing(
+
+                                                                       c.path.file,
+                                                                       c.delim,
+                                                                       b.add.mod.date.path.file,
+                                                                       b.show.info
+                                                               )
+
 
                                                        return(df.temp)
                                                })
@@ -299,7 +356,22 @@
 
                                        function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                               df.temp <- readRDS(file = c.path.file)
+                                               df.temp <-
+
+                                                       readRDS(
+
+                                                               file = c.path.file
+
+                                                       )  %>%
+
+                                                       f_post_processing(
+
+                                                               c.path.file,
+                                                               c.delim,
+                                                               b.add.mod.date.path.file,
+                                                               b.show.info
+                                                       )
+
 
                                                return(df.temp)
                                        }
@@ -313,7 +385,21 @@
 
                                        function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                               df.temp <- read_fst(path = c.path.file)
+                                               df.temp <-
+
+                                                       read_fst(
+
+                                                               path = c.path.file
+                                                       )  %>%
+
+                                                       f_post_processing(
+
+                                                               c.path.file,
+                                                               c.delim,
+                                                               b.add.mod.date.path.file,
+                                                               b.show.info
+                                                       )
+
 
                                                return(df.temp)
                                        }
@@ -327,9 +413,23 @@
 
                                        function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                               df.temp <- xmlParse(file = c.path.file) %>%
+                                               df.temp <-
 
-                                                       xmlToDataFrame()
+                                                       xmlParse(
+
+                                                               file = c.path.file
+                                                       ) %>%
+
+                                                       xmlToDataFrame()  %>%
+
+                                                       f_post_processing(
+
+                                                               c.path.file,
+                                                               c.delim,
+                                                               b.add.mod.date.path.file,
+                                                               b.show.info
+                                                       )
+
 
                                                return(df.temp)
                                        }
@@ -344,7 +444,21 @@
 
                                        function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                               df.temp <- read_parquet(file = c.path.file)
+                                               df.temp <-
+
+                                                       read_parquet(
+
+                                                               file = c.path.file
+                                                       )  %>%
+
+                                                       f_post_processing(
+
+                                                               c.path.file,
+                                                               c.delim,
+                                                               b.add.mod.date.path.file,
+                                                               b.show.info
+                                                       )
+
 
                                                return(df.temp)
                                        }
@@ -390,11 +504,22 @@
 
                                                        # Extract table c.table.name and add column with path name and date
                                                        # of modification.
-                                                       df.temp <- dbGetQuery(
+                                                       df.temp <-
+
+                                                               dbGetQuery(
 
                                                                        con,
                                                                        paste("select * from", c.table.name)
+                                                               )  %>%
+
+                                                               f_post_processing(
+
+                                                                       c.path.file,
+                                                                       c.delim,
+                                                                       b.add.mod.date.path.file,
+                                                                       b.show.info
                                                                )
+
 
                                                        # Disconnect from database.
                                                        dbDisconnect(con)
@@ -424,10 +549,21 @@
 
 
                                                # Open shapefile.
-                                               df.temp <- sf.temp %>%
+                                               df.temp <-
+
+                                                       sf.temp %>%
 
                                                        # Converteer shapefile in dataframe.
-                                                       as.data.frame(.)
+                                                       as.data.frame(.)  %>%
+
+                                                       f_post_processing(
+
+                                                               c.path.file,
+                                                               c.delim,
+                                                               b.add.mod.date.path.file,
+                                                               b.show.info
+                                                       )
+
 
                                                return(df.temp)
                                        }
@@ -443,7 +579,22 @@
                                        function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
                                                # Open dbf file.
-                                               df.temp <- read.dbf(file = c.path.file, as.is = TRUE)
+                                               df.temp <-
+
+                                                       read.dbf(
+
+                                                               file  = c.path.file,
+                                                               as.is = TRUE
+                                                       )  %>%
+
+                                                       f_post_processing(
+
+                                                               c.path.file,
+                                                               c.delim,
+                                                               b.add.mod.date.path.file,
+                                                               b.show.info
+                                                       )
+
 
                                                return(df.temp)
                                        }
@@ -459,13 +610,24 @@
                                        function(c.file.string) { # c.file.string <- v.file.string[[1]]
 
                                                # Open dbf file.
-                                               df.temp <- read_sheet(
+                                               df.temp <-
+
+                                                       read_sheet(
 
                                                                ss        = c.file.string,
                                                                sheet     = c.sheet.name,
                                                                col_names = b.col.names,
                                                                col_types = l.col.type
-                                                        )
+                                                        )  %>%
+
+                                                       f_post_processing(
+
+                                                               c.path.file,
+                                                               c.delim,
+                                                               b.add.mod.date.path.file,
+                                                               b.show.info
+                                                       )
+
 
                                                return(df.temp)
                                        }
@@ -485,32 +647,6 @@
                                 # Clean-up header names.
                                 f_clean_up_header_names()
                 }
-
-
-                # Add column with path name and date of modification.
-                if(b.add.mod.date.path.file) {
-
-                        df.data.object <- df.data.object %>%
-
-                                mutate(
-                                        path.file = c.path.file,
-                                        mod.date  = file.mtime(c.path.file)
-                                )
-                }
-
-
-                # Show header names, if needed.
-                if (b.show.info) {
-
-                        cat(paste0("\nFile name:    '", basename(c.path.file), "'"), "\n")
-                        cat(paste0("Column names: ", f_paste(names(df.data.object), b.quotation = TRUE)), "\n")
-
-                        if(!is.null(c.delim)) {
-
-                                cat(paste0("Delimiter:    '", c.delim, "'"))
-                        }
-                }
-
 
                 # Convert to tibble.
                 # df.data.object <- as_tibble(df.data.object)

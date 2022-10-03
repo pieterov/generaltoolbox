@@ -70,7 +70,18 @@
         # PROCESS
         ######################################################################################
 
-        if (!is.null(mc.cores) & f_who_am_i() %in% c("Pieters-MacBook-Pro.local", "Pieters-MBP.home")) {
+        if (!is.null(mc.cores) & (
+
+                f_who_am_i() %in% c(
+
+                        # MAcBook Pro
+                        "Pieters-MacBook-Pro.local", "Pieters-MBP.home",
+
+                        # Mac Studio
+                        "Pieters-Mac-Studio.local"
+                        )
+                )
+        ) {
 
                 l.output <- mclapply(
 

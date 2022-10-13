@@ -9,6 +9,7 @@
                 c.path.source,
                 c.path.destination,
                 v.file.to.move              = NULL,
+                c.file.to.move.filter.type  = "regex", # 'regex' is default, alternative is 'file.name.ext'
                 c.date.treshold             = NULL,
                 b.check.md5                 = TRUE,
                 b.delete.from.source        = TRUE,
@@ -51,6 +52,15 @@
         # c.path.destination = paste0(path.data.source, "RDS/")
         # c.date.treshold    = (today() - 50)
         # b.check.md5        = FALSE
+
+        #  Move JPGs
+        # c.path.source        = paste0("/Users/home/TEMP/", c.folder)
+        # c.path.destination   = paste0("/Users/home/TEMP/", c.folder, " - ", i)
+        # v.file.to.move       = df.file %>% filter(subbatch == i) %>% pull(file.name.ext)
+        # c.date.treshold      = NULL
+        # b.check.md5          = FALSE
+        # b.delete.from.source = FALSE
+        # b.overwrite          = TRUE
 
 
 #################################################################################
@@ -176,16 +186,32 @@
 
                 df.file.to.move <- df.file.to.move %>%
 
-                        filter(
-                                grepl(
-                                        f_paste_regex(
+                        purrr::when(
 
-                                                v.file.to.move,
-                                                c.pre = "",
-                                                c.post = ""
+                                # Filter based on regex, though without ^ amd $.
+                                c.file.to.move.filter.type == "regex" ~
+
+                                        filter(.,
+
+                                                grepl(
+                                                        f_paste_regex(
+
+                                                                v.file.to.move,
+                                                                c.pre = "",
+                                                                c.post = ""
+                                                        ),
+
+                                                        file.name.ext
+                                                )
                                         ),
-                                file.name.ext
-                                )
+
+                                # Filter based on file.name.ext
+                                c.file.to.move.filter.type == "file.name.ext" ~
+
+                                        filter(.,
+
+                                               file.name.ext %in% v.file.to.move
+                                        )
                         )
                 }
 

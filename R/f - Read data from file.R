@@ -24,7 +24,7 @@
 
                 # In case of Excel file.
                 c.sheet.name             = NULL, # was "Sheet1"
-                n.slice.rows             = 0,
+                n.skip.rows             = 0,
 
                 # Set to NULL, so we know when set by user.
                 c.delim                  = NULL,
@@ -65,7 +65,7 @@
                 # c.file.string.exclude    = NULL
                 # b.show.info              = FALSE
                 # c.sheet.name             = NULL
-                # n.slice.rows             = 0
+                # n.skip.rows             = 0
                 # c.delim                  = NULL
                 # b.col.names              = TRUE
                 # l.col.type               = NULL
@@ -74,78 +74,12 @@
                 # b.add.mod.date.path.file = FALSE
                 # b.clean.up.header.names  = TRUE
 
-                # Milatonie
-                # c.path                  = c.url.source
-                # c.file.type             = "csv"
-                # l.col.type              = cols(.default = "c")
-                # b.clean.up.header.names = FALSE
-
-                # Google Sheet
-                # c.file.type             = "gs"
-                # c.path                  = "https://docs.google.com/spreadsheets/d/1bqRGItDJUloEgkQtuOINOzM4Z45M7io99mykbPx5-D8"
-                # c.sheet.name            = "FeatureDictionary"
-                # b.clean.up.header.names = FALSE
-
-                # delim
-                # c.path      = c.url.source
-                # c.file.type = "delim"
-                # l.col.type  = cols(.default = "c")
-
-                # DataChamp
-                # v.file.string           = "2022 02 09 - DataChamp - Oletti Productfeed"
-                # c.file.type             = "delim"
-                # c.path                  = path.data
-                # b.clean.up.header.names = FALSE
-
-                # Developing f_read_data in case of xls and unknown sheet name.
-                # v.file.string            = "10699885"
-                # c.file.type              = "xls"
-                # c.path                   = path.data
-                # c.sheet.name             = "data"
-
-                # UL-Reg-Aff
-                # v.file.string = "GPC SDS Tracker"
-                # c.sheet.name  = "Tracker"
+                # BLC
+                # v.file.string = "DPCOMP with sort test multivariate v1 case 4"
                 # c.file.type   = "xls"
                 # c.path        = path.data
-
-                # BLC
-                # v.file.string            = c.file.name
-                # c.file.type              = "xls"
-                # c.path                   = c.folder
-                # c.sheet.name             = "^Sheet"
-                # b.exact.match            = TRUE
-                # b.col.names              = FALSE
-
-                # Partner address
-                # v.file.string           = "1TkOM0agRxseJ6km8R6Fd6u7_rhJXvl8VD8ZPITp8M6Q"
-                # l.col.type              = strrep("c", f_gs_col_number("1TkOM0agRxseJ6km8R6Fd6u7_rhJXvl8VD8ZPITp8M6Q"))
-                # c.file.type             = "gs"
-
-                # v.file.string           = f_oletti_dictionary(c.update.type)
-                # c.file.type             = "gs"
-                # c.sheet.name            = "Google Product Category Taxonomy"
-                # b.clean.up.header.names = FALSE
-
-                # c.path                  = c.url.source
-                # c.file.type             = "csv"
-                # l.col.type              = cols(.default = "c")
-                # b.clean.up.header.names = FALSE
-
-                # c.file.type             = "gs"
-                # v.file.string           = c.gs.code.destination
-                # c.sheet.name            = c.sheet.destination
-                # l.col.type              = strrep("c", f_gs_col_number(c.gs.code.destination, c.sheet.destination))
-                # b.clean.up.header.names = FALSE
-
-                # v.file.string           = "QAVAILABLE"
-                # c.path                  = path.data
-                # c.file.type             = "csv"
-                # c.delim                 = ";"
-                # l.col.type              = cols(.default = "c")
-                # b.clean.up.header.names = FALSE
-                # b.col.names             = FALSE
-                # b.show.info             = TRUE
+                # c.sheet.name  = "model"
+                # l.col.type    = cols(.default = "c")
 
 
                 ##############################################################################
@@ -294,7 +228,7 @@
 
                                                                        path      = c.path.file,
                                                                        sheet     = c.sheet.name,
-                                                                       skip      = n.slice.rows,
+                                                                       skip      = n.skip.rows,
                                                                        col_names = b.col.names,
                                                                        col_types = l.col.type
                                                                ) %>%

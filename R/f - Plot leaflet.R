@@ -16,6 +16,8 @@
                 v.coord.point.midpoint  = NULL,
                 n.zoom                  = 13,
                 b.save.leaflet          = FALSE,
+                b.add.date              = TRUE,
+                b.add.time              = TRUE,
                 b.add.streetsmart       = TRUE,
 
 
@@ -24,8 +26,8 @@
                 ##############################################
 
                 df.point                = NULL,
-                v.coord.point           = c("point.lon", "point.lat"),
-                c.id.point              = "point.id",
+                v.coord.point           = c("bord.lon", "bord.lat"),
+                c.id.point              = "bord.id",
 
                 b.show.point.label      = TRUE,
                 v.info.tag.point.label  = NULL,
@@ -111,7 +113,6 @@
                 df.text                 = NULL,
                 v.coord.text            = c("text.lon", "text.lat"),
                 c.text.label            = "text.label"
-
         ) {
 
 
@@ -130,6 +131,8 @@
         # v.coord.point.midpoint  = NULL
         # n.zoom                  = 13
         # b.save.leaflet          = FALSE
+        # b.add.date              = TRUE
+        # b.add.time              = TRUE
         # b.add.streetsmart       = TRUE
         #
         #
@@ -2607,9 +2610,23 @@
         # Save kaart.
         if(b.save.leaflet) {
 
-                saveWidget(widget = plot.leaflet,
-                           file   = paste0(path.leafets, gsub("-", " ", Sys.Date()), " - ",
-                                           c.leaflet.title, ".html"))
+                saveWidget(
+
+                        widget = plot.leaflet,
+
+                        file   = paste0(
+
+                                path.leafets,
+
+                                ifelse(b.add.date, paste0(format(Sys.time(), "%Y %m %d"), " - "), ""),
+
+                                ifelse(b.add.time, paste0(format(Sys.time(), "%H %M %S"), " - "), ""),
+
+                                c.leaflet.title,
+
+                                ".html"
+                        )
+                )
 
                 cat("Leaflet saved.\n\n")
         }

@@ -24,7 +24,7 @@
 
                 # In case of Excel file.
                 c.sheet.name             = NULL, # was "Sheet1"
-                n.skip.rows             = 0,
+                n.skip.rows              = 0,
 
                 # Set to NULL, so we know when set by user.
                 c.delim                  = NULL,
@@ -79,7 +79,6 @@
                 # c.file.type   = "xls"
                 # c.path        = path.data
                 # c.sheet.name  = "model"
-                # l.col.type    = cols(.default = "c")
 
 
                 ##############################################################################

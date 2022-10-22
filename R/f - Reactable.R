@@ -5,13 +5,35 @@
 
         f_reactable <- function(
 
-                df.input
+                df.input,
+                v.col.digit,
+                v.col.digit.name,
+                v.col.digit.number,
+                n.defaultPageSize     = 10,
+                b.showPageSizeOptions = FALSE,
+                v.pageSizeOptions     = c(10, 20, 30),
+                b.filterable          = FALSE,
+                b.searchable          = FALSE
         ) {
 
 
         ######################################################################################
         # TEST
         ######################################################################################
+
+        # ALWAYS
+        # n.defaultPageSize     = 10
+        # b.showPageSizeOptions = FALSE
+        # v.pageSizeOptions     = c(10, 20, 30)
+        # b.filterable          = FALSE
+        # b.searchable          = FALSE
+
+        # Set 1
+        # df.input           = df.tg.target
+        # v.col.digit        = c("target")
+        # v.col.digit.name   = c("target (%)")
+        # v.col.digit.number = c(2)
+        # n.defaultPageSize  = 30
 
         ######################################################################################
         # ERROR CHECKS
@@ -20,6 +42,31 @@
         ######################################################################################
         # INITIALIZATION
         ######################################################################################
+
+        # Update formatting of variable column names. Using sapply allows keeping the
+        # item names (not available in lapply). Using simplify is false prevents
+        # the list from being collapsed.
+        # https://github.com/glin/reactable/issues/138
+        l.colDef.digit <- sapply(
+
+                v.col.digit,
+
+                function(x) { # x = v.col.digit[1]
+
+                        colDef(
+                                name   = v.col.digit.name[x == v.col.digit],
+
+                                format = colFormat(
+
+                                        digits = v.col.digit.number[x == v.col.digit]
+                                )
+                        )
+                },
+
+                USE.NAMES = TRUE,
+                simplify  = FALSE
+        )
+
 
         ######################################################################################
         # PROCESS
@@ -34,6 +81,12 @@
                                 fontSize   = '16px'
                         ),
 
+                        defaultColDef = colDef(
+
+                                align    = "center",
+                                maxWidth = 120
+                        ),
+
                         rowStyle = function(index) {
 
                                 if (df.input[index, 1] == "Total") {
@@ -42,25 +95,17 @@
                                 }
                         },
 
-                        defaultColDef = colDef(
-
-                                align    = "center",
-                                maxWidth = 120
-                        ),
-
                         columns = c(
 
-                                list(
-                                        target = colDef(
-
-                                                name   = "target (%)",
-
-                                                format = colFormat(digits = 2)
-                                        )
-                                )
+                                l.colDef.digit
                         ),
 
-                        defaultPageSize = 30
+                        defaultPageSize      = n.defaultPageSize,
+                        showPageSizeOptions  = b.showPageSizeOptions,
+                        pageSizeOptions      = v.pageSizeOptions,
+
+                        filterable           = b.filterable,
+                        searchable           = b.searchable
                 )
 
 

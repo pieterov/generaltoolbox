@@ -130,7 +130,12 @@
 
 
         # Print header.
-        cat(paste0("\n ", name, "\n\n"))
+        cat(
+                paste0(
+                        "\n ", name, " (", class(x[[c.column]]), ")\n\n"
+                )
+        )
+
 
         cat(
                 paste0(

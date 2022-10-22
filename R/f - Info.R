@@ -25,9 +25,13 @@
         # Als x een dataframe is.
         if (is.data.frame(x)) {
 
-                for (c.column in colnames(x)) { # c.column <- colnames(x)[1]
+                for (c.column in colnames(x)) { # c.column <- colnames(x)[7]
 
-                        cat(paste("\n\n\n\nField name: ", c.column, "\n"))
+                        cat(
+                                paste0(
+                                        "\n\n\n\nField name: ", c.column, "\n"
+                                )
+                        )
 
                         f_vector_info(
 

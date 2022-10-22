@@ -6,6 +6,7 @@
         f_reactable <- function(
 
                 df.input,
+                c.table.title         = "",
                 v.col.digit,
                 v.col.digit.name,
                 v.col.digit.number,
@@ -22,6 +23,7 @@
         ######################################################################################
 
         # ALWAYS
+        # c.table.title         = ""
         # n.defaultPageSize     = 10
         # b.showPageSizeOptions = FALSE
         # v.pageSizeOptions     = c(10, 20, 30)
@@ -72,41 +74,49 @@
         # PROCESS
         ######################################################################################
 
-        df.input %>%
+        reactable(
 
-                reactable(
+                data = df.input,
 
-                        style = list(
+                style = list(
 
-                                fontSize   = '16px'
-                        ),
+                        fontSize   = '16px'
+                ),
 
-                        defaultColDef = colDef(
+                defaultColDef = colDef(
 
-                                align    = "center",
-                                maxWidth = 120
-                        ),
+                        align    = "center",
+                        maxWidth = 120
+                ),
 
-                        rowStyle = function(index) {
+                rowStyle = function(index) {
 
-                                if (df.input[index, 1] == "Total") {
+                        if (df.input[index, 1] == "Total") {
 
-                                        list(fontWeight = "bold")
-                                }
-                        },
+                                list(fontWeight = "bold")
+                        }
+                },
 
-                        columns = c(
+                columns = c(
 
-                                l.colDef.digit
-                        ),
+                        l.colDef.digit
+                ),
 
-                        defaultPageSize      = n.defaultPageSize,
-                        showPageSizeOptions  = b.showPageSizeOptions,
-                        pageSizeOptions      = v.pageSizeOptions,
+                defaultPageSize      = n.defaultPageSize,
+                showPageSizeOptions  = b.showPageSizeOptions,
+                pageSizeOptions      = v.pageSizeOptions,
 
-                        filterable           = b.filterable,
-                        searchable           = b.searchable
+                filterable           = b.filterable,
+                searchable           = b.searchable
+        ) %>%
+
+        htmlwidgets::prependContent(
+
+                h2(
+                        class = "title",
+                        paste("Table - ", c.table.title)
                 )
+        )
 
 
         ######################################################################################

@@ -1,9 +1,9 @@
 ##############################################################################################
-# NAME:         FUNCTION - AS DATE
+# NAME:         FUNCTION - REACTABLE
 # AUTHOR:       Pieter Overdevest
 ##############################################################################################
 
-        f_test <- function(
+        f_reactable <- function(
 
                 df.input
         ) {

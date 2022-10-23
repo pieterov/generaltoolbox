@@ -6,10 +6,14 @@
         f_reactable <- function(
 
                 df.input,
-                c.table.title         = "",
-                v.col.digit,
-                v.col.digit.name,
-                v.col.digit.number,
+                c.table.header        = NULL,
+                c.table.footer        = NULL,
+                n.table.number        = NULL,
+                v.col.digit           = NULL,
+                v.col.digit.name      = NULL,
+                v.col.digit.number    = NULL,
+                v.col.euro            = NULL,
+                v.col.euro.name       = NULL,
                 n.defaultPageSize     = 10,
                 b.showPageSizeOptions = FALSE,
                 v.pageSizeOptions     = c(10, 20, 30),
@@ -22,16 +26,25 @@
         # TEST
         ######################################################################################
 
-        # ALWAYS
-        # c.table.title         = ""
+        ## ALWAYS
+        # c.table.header        = NULL
+        # c.table.footer        = NULL
+        # n.table.number        = NULL
+        # v.col.digit           = NULL
+        # v.col.digit.name      = NULL
+        # v.col.digit.number    = NULL
+        # v.col.euro            = NULL
+        # v.col.euro.name       = NULL
         # n.defaultPageSize     = 10
         # b.showPageSizeOptions = FALSE
         # v.pageSizeOptions     = c(10, 20, 30)
         # b.filterable          = FALSE
         # b.searchable          = FALSE
-
-        # Set 1
+        # # Set 1
         # df.input           = df.tg.target
+        # c.table.header      = "Dit is een TITEL"
+        # c.table.footer     = "dit is een footer"
+        # n.table.number     = 3
         # v.col.digit        = c("target")
         # v.col.digit.name   = c("target (%)")
         # v.col.digit.number = c(2)
@@ -70,6 +83,29 @@
         )
 
 
+        l.colDef.euro <- sapply(
+
+                v.col.euro,
+
+                function(x) { # x = v.col.euro[1]
+
+                        colDef(
+                                name   = v.col.euro.name[x == v.col.euro],
+
+                                format = colFormat(
+
+                                        currency   = "EUR",
+                                        separators = TRUE,
+                                        locales    = "nl-NL",
+                                        digits     = 2
+                                )
+                        )
+                },
+
+                USE.NAMES = TRUE,
+                simplify  = FALSE
+        )
+
         ######################################################################################
         # PROCESS
         ######################################################################################
@@ -99,7 +135,9 @@
 
                 columns = c(
 
-                        l.colDef.digit
+                        l.colDef.digit,
+
+                        l.colDef.euro
                 ),
 
                 defaultPageSize      = n.defaultPageSize,
@@ -110,13 +148,26 @@
                 searchable           = b.searchable
         ) %>%
 
-        htmlwidgets::prependContent(
+        # Add title.
+        purrr::when(
 
-                h2(
-                        class = "title",
-                        paste("Table - ", c.table.title)
+                !is.null(c.table.header) ~ htmlwidgets::prependContent(
+
+                        ., paste0("<p><strong>Table ", n.table.number, " - ", c.table.header, "</strong></p>")
+                )
+        ) %>%
+
+        # Add footer.
+        purrr::when(
+
+                !is.null(c.table.footer) ~
+
+                htmlwidgets::appendContent(
+
+                        ., paste0("<p><small><em>Note - ", c.table.footer, "</em></small></p>")
                 )
         )
+
 
 
         ######################################################################################

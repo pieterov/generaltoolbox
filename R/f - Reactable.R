@@ -155,16 +155,11 @@
 
                 !is.null(c.table.header) ~ htmlwidgets::prependContent(
 
-                        ., htmltools::tags$p(
+                        ., htmltools::tags$strong(
 
                                 paste0("Table ", n.table.number, " - ", c.table.header),
 
-                                style = list(
-
-                                        fontFamily = "Menlo",
-                                        fontWeight = "bold",
-                                        fontSize   = "14px"
-                                )
+                                style = "font-family: Menlo; font-size: 14px"
                         )
                 )
         ) %>%
@@ -179,11 +174,7 @@
 
                                 paste0("Note - ", c.table.footer),
 
-                                style = list(
-
-                                        fontFamily = "Menlo",
-                                        fontSize   = "12px"
-                                )
+                                style = "font-family: Menlo; font-size: 12px"
                         )
                 )
         )

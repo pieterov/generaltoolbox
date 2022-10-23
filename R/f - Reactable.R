@@ -116,6 +116,7 @@
 
                 style = list(
 
+                        fontFamily = 'Menlo',
                         fontSize   = '16px'
                 ),
 
@@ -149,25 +150,43 @@
         ) %>%
 
         # Add title.
+        # https://stackoverflow.com/questions/63503366/how-to-change-the-font-used-in-htmlwidgets-for-r
         purrr::when(
 
                 !is.null(c.table.header) ~ htmlwidgets::prependContent(
 
-                        ., paste0("<p><strong>Table ", n.table.number, " - ", c.table.header, "</strong></p>")
+                        ., htmltools::tags$p(
+
+                                paste0("Table ", n.table.number, " - ", c.table.header),
+
+                                style = list(
+
+                                        fontFamily = "Menlo",
+                                        fontWeight = "bold",
+                                        fontSize   = "14px"
+                                )
+                        )
                 )
         ) %>%
 
         # Add footer.
+        # Why using 'i' instead of 'p': https://shiny.rstudio.com/articles/tag-glossary.html
         purrr::when(
 
-                !is.null(c.table.footer) ~
+                !is.null(c.table.footer) ~ htmlwidgets::appendContent(
 
-                htmlwidgets::appendContent(
+                        ., htmltools::tags$i(
 
-                        ., paste0("<p><small><em>Note - ", c.table.footer, "</em></small></p>")
+                                paste0("Note - ", c.table.footer),
+
+                                style = list(
+
+                                        fontFamily = "Menlo",
+                                        fontSize   = "12px"
+                                )
+                        )
                 )
         )
-
 
 
         ######################################################################################

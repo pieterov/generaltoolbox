@@ -12,7 +12,7 @@
                 n.table.number          = NULL,
 
                 c.col.default.align     = "center",
-                n.col.default.max.width = 100,
+                n.col.default.max.width = 120,
 
                 v.col.text              = NULL,
                 v.col.text.name         = NULL,

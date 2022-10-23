@@ -26,7 +26,7 @@
         # TEST
         ######################################################################################
 
-        ## ALWAYS
+        # ALWAYS
         # c.table.header        = NULL
         # c.table.footer        = NULL
         # n.table.number        = NULL
@@ -40,15 +40,15 @@
         # v.pageSizeOptions     = c(10, 20, 30)
         # b.filterable          = FALSE
         # b.searchable          = FALSE
-        # # Set 1
+        ## Set 1
         # df.input           = df.tg.target
-        # c.table.header      = "Dit is een TITEL"
-        # c.table.footer     = "dit is een footer"
-        # n.table.number     = 3
+        # c.table.header     = "Composition of target product."
+        # c.table.footer     = NULL
+        # n.table.number     = table.i
         # v.col.digit        = c("target")
         # v.col.digit.name   = c("target (%)")
         # v.col.digit.number = c(2)
-        # n.defaultPageSize  = 30
+        # n.defaultPageSize  = 10
 
         ######################################################################################
         # ERROR CHECKS
@@ -157,11 +157,12 @@
 
                         ., htmltools::tags$strong(
 
-                                paste0("Table ", n.table.number, " - ", c.table.header),
-
-                                style = "font-family: Menlo; font-size: 14px"
+                                paste0("Table ", n.table.number, " - ", c.table.header)
                         )
-                )
+                ),
+
+                # If c.table.footer is NULL, then pass on the input (.).
+                .
         ) %>%
 
         # Add footer.
@@ -174,9 +175,12 @@
 
                                 paste0("Note - ", c.table.footer),
 
-                                style = "font-family: Menlo; font-size: 12px"
+                                style = "font-size: 12px"
                         )
-                )
+                ),
+
+                # If c.table.footer is NULL, then pass on the input (.).
+                .
         )
 
 

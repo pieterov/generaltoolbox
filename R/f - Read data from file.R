@@ -32,13 +32,19 @@
                 # Do the data contain header names?
                 b.col.names              = TRUE,
 
-                # In case of a Excel or delimited file.
+                # In case of Excel file, l.col.type should consist of list of:
+                # "skip", "guess", "logical", "numeric", "date", "text" or "list".
+
+                # In case of delimited file, l.col.type should consist of list of:
                 # c = character, i = integer, n = number, d = double,
                 # l = logical, D = date, T = date time, t = time,
                 # ? = guess, or _/- to skip the column.
-                #
-                # Or put everything on character, using: cols(.default = "c")
+
+                # In the past I used 'cols(.default = "c")' (no longer needed).
+
+                # Or put everything on character.
                 l.col.type               = NULL,
+                n.guess.max              = 1000,
 
                 # In case of SQLite file.
                 c.table.name             = NULL,
@@ -69,6 +75,7 @@
                 # c.delim                  = NULL
                 # b.col.names              = TRUE
                 # l.col.type               = NULL
+                # n.guess.max              = 1000
                 # c.table.name             = NULL
                 # c.show.report            = "all"
                 # b.add.mod.date.path.file = FALSE
@@ -79,6 +86,12 @@
                 # c.file.type   = "xls"
                 # c.path        = path.data
                 # c.sheet.name  = "model"
+
+                # v.file.string            = "Binary Mixtures - Parts I II III - FINAL"
+                # c.file.type              = "xls"
+                # c.path                   = path.deliverables
+                # c.sheet.name             = "Solids"
+                # n.guess.max              = 20000
 
 
                 ##############################################################################
@@ -211,6 +224,7 @@
 
                                                function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
+                                                       # Get all sheet names in the workbook.
                                                        v.sheet.name <- readxl::excel_sheets(c.path.file)
 
                                                        if(is.null(c.sheet.name)) {
@@ -229,7 +243,8 @@
                                                                        sheet     = c.sheet.name,
                                                                        skip      = n.skip.rows,
                                                                        col_names = b.col.names,
-                                                                       col_types = l.col.type
+                                                                       col_types = l.col.type,
+                                                                       guess_max = n.guess.max
                                                                ) %>%
 
                                                                f_post_processing(

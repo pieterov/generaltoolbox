@@ -23,7 +23,7 @@
 
 
         # Als x een dataframe is.
-        if (is.data.frame(x)) {
+        if(is.data.frame(x)) {
 
                 for (c.column in colnames(x)) { # c.column <- colnames(x)[7]
 
@@ -35,7 +35,7 @@
 
                         f_vector_info(
 
-                                v         = as.character(x[[c.column]]),
+                                v.input   = x[[c.column]],
                                 name      = c.column,
                                 n.top     = n.top,
                                 show.freq = show.freq,
@@ -46,7 +46,7 @@
 
                 f_vector_info(
 
-                        v         = as.character(x),
+                        v.input   = x,
                         name      = deparse(substitute(x)),
                         n.top     = n.top,
                         show.freq = show.freq,

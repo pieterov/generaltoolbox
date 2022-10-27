@@ -4,30 +4,33 @@
 # DESCRIPTION:  Provide informartion on vector.
 #################################################################################
 
-    f_vector_info <- function(v,
-                              name,
-                              n.top,
-                              show.freq,
-                              n.width) {
+        f_vector_info <- function(
+
+                v.input,
+                name,
+                n.top,
+                show.freq,
+                n.width
+        ) {
 
 ##############################################################################
 # Error check.
 ##############################################################################
 
-        # v         = df.datachamp.baseline$id.sku.vendor[1:3]
+        # v.input   = df.datachamp.baseline$id.sku.vendor[1:3]
         # name      = "df.datachamp.baseline$id.sku.vendor"
         # n.top     = 10
         # show.freq = TRUE
 
-        # v         = l.result$bord.type
+        # v.input         = l.result$bord.type
         # name      = "l.result$bord.type"
         # n.top     = 10
         # show.freq = TRUE
 
-        # v <- c(0, 2, 2, NA, NA, NA, 0/0, -0/0, -0/0, 0/0, 6/0, -7/0, -8/0, 9/0, 10/0)
-        # v <- c(NA, NA, NA)
-        # v <- c(0/0, 0/0, 0/0, 0/0)
-        # v <- c(6/0, 7/0, 8/0, 9/0, 10/0)
+        # v.input <- c(0, 2, 2, NA, NA, NA, 0/0, -0/0, -0/0, 0/0, 6/0, -7/0, -8/0, 9/0, 10/0)
+        # v.input <- c(NA, NA, NA)
+        # v.input <- c(0/0, 0/0, 0/0, 0/0)
+        # v.input <- c(6/0, 7/0, 8/0, 9/0, 10/0)
 
 
 ##############################################################################
@@ -45,7 +48,7 @@
 ##############################################################################
 
         # Initialization. We take max of nchar and 3 to prevent count errors below. Width is at least 3.
-        n.count.true <- nchar(format(length(v), big.mark = ","))
+        n.count.true <- nchar(format(length(v.input), big.mark = ","))
         n.count      <- max(3, n.count.true)
 
         # Calculate basic info.
@@ -65,14 +68,14 @@
                 y = format(
 
                         c(
-                                length(v),
-                                length(unique(v)),
-                                sum(v == 0, na.rm = TRUE),
-                                sum(v == "", na.rm = TRUE),
-                                sum(v %in% NA),
-                                sum(v %in% NaN),
-                                sum(v %in% -Inf),
-                                sum(v %in% Inf)
+                                length(v.input),
+                                length(unique(v.input)),
+                                sum(v.input == 0, na.rm = TRUE),
+                                sum(v.input == "", na.rm = TRUE),
+                                sum(v.input %in% NA),
+                                sum(v.input %in% NaN),
+                                sum(v.input %in% -Inf),
+                                sum(v.input %in% Inf)
                         ),
 
                         width    = n.count-1,
@@ -89,32 +92,32 @@
                                 c(
 
                                         round(
-                                                sum(v == 0, na.rm = TRUE) / length(v) * 100,
+                                                sum(v.input == 0, na.rm = TRUE) / length(v.input) * 100,
                                                 digits = 1
                                         ),
 
                                         round(
-                                                sum(v == "", na.rm = TRUE) / length(v) * 100,
+                                                sum(v.input == "", na.rm = TRUE) / length(v.input) * 100,
                                                 digits = 1
                                         ),
 
                                         round(
-                                                sum(v %in% NA) / length(v) * 100,
+                                                sum(v.input %in% NA) / length(v.input) * 100,
                                                 digits = 1
                                         ),
 
                                         round(
-                                                sum(v %in% NaN) / length(v) * 100,
+                                                sum(v.input %in% NaN) / length(v.input) * 100,
                                                 digits = 1
                                         ),
 
                                         round(
-                                                sum(v %in% -Inf) / length(v) * 100,
+                                                sum(v.input %in% -Inf) / length(v.input) * 100,
                                                 digits = 1
                                         ),
 
                                         round(
-                                                sum(v %in% Inf) / length(v) * 100,
+                                                sum(v.input %in% Inf) / length(v.input) * 100,
                                                 digits = 1
                                         )
                                 ),
@@ -132,7 +135,7 @@
         # Print header.
         cat(
                 paste0(
-                        "\n ", name, " (", class(x[[c.column]]), ")\n\n"
+                        "\n ", name, " (", class(v.input), ")\n\n"
                 )
         )
 
@@ -170,24 +173,24 @@
         if (show.freq) {
 
                 # Replace any NA by "NA", and NaN by "NaN"
-                v[v %in% NA]  <- "NA "
-                v[v %in% NaN] <- "NaN "
-                v[v %in% Inf] <- "Inf "
+                v.input[v.input %in% NA]  <- "NA "
+                v.input[v.input %in% NaN] <- "NaN "
+                v.input[v.input %in% Inf] <- "Inf "
 
                 # Calculate frequency of levels in vector.
-                df.freq.source <- as.data.frame(table(v)) %>%
+                df.freq.source <- as.data.frame(table(v.input)) %>%
 
-                        arrange(desc(Freq), v) %>%
+                        arrange(desc(Freq), v.input) %>%
 
                         mutate(
-                                v     = as.character(v),
-                                v     = ifelse(
+                                v.input     = as.character(v.input),
+                                v.input     = ifelse(
 
-                                        nchar(v) >= (n.width - 3),
+                                        nchar(v.input) >= (n.width - 3),
 
-                                        paste0(substr(v, 1, (n.width - 4)), "..."),
+                                        paste0(substr(v.input, 1, (n.width - 4)), "..."),
 
-                                        v
+                                        v.input
                                 ),
 
                                 Freq2 = format(Freq, big.mark = ",", width = n.count),
@@ -199,14 +202,14 @@
 
                 df.dots <- data.frame(
 
-                        v    = "...",
+                        v.input    = "...",
                         Freq = paste0(strrep(" ", n.count - 3), "..."),
                         perc = paste0(strrep(" ", 5       - 3), "...")
                 )
 
                 df.total <- data.frame(
 
-                        v    = c(
+                        v.input    = c(
 
                                 strrep("-", n.width-1),
                                 "TOTAL"
@@ -214,7 +217,7 @@
 
                         Freq = c(
                                 strrep("-", n.count),
-                                format(length(v), big.mark = ",")
+                                format(length(v.input), big.mark = ",")
                         ),
 
                         perc = c(

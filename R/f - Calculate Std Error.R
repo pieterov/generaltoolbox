@@ -15,15 +15,21 @@
         # TESTING
         #'#####################################################################################
 
-        # df.input   = df.sc.source
-        # c.group.by = "file.comp.stabilization"
-        # c.model    = "solids.median"
-        # c.data     = "solids"
+        df.input   = df.sc
+        c.group.by = "file.comp.stabilization"
+        c.model    = "solids.median"
+        c.data     = "solids"
 
 
         #'#####################################################################################
         # ERROR CHECK
         #'#####################################################################################
+
+        if(df.input %>% filter(is.na(get(c.model)), is.na(get(c.data))) %>% nrow() > 0) {
+
+                stop("Dataframe cannot have NA in both c.model and c.data!")
+        }
+
 
         #'#####################################################################################
         # INITIALIZE
@@ -47,6 +53,11 @@
 
 
         v.output <- df.input %>%
+
+                mutate(
+                        !!c.model := ifelse(is.na(get(c.model)), get(c.data),  get(c.model)),
+                        !!c.data  := ifelse(is.na(get(c.data)),  get(c.model), get(c.data))
+                ) %>%
 
                 mutate(
                         # Calculate square of difference between model and data.

@@ -7,10 +7,6 @@
 
                 df.input,
 
-                c.table.header          = NULL,
-                c.table.footer          = NULL,
-                n.table.number          = NULL,
-
                 c.col.default.align     = "center",
                 n.col.default.max.width = 120,
 
@@ -45,10 +41,6 @@
         ######################################################################################
 
         # ALWAYS
-        # c.table.header          = NULL
-        # c.table.footer          = NULL
-        # n.table.number          = NULL
-        #
         # c.col.default.align     = "center"
         # n.col.default.max.width = 100
         #
@@ -78,9 +70,6 @@
 
         # # Set 1
         # df.input            = df.tg.target
-        # c.table.header      = "Composition of target product."
-        # n.table.number      = n.table.i
-        #
         # c.col.default.align = "left"
         #
         # v.col.text          = "name"
@@ -252,40 +241,6 @@
 
                 filterable           = b.filterable,
                 searchable           = b.searchable
-        ) %>%
-
-        # Add title.
-        # https://stackoverflow.com/questions/63503366/how-to-change-the-font-used-in-htmlwidgets-for-r
-        purrr::when(
-
-                !is.null(c.table.header) ~ htmlwidgets::prependContent(
-
-                        ., htmltools::tags$strong(
-
-                                paste0("Table ", n.table.number, " - ", c.table.header)
-                        )
-                ),
-
-                # If c.table.footer is NULL, then pass on the input (.).
-                .
-        ) %>%
-
-        # Add footer.
-        # Why using 'i' instead of 'p': https://shiny.rstudio.com/articles/tag-glossary.html
-        purrr::when(
-
-                !is.null(c.table.footer) ~ htmlwidgets::appendContent(
-
-                        ., htmltools::tags$i(
-
-                                paste0("Note - ", c.table.footer),
-
-                                style = "font-size: 12px"
-                        )
-                ),
-
-                # If c.table.footer is NULL, then pass on the input (.).
-                .
         )
 
 

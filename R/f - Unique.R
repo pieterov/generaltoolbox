@@ -8,6 +8,7 @@
 
                 v.vector,
                 b.freq = FALSE,
+                b.sort = TRUE,
                 n.char = "all") {
 
 
@@ -36,9 +37,12 @@
         # Process
         #########################################################################
 
-        df.result <- tibble(x = v.vector) %>%
+        df.result <- tibble(x = unique(v.vector)) %>%
 
-                dplyr::count(x) %>%
+                left_join(
+
+                        y = tibble(x = v.vector) %>% dplyr::count(x)
+                ) %>%
 
                 mutate(
                         x = ifelse(is.na(x), "NA", x),
@@ -64,23 +68,17 @@
                 )
 
 
-        # Sort based b.freq
-        if(b.freq) {
+        # Sort based on b.freq
+        v.result <- df.result %>%
 
-                v.result <- df.result %>%
+                purrr::when(
 
-                        arrange(desc(n)) %>%
+                         b.freq & b.sort ~ arrange(., desc(n)),
+                        !b.freq & b.sort ~ arrange(., x),
+                         TRUE            ~ .
+                ) %>%
 
-                        pull(y)
-
-        } else {
-
-                v.result <- df.result %>%
-
-                        arrange(x) %>%
-
-                        pull(x)
-        }
+                pull(y)
 
 
         #########################################################################

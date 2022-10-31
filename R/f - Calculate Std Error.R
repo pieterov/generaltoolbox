@@ -25,12 +25,6 @@
         # ERROR CHECK
         #'#####################################################################################
 
-        if(df.input %>% filter(is.na(get(c.model)), is.na(get(c.data))) %>% nrow() > 0) {
-
-                stop("Dataframe cannot have NA in both c.model and c.data!")
-        }
-
-
         #'#####################################################################################
         # INITIALIZE
         #'#####################################################################################
@@ -55,8 +49,11 @@
         v.output <- df.input %>%
 
                 mutate(
-                        !!c.model := ifelse(is.na(get(c.model)), get(c.data),  get(c.model)),
-                        !!c.data  := ifelse(is.na(get(c.data)),  get(c.model), get(c.data))
+                        !!c.model := ifelse(is.na(get(c.model)) & !is.na(get(c.data)),  get(c.data),  get(c.model)),
+                        !!c.data  := ifelse(is.na(get(c.data))  & !is.na(get(c.model)), get(c.model), get(c.data)),
+
+                        !!c.model := ifelse(is.na(get(c.model)) & is.na(get(c.data)), 0, get(c.model)),
+                        !!c.data  := ifelse(is.na(get(c.model)) & is.na(get(c.data)), 0, get(c.data))
                 ) %>%
 
                 mutate(

@@ -15,10 +15,10 @@
         # TESTING
         #'#####################################################################################
 
-        df.input   = df.sc
-        c.group.by = "file.comp.stabilization"
-        c.model    = "solids.median"
-        c.data     = "solids"
+        # df.input   = df.sc
+        # c.group.by = "file.comp.stabilization"
+        # c.model    = "solids.median"
+        # c.data     = "solids"
 
 
         #'#####################################################################################

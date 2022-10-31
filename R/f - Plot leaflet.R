@@ -346,6 +346,21 @@
         # v.coord.point  = c("cell.x", "cell.y")
         # b.save.leaflet = TRUE
 
+        # c.leaflet.title = paste0(
+        #
+        #         "Cell Centers t.b.v. ISA Analyse Den Bosch (cellgrootte ",
+        #         n.cell.width/1000, "x", n.cell.width/1000, "km2). Label: cell ID (#centers)")
+        #
+        # df.point       = df.cell %>% select(point.x = cell.x.mid, point.y = cell.y.mid) %>% mutate(id = seq(n()))
+        # c.id.point     = "id"
+        # v.coord.point  = c("point.x", "point.y")
+        # df.text        = df.cell %>% mutate(text.label = paste0(cell.seq, " (", n.center, ")"))
+        # v.coord.text   = c("cell.x.mid", "cell.y.mid")
+        # c.text.label   = "text.label"
+        # b.save.leaflet = FALSE
+
+
+
 ##############################################################################
 # ERROR CHECKS
 ##############################################################################
@@ -363,6 +378,20 @@
                         stop("De velden - ", f_paste(v.coord.point), " (v.coord.point) - moeten aanwezig zijn in df.point!")
                 }
 
+
+                # Check appendix v.coord.point.
+                if(!any(grepl("x$|lon$", v.coord.point[1]))) {
+
+                        stop("Het veld - '", v.coord.point[1], "' (v.coord.point[1]) - moeten eindigen met '.x' of '.lon'!")
+                }
+
+                if(!any(grepl("y$|lat$", v.coord.point[2]))) {
+
+                        stop("Het veld - '", v.coord.point[2], "' (v.coord.point[2]) - moeten eindigen met '.y' of '.lat'!")
+                }
+
+
+                # Check that c.id.point is in names df.point.
                 if(!c.id.point %in% names(df.point)) {
 
                         stop("Het veld - ", c.id.point, " (c.id.point) - moeten aanwezig zijn in df.point!")
@@ -585,6 +614,18 @@
         # Check in het geval df.line ongelijk is aan NULL.
         if(!is.null(df.line)) {
 
+                # Check appendix v.coord.line.
+                if(!any(grepl("x$|lon$", v.coord.line[1]))) {
+
+                        stop("Het veld - '", v.coord.line[1], "' (v.coord.line[1]) - moeten eindigen met '.x' of '.lon'!")
+                }
+
+                if(!any(grepl("y$|lat$", v.coord.line[2]))) {
+
+                        stop("Het veld - '", v.coord.line[2], "' (v.coord.line[2]) - moeten eindigen met '.y' of '.lat'!")
+                }
+
+
                 # Check number of columns
                 if(!is.null(df.color.line)) {
 
@@ -603,7 +644,7 @@
                 # Check df.color.line.
                 if(!is.null(c.color.line)) {
 
-                        # Aantal levels van fill factor in df.point.
+                        # Aantal levels van fill factor in df.line.
                         n.level.stroke.color.line <- length(unique(pull(df.line, c.color.line)))
 
                         if(n.level.stroke.color.line == 2) {
@@ -626,7 +667,7 @@
                 # Check df.weight.line.
                 if(!is.null(c.weight.line)) {
 
-                        # Aantal levels van fill factor in df.point.
+                        # Aantal levels van fill factor in df.line.
                         n.level.stroke.weight.line <- length(unique(pull(df.line, c.weight.line)))
 
                         # Check df.weight.line.
@@ -637,6 +678,25 @@
                                         c.weight.line, ", nl. ", n.level.stroke.weight.line, "!"
                                 )
                         }
+                }
+        }
+
+
+        ######################################################################
+        # POLYGONS
+        ######################################################################
+
+        if(!is.null(df.polygon)) {
+
+                # Check appendix v.coord.polygon.
+                if(!any(grepl("x$|lon$", v.coord.polygon[1]))) {
+
+                        stop("Het veld - '", v.coord.polygon[1], "' (v.coord.polygon[1]) - moeten eindigen met '.x' of '.lon'!")
+                }
+
+                if(!any(grepl("y$|lat$", v.coord.polygon[2]))) {
+
+                        stop("Het veld - '", v.coord.polygon[2], "' (v.coord.polygon[2]) - moeten eindigen met '.y' of '.lat'!")
                 }
         }
 
@@ -667,6 +727,18 @@
         ######################################################################
 
         if(!is.null(df.text)) {
+
+                # Check appendix v.coord.text.
+                if(!any(grepl("x$|lon$", v.coord.text[1]))) {
+
+                        stop("Het veld - '", v.coord.text[1], "' (v.coord.text[1]) - moeten eindigen met '.x' of '.lon'!")
+                }
+
+                if(!any(grepl("y$|lat$", v.coord.text[2]))) {
+
+                        stop("Het veld - '", v.coord.text[2], "' (v.coord.text[2]) - moeten eindigen met '.y' of '.lat'!")
+                }
+
 
                 if(!all(v.coord.text %in% names(df.text))) {
 

@@ -23,6 +23,18 @@
         # c.id     = "ID"
         # f_check_cols_not_empty(df.input, v.col.include, c.id)
 
+        # df.input = df.order
+        # v.col.exclude = c(
+        #
+        #         "created.refund", "discount.code",
+        #         "line.unit.price.refund",
+        #         "line.total.price.refund",
+        #         "order.discount",
+        #         "order.refund",
+        #         "order.net.payment",
+        #         "line.refund.status",
+        #         "line.tag")
+        # c.id     = "id"
 
         ######################################################################################
         # ERROR CHECKS
@@ -55,16 +67,26 @@
         df.temp <- df.input %>%
 
                 # Select concerned columns
-                select(all_of(v.col.include)) %>%
+                select(
+                        all_of(v.col.include)
+                ) %>%
 
                 # Determine number of NA per column
-                f_summarize(b.view = FALSE, b.return = TRUE) %>%
+                f_summarize(
+
+                        b.view   = FALSE,
+                        b.return = TRUE
+                ) %>%
 
                 # Select columns with NA
-                filter(n.na > 0) %>%
+                filter(
+                        n.na > 0
+                ) %>%
 
                 # Create label.
-                mutate(n.label = paste0("'", feature, "' (", n.na, ")"))
+                mutate(
+                        n.label = paste0("'", feature, "' (", n.na, ")")
+                )
 
 
         ######################################################################################

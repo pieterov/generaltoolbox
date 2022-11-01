@@ -15,144 +15,185 @@
 
                 ) {
 
-                # Testing
-                # df.input = df.source %>% select(23) %>% head(10)
-                # b.sort   = FALSE
-                # b.view   = TRUE
-                # b.return = FALSE
-                # n.char   = 20
-                # n.freq   = 3
+
+        ##############################################################################################
+        # Testing.
+        ##############################################################################################
+
+        # ALWAYS
+        # b.sort   = TRUE
+        # b.view   = TRUE
+        # b.return = FALSE
+        # n.char   = "all"
+        # n.freq   = 3
+
+        # OPTIES
+        # df.input = df.source %>% select(23) %>% head(10)
+        # b.sort   = FALSE
+        # b.view   = TRUE
+        # b.return = FALSE
+        # n.char   = 20
+        # n.freq   = 3
+
+        # df.input = df.temp
+        # b.view   = FALSE
+        # b.return = TRUE
 
         ##############################################################################################
         # Error check.
         ##############################################################################################
 
-                # Check that input is a data frame.
-                if(!"data.frame" %in% class(df.input)) {
+        # Check that input is a data frame.
+        if(!"data.frame" %in% class(df.input)) {
 
-                        stop("Note, the input must be a data frame!")
+                stop("Note, the input must be a data frame!")
+        }
+
+
+        # Check whether one or more columns contain listed data.
+        v.class         <- sapply(df.input, class)
+        v.names.as.list <- names(v.class[v.class %in% c("list")])
+
+        if(length(v.names.as.list) > 0) {
+
+                for (c.temp in v.names.as.list) { # c.temp <- v.names.as.list[1]
+
+                        df.input <- df.input %>%
+
+                                mutate(
+                                        !!c.temp := c.temp %>% get() %>% unlist() %>% paste(collapse = "|")
+                                )
                 }
 
 
-                # Check whether one or more columns contain listed data.
-                v.class         <- sapply(df.input, class)
-                v.names.as.list <- names(v.class[v.class %in% c("list")])
+                warning(glue(
 
-                if(length(v.names.as.list) > 0) {
-
-                        for (c.temp in v.names.as.list) { # c.temp <- v.names.as.list[1]
-
-                                df.input <- df.input %>%
-
-                                        mutate(
-                                                !!c.temp := c.temp %>% get() %>% unlist() %>% paste(collapse = "|")
-                                        )
-                        }
-
-
-
-                        warning(glue(
-
-                                "De volgende {length(v.names.as.list)} kolommen zijn van het type 'list'. De waarden ",
-                                "in deze kolommen zijn aan elkaar geplakt om f_summary te voltooien:\n",
-                                "{f_paste(v.names.as.list)}"
-                        ))
-                }
+                        "De volgende {length(v.names.as.list)} kolommen zijn van het type 'list'. De waarden ",
+                        "in deze kolommen zijn aan elkaar geplakt om f_summary te voltooien:\n",
+                        "{f_paste(v.names.as.list)}"
+                ))
+        }
 
 
         ##############################################################################################
         # Main.
         ##############################################################################################
 
-                # Get info per column.
-                df.info.per.column <- tibble(feature = names(df.input)) %>%
+        # Get info per column.
+        df.info.per.column <-
 
-                        mutate(
-                                class = sapply(
+                tibble(
+                        feature = names(df.input)
+                ) %>%
 
-                                        v.class, function(c.temp) {
+                mutate(
+                        class = sapply(
 
-                                                paste(c.temp, collapse = "|")
-                                        }),
+                                v.class, function(c.temp) {
 
-                                n.na = sapply(
+                                        paste(c.temp, collapse = "|")
+                                }),
 
-                                        df.input, function(v.temp) {
+                        n.na = sapply(
 
-                                                sum(is.na(v.temp), na.rm = TRUE)
+                                df.input, function(v.temp) {
 
-                                        }),
+                                        sum(is.na(v.temp), na.rm = TRUE)
 
-                                n.zero = sapply(
+                                }),
 
-                                        df.input, function(v.temp) { # v.temp <- df.input[1]
+                        n.zero = sapply(
 
-                                                sum(v.temp == 0, na.rm = TRUE)
+                                df.input, function(v.temp) { # v.temp <- df.input[1]
 
-                                        }),
+                                        sum(v.temp == 0, na.rm = TRUE)
 
-                                n.unique = sapply(
+                                }),
 
-                                        df.input, function(v.temp) {
+                        n.unique = sapply(
 
-                                                length(unique(v.temp))
+                                df.input, function(v.temp) {
 
-                                        }),
+                                        length(unique(v.temp))
 
-                                n.tot = nrow(df.input),
+                                }),
 
-                                min = sapply(
+                        n.tot = nrow(df.input),
 
-                                        df.input, function(v.temp) {
+                        min = sapply(
 
-                                                ifelse("numeric" %in% class(v.temp), min(v.temp), NA)
-                                        }),
+                                df.input, function(v.temp) {
 
-                                max = sapply(
+                                        ifelse("numeric" %in% class(v.temp), min(v.temp), NA)
+                                }),
 
-                                        df.input, function(v.temp) {
+                        max = sapply(
 
-                                                ifelse("numeric" %in% class(v.temp), max(v.temp), NA)
-                                        }),
+                                df.input, function(v.temp) {
 
-                                example = sapply(
+                                        ifelse("numeric" %in% class(v.temp), max(v.temp), NA)
+                                }),
 
-                                        df.input, function(v.temp) { # v.temp = df.input[["tls.ciphers"]]
+                        example = sapply(
 
-                                                n.freq.used <- min(
+                                df.input,
 
-                                                        n.freq,
+                                function(v.temp) { # v.temp = df.input[["line.quantity"]]
 
-                                                        v.temp %>% unique() %>% length()
+                                        n.freq.present <- v.temp %>% unique() %>% length()
+
+                                        n.freq.used    <- min(n.freq, n.freq.present)
+
+                                        v.temp %>%
+
+                                                f_unique(
+                                                        b.freq = TRUE,
+                                                        b.sort = TRUE,
+                                                        n.char = n.char
+                                                ) %>%
+
+                                                .[1:n.freq.used] %>%
+
+                                                purrr::when(
+
+                                                        # We show all elements.
+                                                        (n.freq.used == n.freq.present) ~ f_paste(
+
+                                                                v.string = .,
+                                                                b.sort   = FALSE
+                                                        ),
+
+                                                        # We show fewer elements then present.
+                                                        TRUE ~ paste0(
+
+                                                                f_paste(
+                                                                        v.string = .,
+                                                                        c.and    = "",
+                                                                        b.sort   = FALSE
+                                                                ),
+
+                                                                ", ..."
+                                                        )
                                                 )
 
-                                                v.temp %>%
 
-                                                        f_unique(
-                                                                b.freq = TRUE,
-                                                                n.char = n.char
-                                                        ) %>%
+                                })
+                )
 
-                                                        .[1:n.freq.used] %>%
+        # Sort column names?
+        if(b.sort) {
 
-                                                        f_paste(c.and = "", b.sort = FALSE)
-                                        })
-                        )
+                df.info.per.column <- df.info.per.column %>%
 
-                # Sort column names?
-                if(b.sort) {
-
-                        df.info.per.column <- df.info.per.column %>%
-
-                                arrange(class, desc(n.unique))
-                }
+                        arrange(class, desc(n.unique))
+        }
 
 
         ##############################################################################################
         # Return.
         ##############################################################################################
 
-                if(b.view & !b.return) {View(df.info.per.column)}
-                if(b.return)           {return(df.info.per.column)}
-        }
+        if(b.view & !b.return) {View(df.info.per.column)}
+        if(b.return)           {return(df.info.per.column)}
+}
 

@@ -16,6 +16,16 @@
         # Testing
         #########################################################################
 
+        # ALWAYS
+        # b.freq = FALSE
+        # b.sort = TRUE
+        # n.char = "all"
+
+        # OPTIONAL
+        # v.vector = v.temp
+        # b.freq   = TRUE
+
+
         # v.vector <- df.bord.hl.concept.hl.final %>% filter(project.name.year %in% v.sqlite.name.in.hl.concept.in.hl.final, in.hl.concept.not.in.hl.final) %>% pull(project.name.year)
         # v.vector <- v.temp; n.char = 5
 
@@ -41,7 +51,8 @@
 
                 left_join(
 
-                        y = tibble(x = v.vector) %>% dplyr::count(x)
+                        y  = tibble(x = v.vector) %>% dplyr::count(x),
+                        by = "x"
                 ) %>%
 
                 mutate(

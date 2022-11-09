@@ -27,7 +27,7 @@
 
 
         # v.vector <- df.bord.hl.concept.hl.final %>% filter(project.name.year %in% v.sqlite.name.in.hl.concept.in.hl.final, in.hl.concept.not.in.hl.final) %>% pull(project.name.year)
-        # v.vector <- v.temp; n.char = 5
+        # v.vector <- df.order.1 %>% pull(partner)
 
         #########################################################################
         # Error check
@@ -89,7 +89,12 @@
                          TRUE            ~ .
                 ) %>%
 
-                pull(y)
+                purrr::when(
+
+                         b.freq ~ pull(., y),
+                         TRUE   ~ pull(., x)
+                )
+
 
 
         #########################################################################

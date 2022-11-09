@@ -360,6 +360,33 @@
         # b.save.leaflet = FALSE
 
 
+        # SCHOOLZONE
+        # c.leaflet.title         = "Voorbeelden Schoolzones Rotterdam"
+        # c.legend.title          = "Categorie"
+        # c.layer                 = "point.type"
+        # v.coord.point.midpoint  = c(mean(df.point.plot$point.lon), mean(df.point.plot$point.lat))
+        # n.zoom                  = 16
+        # b.save.leaflet          = FALSE
+        # df.point                = df.point.plot
+        # v.coord.point           = c("point.lon", "point.lat")
+        # c.id.point              = "point.id"
+        # c.fill.factor.point     = "point.type"
+        # c.weight.point          = "point.type"
+        # df.fill.point           = df.fill.point.
+        # df.weight.point         = df.weight.point.
+        # v.info.tag.point.popup  = v.info.tag
+        # v.info.veld.point.popup = v.info.veld
+        # df.line                 = df.line.plot
+        # c.color.line            = "line.type"
+        # c.weight.line           = "line.type"
+        # df.color.line           = df.color.line.
+        # df.weight.line          = df.weight.line.
+        # n.opacity.line          = 0.7
+        # df.polygon              = df.polygon.plot
+        # n.fill.opacity.polygon  = 0.15
+        # b.show.polygon.label    = FALSE
+        # b.show.polygon.popup    = FALSE
+
 
 ##############################################################################
 # ERROR CHECKS
@@ -973,33 +1000,47 @@
                 v.coord.point.lonlat   <- c(c.coord.point.lon, c.coord.point.lat)
 
 
-                # Hernoem x,y naar point.x en point.y, en voeg point.lon en point.lat toe.
+                # Voeg point.x en point.y toe.
                 if( all(all_of(v.coord.point.xy) %in% names(df.point)) ) {
 
                         df.point$point.x <- as.numeric(df.point[[c.coord.point.x]])
                         df.point$point.y <- as.numeric(df.point[[c.coord.point.y]])
 
-                        # Voeg lon en lat toe.
-                        df.point <- df.point %>%
+                        # Voeg point.lon en point.lat toe.
+                        if( all(all_of(v.coord.point.lonlat) %in% names(df.point)) ) {
 
-                                mutate(point.lon = f_rd_to_wgs84_longitude(point.x, point.y),
-                                       point.lat = f_rd_to_wgs84_latitude(point.x, point.y)
-                                )
+                                df.point$point.lat <- as.numeric(df.point[[c.coord.point.lat]])
+                                df.point$point.lon <- as.numeric(df.point[[c.coord.point.lon]])
+
+                        } else {
+
+                                df.point <- df.point %>%
+
+                                        mutate(point.lon = f_rd_to_wgs84_longitude(point.x, point.y),
+                                               point.lat = f_rd_to_wgs84_latitude(point.x, point.y)
+                                        )
+                        }
+
+                } else {
+
+                        # Voeg point.x en point.y toe.
+                        if( all(all_of(v.coord.point.lonlat) %in% names(df.point)) ) {
+
+                                df.point$point.lat <- as.numeric(df.point[[c.coord.point.lat]])
+                                df.point$point.lon <- as.numeric(df.point[[c.coord.point.lon]])
+
+                                df.point <- df.point %>%
+
+                                        mutate(point.x = f_wgs84_to_rd_x(point.lat, point.lon),
+                                               point.y = f_wgs84_to_rd_y(point.lat, point.lon)
+                                        )
+
+                        } else {
+
+                                stop("No coordinate features available in df.point!")
+                        }
                 }
 
-                # Hernoem lon,lat naar point.lon en point.lat, en voeg point.x en point.y toe.
-                if( all(all_of(v.coord.point.lonlat) %in% names(df.point)) ) {
-
-                        df.point$point.lat <- as.numeric(df.point[[c.coord.point.lat]])
-                        df.point$point.lon <- as.numeric(df.point[[c.coord.point.lon]])
-
-                        # Voeg x en y toe. Let op f_wgs84_to_rd_x heeft 'lat' als eerste input en 'lon' als tweede input.
-                        df.point <- df.point %>%
-
-                                mutate(point.x = f_wgs84_to_rd_x(point.lat, point.lon),
-                                       point.y = f_wgs84_to_rd_y(point.lat, point.lon)
-                                )
-                }
 
 
                 # Hernoem SCHOUWRICHTING kolom.
@@ -1133,40 +1174,53 @@
         if(!is.null(df.line)) {
 
                 # CONVERSIE COORDINAAT LABELS.
-                c.coord.line.x      <- gsub("lon$", "x", v.coord.line[1])
-                c.coord.line.y      <- gsub("lat$", "y", v.coord.line[2])
-                c.coord.line.lon    <- gsub("x$", "lon", v.coord.line[1])
-                c.coord.line.lat    <- gsub("y$", "lat", v.coord.line[2])
-                v.coord.line.xy     <- c(c.coord.line.x,   c.coord.line.y)
-                v.coord.line.lonlat <- c(c.coord.line.lon, c.coord.line.lat)
+                c.coord.line.x        <- gsub("lon$", "x", v.coord.line[1])
+                c.coord.line.y        <- gsub("lat$", "y", v.coord.line[2])
+                c.coord.line.lon      <- gsub("x$", "lon", v.coord.line[1])
+                c.coord.line.lat      <- gsub("y$", "lat", v.coord.line[2])
+                v.coord.line.xy       <- c(c.coord.line.x,   c.coord.line.y)
+                v.coord.line.lonlat   <- c(c.coord.line.lon, c.coord.line.lat)
 
-                # Hernoem x,y naar line.x en line.y, en voeg line.lon en line.lat toe.
+
+                # Voeg line.x en line.y toe.
                 if( all(all_of(v.coord.line.xy) %in% names(df.line)) ) {
 
                         df.line$line.x <- as.numeric(df.line[[c.coord.line.x]])
                         df.line$line.y <- as.numeric(df.line[[c.coord.line.y]])
 
-                        # Voeg lon en lat toe.
-                        df.line <- df.line %>%
+                        # Voeg line.lon en line.lat toe.
+                        if( all(all_of(v.coord.line.lonlat) %in% names(df.line)) ) {
 
-                                mutate(line.lon = f_rd_to_wgs84_longitude(line.x, line.y),
-                                       line.lat = f_rd_to_wgs84_latitude(line.x, line.y)
-                                )
-                }
+                                df.line$line.lat <- as.numeric(df.line[[c.coord.line.lat]])
+                                df.line$line.lon <- as.numeric(df.line[[c.coord.line.lon]])
 
+                        } else {
 
-                # Hernoem lon,lat naar line.lon en line.lat, en voeg line.x en line.y toe.
-                if( all(all_of(v.coord.line.lonlat) %in% names(df.line)) ) {
+                                df.line <- df.line %>%
 
-                        df.line$line.lat <- as.numeric(df.line[[c.coord.line.lat]])
-                        df.line$line.lon <- as.numeric(df.line[[c.coord.line.lon]])
+                                        mutate(line.lon = f_rd_to_wgs84_longitude(line.x, line.y),
+                                               line.lat = f_rd_to_wgs84_latitude(line.x, line.y)
+                                        )
+                        }
 
-                        # Voeg x en y toe. Let op f_wgs84_to_rd_x heeft 'lat' als eerste input en 'lon' als tweede input.
-                        df.line <- df.line %>%
+                } else {
 
-                                mutate(line.x = f_wgs84_to_rd_x(line.lat, line.lon),
-                                       line.y = f_wgs84_to_rd_y(line.lat, line.lon)
-                                )
+                        # Voeg line.x en line.y toe.
+                        if( all(all_of(v.coord.line.lonlat) %in% names(df.line)) ) {
+
+                                df.line$line.lat <- as.numeric(df.line[[c.coord.line.lat]])
+                                df.line$line.lon <- as.numeric(df.line[[c.coord.line.lon]])
+
+                                df.line <- df.line %>%
+
+                                        mutate(line.x = f_wgs84_to_rd_x(line.lat, line.lon),
+                                               line.y = f_wgs84_to_rd_y(line.lat, line.lon)
+                                        )
+
+                        } else {
+
+                                stop("NNo coordinate features available in df.line!")
+                        }
                 }
 
 
@@ -2514,7 +2568,7 @@
                                                 popup       = ~ point.popup,
                                                 label       = ~ point.label,
                                                 group       = v.keys[i]
-                                                )
+                                        )
                             }
 
 
@@ -2555,7 +2609,7 @@
                                                 popup       = ~ point.popup,
                                                 label       = ~ point.label,
                                                 group       = v.keys[i]
-                                                )
+                                        )
                                 }
 
                         plot.leaflet <- plot.leaflet %>%
@@ -2597,22 +2651,22 @@
                                                 group       = v.keys[i]
                                                 )
                                 }
-                        }
+                }
 
+
+                # Layers control.
+                if(c.layer.point != "point") {
 
                         # Layers control.
-                        if(c.layer.point != "point") {
+                        plot.leaflet <- plot.leaflet %>%
 
-                                # Layers control.
-                                plot.leaflet <- plot.leaflet %>%
+                                addLayersControl(
 
-                                        addLayersControl(
-
-                                                baseGroups    = c("OSM (default)", "Toner Lite"),
-                                                overlayGroups = v.keys,
-                                                options       = layersControlOptions(collapsed = FALSE)
-                                        )
-                        }
+                                        baseGroups    = c("OSM (default)", "Toner Lite"),
+                                        overlayGroups = v.keys,
+                                        options       = layersControlOptions(collapsed = FALSE)
+                                )
+                }
 
         } else {
 

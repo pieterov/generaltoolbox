@@ -89,7 +89,7 @@
 
                 if(c.and == "") {
 
-                        c.and.updated <- paste0(", ")
+                        c.and.updated <- paste0(c.collapse, " ")
 
                 } else {
 
@@ -97,7 +97,15 @@
                 }
 
         } else {
-                c.and.updated <- paste0(c.collapse, " ", c.and, " ")
+
+                if(c.and == "") {
+
+                        c.and.updated <- paste0(c.collapse, " ")
+
+                } else {
+
+                        c.and.updated <- paste0(c.collapse, " ", c.and, " ")
+                }
         }
 
 

@@ -8,7 +8,9 @@
                 c.folder.source,
                 c.file.source,
                 c.folder.destination,
-                c.file.destination = NULL
+                c.file.destination   = NULL,
+                b.add.date           = TRUE,
+                b.add.time           = FALSE
         )
 
         {
@@ -94,9 +96,9 @@
         # Destination file.
         c.file.destination <- paste0(
 
-                format(Sys.time(), "%Y %m %d"), " - ",
+                ifelse(b.add.date, paste0(format(Sys.time(), "%Y %m %d"), " - "), ""),
 
-                format(Sys.time(), "%H %M %S"), " - ",
+                ifelse(b.add.time, paste0(format(Sys.time(), "%H %M %S"), " - "), ""),
 
                 ifelse(
                         is.null(c.file.destination),

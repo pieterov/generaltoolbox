@@ -89,6 +89,10 @@
         # INITIALIZATION
         ######################################################################################
 
+        # Replace NA with "NA" in first column.
+        df.input[is.na(df.input[[1]]), 1] <- "NA"
+
+
         ######################################################################################
         # Align text.
         ######################################################################################
@@ -96,7 +100,7 @@
         # Update v.col.text vectors.
         if(!is.null(v.col.text) & is.null(v.col.text.name))   v.col.text.name   <- v.col.text
         if(!is.null(v.col.text) & is.null(v.col.text.align))  v.col.text.align  <- rep("left", length(v.col.text))
-        if(!is.null(v.col.text) & is.null(v.col.text.width))  v.col.text.width  <- rep(120,     length(v.col.text))
+        if(!is.null(v.col.text) & is.null(v.col.text.width))  v.col.text.width  <- rep(120,    length(v.col.text))
 
 
         l.colDef.text <- sapply(

@@ -8,7 +8,7 @@
 
                 v.vector,
                 b.show.freq    = FALSE,
-                b.sort.by.val  = TRUE,
+                b.sort.by.val  = FALSE,
                 b.sort.by.freq = FALSE,
                 n.char         = "all") {
 
@@ -19,7 +19,7 @@
 
         # ALWAYS
         # b.show.freq    = FALSE
-        # b.sort.by.val  = TRUE
+        # b.sort.by.val  = FALSE
         # b.sort.by.freq = FALSE
         # n.char         = "all"
 

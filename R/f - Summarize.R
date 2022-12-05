@@ -147,9 +147,9 @@
                                         v.temp %>%
 
                                                 f_unique(
-                                                        b.freq = TRUE,
-                                                        b.sort = TRUE,
-                                                        n.char = n.char
+                                                        b.show.freq    = TRUE,
+                                                        b.sort.by.freq = TRUE,
+                                                        n.char         = n.char
                                                 ) %>%
 
                                                 .[1:n.freq.used] %>%

@@ -20,6 +20,10 @@
         # v.element <- c("drager.id", "groep.id")
         # v.search  <- c(9324728, 1)
 
+        # l.input   = df.jpg
+        # v.element = "bord.fid"
+        # v.search  = "00a0fdd7-997b-4406-bc24-0200f32f2718"
+
 
         #################################################################################
         # Error check
@@ -40,7 +44,7 @@
                 l.result.element <- mapply(function(c.element, c.search) {
 
                         ifelse(
-                                first(df.temp[[c.element]]) == c.search,
+                                any(df.temp[[c.element]] == c.search),
                                 TRUE, FALSE)
                         },
 

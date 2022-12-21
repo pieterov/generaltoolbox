@@ -53,6 +53,7 @@
         # c.date.treshold             = NULL
         # b.delete.from.source        = TRUE
         # b.overwrite                 = TRUE
+        # b.save.file.list            = FALSE
 
         # # TESTEN
         # v.file.to.move     = df.files.temp$file.name.ext

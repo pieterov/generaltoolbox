@@ -1,11 +1,33 @@
+#' @title Source latest file.
+#'
+#' @description Sources latest file.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param script.to.source String in filename to source.
+#' @param path Full path to folder containing the file.
+#'
+#' @returns None
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_source(
+#'        script.to.source = "I - IWD",
+#'        path             = paste0(path.root.local, "IWD/Projects/Initialization IWD")
+#' )
+
 #################################################################################
-# NAME:         FUNCTION - SOURCE.
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Source newest file.
+# FUNCTION.
 #################################################################################
 
-        f_source <- function(script.to.source,
-                             path) {
+        f_source <- function(
+
+                script.to.source,
+                path
+        ) {
 
                 # Determine c.pattern.
                 c.pattern <- paste0(script.to.source, ".*\\.R$")

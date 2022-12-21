@@ -1,7 +1,35 @@
+#' @title Move (or copy) files between folders
+#'
+#' @description This function can be used to move (or copy) files from one folder (source) to another folder (destination).
+#'
+#' @author Pieter Overdevest
+#'
+#' @param c.path.source Full path to folder that holds files to be moved/copied.
+#' @param c.path.destination Full path to folder where files should be moved/copied to. In case it does not exist,
+#' it will be created. Though, the parent of the new folder must exist, else an error will be thrown.
+#' @param v.file.to.move List of files in c.path.source to be moved/copied. Each value should be the filename plus its
+#' extension. By default the value is NULL, resulting in the files to be moved/copied.
+#' @param c.date.treshold In case given - e.g., 'today() - 60' - files older than this date will be moved/copied. The date
+#' is derived from what is given in the filename. By default the value is NULL, resulting in the files to be moved/copied.
+#' @param b.delete.from.source Should we move or copy the files? By default the value is TRUE, effectively moving the
+#' files, and when set to FALSE, effectively copying the files.
+#' @param b.overwrite Should we overwrite files in case they are already present in the destination folder? By default
+#' the value is TRUE. In case, the value is set to FALSE, files will not be overwritten, if applicable.
+#' @param b.save.file.list Should we save the list of moved/copied files to an Excel file? The default is set to FALSE.
+#'
+#' @returns A data frame listing the moved/copied files.
+#'
+#' @details In case files from the source folder already occur in the destination folder, they will not be removed from
+#' the source folder when b.overwrite has been set to FALSE and b.delete.from.source has been set to TRUE. This is to
+#' prevent loosing the concerned files.
+#'
+#' @export
+#'
+#' @examples
+#' df.move <- f_move_files(c.path.source = "...", c.path.destination = "...")
+
 #################################################################################
-# NAME:         FUNCTION - Move files.
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Move files.
+# FUNCTION.
 #################################################################################
 
         f_move_files = function(
@@ -9,12 +37,11 @@
                 c.path.source,
                 c.path.destination,
                 v.file.to.move              = NULL,
-                c.file.to.move.filter.type  = "regex", # 'regex' is default, alternative is 'file.name.ext'
                 c.date.treshold             = NULL,
-                b.check.md5                 = TRUE,
                 b.delete.from.source        = TRUE,
-                b.overwrite                 = TRUE
-                ) {
+                b.overwrite                 = TRUE,
+                b.save.file.list            = FALSE
+        ) {
 
 
 #################################################################################
@@ -24,7 +51,6 @@
         # ALTIJD
         # v.file.to.move              = NULL
         # c.date.treshold             = NULL
-        # b.check.md5                 = TRUE
         # b.delete.from.source        = TRUE
         # b.overwrite                 = TRUE
 
@@ -51,16 +77,19 @@
         # c.path.source      = path.data.rds
         # c.path.destination = paste0(path.data.source, "RDS/")
         # c.date.treshold    = (today() - 50)
-        # b.check.md5        = FALSE
 
         #  Move JPGs
         # c.path.source        = paste0("/Users/home/TEMP/", c.folder)
         # c.path.destination   = paste0("/Users/home/TEMP/", c.folder, " - ", i)
         # v.file.to.move       = df.file %>% filter(subbatch == i) %>% pull(file.name.ext)
         # c.date.treshold      = NULL
-        # b.check.md5          = FALSE
         # b.delete.from.source = FALSE
         # b.overwrite          = TRUE
+
+        # Set 5
+        # c.path.source       = "/Users/macstudio/Downloads/test_from"
+        # c.path.destination  = "/Users/macstudio/Downloads/test_to"
+        # v.file.to.move      = c("file_abc.png", "file_def.png")
 
 
 #################################################################################
@@ -89,31 +118,14 @@
 # INITIALIZE
 #################################################################################
 
-        # Determine filename for df.file.to.move that will be saved in path.data,
-        # for reference.
-        f_get_last_two_folders_in_path <- function(c.path) {
-
-                return(
-                        c.path %>%
-                                gsub("^/|/$", "", .) %>%
-                                str_split(pattern = "/") %>%
-                                unlist() %>%
-                                tail(2) %>%
-                                paste(collapse = "_")
-                )
-        }
-
-
         c.file.name <- paste(
 
-                f_get_last_two_folders_in_path(c.path.source),
+                c.path.source      %>% gsub("^/|/$", "", .) %>% str_split(pattern = "/") %>% unlist() %>% tail(2) %>% paste(collapse = "_"),
+
                 "-",
-                f_get_last_two_folders_in_path(c.path.destination)
-                )
 
-
-        # Location where c.file.name will be saved.
-        c.folder.name <- path.data
+                c.path.destination %>% gsub("^/|/$", "", .) %>% str_split(pattern = "/") %>% unlist() %>% tail(2) %>% paste(collapse = "_")
+        )
 
 
 #################################################################################
@@ -126,20 +138,9 @@
         # SOURCE FOLDER
         #############################
 
-        df.file.source.before <- f_get_filenames_in_folder(c.path       = c.path.source,
-                                                           b.return.md5 = b.check.md5) %>%
+        df.file.source.before <- f_get_filenames_in_folder(c.path = c.path.source) %>%
 
                 rename(full.path.source = full.path)
-
-
-        if(b.check.md5) {
-
-                df.file.source.before <- df.file.source.before %>%
-
-                        rename(file.md5.source  = file.md5) %>%
-
-                        add_count(file.md5.source, name = "n.md5.source")
-                }
 
 
         #############################
@@ -147,20 +148,9 @@
         #############################
 
         # Files in the destination folder.
-        df.file.destination.before <- f_get_filenames_in_folder(c.path       = c.path.destination,
-                                                                b.return.md5 = b.check.md5) %>%
+        df.file.destination.before <- f_get_filenames_in_folder(c.path = c.path.destination) %>%
 
                 rename(full.path.destination = full.path)
-
-
-        if(b.check.md5) {
-
-                df.file.destination.before <- df.file.destination.before %>%
-
-                        rename(file.md5.destination  = file.md5) %>%
-
-                        add_count(file.md5.destination, name = "n.md5.destination")
-                }
 
 
         #############################
@@ -170,7 +160,7 @@
         # Starting list of files to move; equal to all files in the source folder.
         df.file.to.move <- df.file.source.before
 
-        # Filter by DATE.
+        # Filter by DATE - if applicable.
         if(!is.null(c.date.treshold)) {
 
                 df.file.to.move <- df.file.to.move %>%
@@ -181,49 +171,16 @@
                 }
 
 
-        # Filter by optional FILENAMES.
+        # Filter by FILENAMES - if applicable.
         if(!is.null(v.file.to.move)) {
 
                 df.file.to.move <- df.file.to.move %>%
 
-                        purrr::when(
+                        filter(
 
-                                # Filter based on regex, though without ^ amd $.
-                                c.file.to.move.filter.type == "regex" ~
-
-                                        filter(.,
-
-                                                grepl(
-                                                        f_paste_regex(
-
-                                                                v.file.to.move,
-                                                                c.pre = "",
-                                                                c.post = ""
-                                                        ),
-
-                                                        file.name.ext
-                                                )
-                                        ),
-
-                                # Filter based on file.name.ext
-                                c.file.to.move.filter.type == "file.name.ext" ~
-
-                                        filter(.,
-
-                                               file.name.ext %in% v.file.to.move
-                                        )
+                               file.name.ext %in% v.file.to.move
                         )
                 }
-
-
-        # Filter by optional FILENAMES - in het geval v.file.to.move leeg is.
-        if(!is.null(v.file.to.move) & length(v.file.to.move) == 0) {
-
-                df.file.to.move <- df.file.to.move %>%
-
-                        head(0)
-
-        }
 
 
         # Flag files are already in the destination folder.
@@ -238,94 +195,35 @@
         # dan worden deze gevlagd in df.file.to.move, middels 'in.destination.before'.
         if(any(df.file.to.move$in.destination.before)) {
 
-                cat(
-                        "The following",
+                cat(paste0(
+
+                        "The following ",
+
                         sum(df.file.to.move$in.destination.before),
-                        "files already exist in the destination folder:\n\n",
+
+                        " files already exist in the destination folder:\n\n",
+
                         c.path.destination, "\n\n",
-                        paste(df.file.to.move %>% filter(in.destination.before) %>% pull(file.name.ext),
-                              collapse = "\n")
+
+                        paste(
+                                df.file.to.move %>% filter(in.destination.before) %>% pull(file.name.ext),
+                                collapse = "\n"
+                        ),
+
+                        "\n\nSince, 'b.overwrite' is ", b.overwrite, ", these files in the destination folder ",
+                        "will ", ifelse(!b.overwrite, "NOT", ""), "be overwritten. ",
+
+                        ifelse(
+                                b.delete.from.source,
+
+                                "They will not be removed from the source folder, even though 'b.delete.from.source' was set to TRUE.\n\n",
+
+                                "\n\n"
                         )
 
-                if(b.overwrite) {
-
-                        cat(
-                                "\n\nSince, 'b.overwrite' is TRUE, these will overwrite those in the",
-                                "destination folder and be removed from the source folder.\n\n"
-                                )
-
-                } else {
-
-                        cat(
-                                "\n\nSince, 'b.overwrite' is FALSE, these will not move to the",
-                                "destination folder and remain in the source folder.\n\n"
-                                )
-                        }
-                }
+                ))
 
 
-        # Check of er bestanden met zelfde MD5 voorkomen in source en source folders.
-        if(b.check.md5) {
-
-                if(any(df.file.source.before$n.md5.source > 1)) {
-
-                        df.temp <- df.file.source.before %>%
-
-                                filter(n.md5.source > 1) %>%
-
-                                select(file.name.ext, file.md5.source) %>%
-
-                                arrange(file.md5.source) %>%
-
-                                as.data.frame()
-
-
-                        # Sla data op.
-                        f_write_data_to_file(
-
-                                x             = df.temp,
-                                v.path        = c.folder.name,
-                                c.file.string = paste0(c.file.name, " - dubbel md5 - source"),
-                                v.add.time    = TRUE
-                                )
-
-
-                        print(df.temp)
-
-
-                        stop("The files listed above in the source folder:\n\n",
-                             c.path.source, "\n\nhave the same MD5 value!")
-                }
-
-
-                if(any(df.file.destination.before$n.md5.destination > 1)) {
-
-                        df.temp <- df.file.destination.before %>%
-
-                                filter(n.md5.destination > 1) %>%
-
-                                select(file.name.ext, file.md5.destination) %>%
-
-                                arrange(file.md5.destination) %>%
-
-                                as.data.frame()
-
-
-                        # Sla data op.
-                        f_write_data_to_file(
-
-                                x             = df.temp,
-                                v.path        = c.folder.name,
-                                c.file.string = paste0(c.file.name, " - dubbel md5 - destination"),
-                                )
-
-
-                        print(df.temp)
-
-
-                        stop("The files listed above in the destination folder:\n\n",
-                             c.path.destination, "\n\nhave the same MD5 value!")
-                }
         }
 
 
@@ -335,7 +233,7 @@
 
         cat("\n##############\nCOPYING FILES:\n##############\n\n")
 
-        # Als een of meer files NIET in de destination folder voorkomen.
+        # Eerst kopieren we de bestanden die vooraf NIET in de destination folder voorkwamen.
         if(any(!df.file.to.move$in.destination.before)) {
 
                 dummy1 <- 1
@@ -354,16 +252,20 @@
 
                         # Het maakt niet zo veel uit of we overwrite op TRUE/FALSE zetten.
                         # We kopieren bestanden die niet in de destination folder voorkomen.
-                        file.copy(from      = df.temp$full.path.source[i],
-                                  to        = paste0(c.path.destination, "/", df.temp$file.name.ext[i]),
-                                  copy.mode = TRUE,
-                                  copy.date = TRUE)
+                        file.copy(
+
+                                from      = df.temp$full.path.source[i],
+                                to        = paste0(c.path.destination, "/", df.temp$file.name.ext[i]),
+                                copy.mode = TRUE,
+                                copy.date = TRUE
+                        )
                 }
 
                 cat("\n\n")
         }
 
-        # Als een of meer files WEL in de destination folder voorkomen en b.overwrite is TRUE.
+        # Vervolgens, indien van toepassing, kopieren we alleen bestanden naar de destination die
+        # vooraf WEL in de destination voorkwamen, als b.overwrite is TRUE.
         if(any(df.file.to.move$in.destination.before) & b.overwrite) {
 
                 dummy1 <- 1
@@ -372,7 +274,7 @@
 
                 cat(
                         "The following", nrow(df.temp),
-                        "files - also present in the destination folder - were copied from:\n\n",
+                        "files - also present in the destination folder - were copied (overwritten) from:\n\n",
                         c.path.source, "\n\nto:\n\n", c.path.destination, "\n"
                         )
 
@@ -382,12 +284,15 @@
 
                         # We overschrijven altijd, omdat we in het geval we dubbele files niet willen overschrijven, we deze
                         # hierboven verwijderen, zie b.overwrite.
-                        file.copy(from      = df.temp$full.path.source[i],
-                                  to        = paste0(c.path.destination, "/", df.temp$file.name.ext[i]),
-                                  copy.mode = TRUE,
-                                  copy.date = TRUE,
-                                  recursive = FALSE,
-                                  overwrite = TRUE)
+                        file.copy(
+
+                                from      = df.temp$full.path.source[i],
+                                to        = paste0(c.path.destination, "/", df.temp$file.name.ext[i]),
+                                copy.mode = TRUE,
+                                copy.date = TRUE,
+                                recursive = FALSE,
+                                overwrite = TRUE
+                        )
                 }
 
                 cat("\n\n")
@@ -410,57 +315,31 @@
         #############################
 
         # Bepaal bestanden in de destination folder after copying.
-        df.file.destination.after <- f_get_filenames_in_folder(c.path       = c.path.destination,
-                                                               b.return.md5 = b.check.md5) %>%
+        df.file.destination.after <- f_get_filenames_in_folder(c.path = c.path.destination) %>%
 
                 rename(full.path.destination = full.path)
-
-
-        if(b.check.md5) {
-
-
-                df.file.destination.after <- df.file.destination.after %>%
-
-                        rename(file.md5.destination  = file.md5) %>%
-
-                        add_count(file.md5.destination, name = "n.md5.destination")
-                }
 
 
         #############################
         # DF.FILE.TO.MOVE
         #############################
 
-        # Bepaal bestanden toegevoegd aan destination folder.
-        if(b.check.md5) {
+        # Bepaal van de bestanden in df.file.to.move of ze aangetroffen zijn in de destination folder.
+        df.file.to.move <- df.file.to.move %>%
 
-                # Op basis van md5.
-                df.file.to.move <- df.file.to.move %>%
+                mutate(
+                        in.destination.after = {file.name.ext %in%
 
-                        mutate(
-                                in.destination.after = {file.md5.source %in%
+                                (df.file.destination.after %>% pull(file.name.ext))}
+                        )
 
-                                        (df.file.destination.after %>% pull(file.md5.destination))}
-                                )
-        } else {
-
-                # Op basis van file.name.ext
-                df.file.to.move <- df.file.to.move %>%
-
-                        mutate(
-                                in.destination.after = {file.name.ext %in%
-
-                                        (df.file.destination.after %>% pull(file.name.ext))}
-                                )
-        }
 
 
         # Error check
-        if(b.overwrite & !all(df.file.to.move$in.destination.after)) {
+        if(!all(df.file.to.move$in.destination.after)) {
 
-                warning("We verwachten dat alle bestanden naar de destination folder gekopieerd zou ",
-                        "worden (b.overwrite = TRUE). Echter, de volgende bestanden zijn niet naar de ",
-                        "destination folder gekopieerd:\n\n",
+                warning("After copying, the following file(s) were not observed in the destination folder:\n\n",
+
                         paste(
                                 df.file.to.move %>%
                                         filter(!in.destination.after) %>%
@@ -470,20 +349,6 @@
                         )
         }
 
-        if(!b.overwrite & !all(df.file.to.move %>% filter(!in.destination.before) %>% pull(in.destination.after))) {
-
-                warning("We verwachten niet dat alle bestanden naar de destination folder gekopieerd zou",
-                        "worden (b.overwrite = FALSE). Echter, de volgende bestanden - die vooraf niet",
-                        "voorkwamen in de destination folder - zijn niet naar de",
-                        "destination folder gekopieerd:\n\n",
-                        paste(
-                                df.file.to.move %>%
-                                        filter(!in.destination.before & !in.destination.after) %>%
-                                        pull(file.name.ext),
-
-                                collapse = "\n")
-                        )
-        }
 
 
         #############################################################################################
@@ -492,18 +357,33 @@
 
         cat("\n##############\nREMOVING FILES:\n##############\n\n")
 
+        # Initialize
+        n.row.temp <- ifelse(
 
-        # Alleen als b.delete.from.source gelijk is aan TRUE, dan verwijderen we de verplaatste files
-        # uit de source folder. Zijn er bestanden om te verwijderen?
-        if(b.delete.from.source & nrow(df.file.to.move) > 0) {
+                b.overwrite,
 
-                # Scenario 'b.overwrite = TRUE': We verwijderen alle bestanden in df.file.to.move.
+                # Indien overwrite is TRUE, verwijderen we alle bestanden genoemd in df.file.to.move.
+                df.file.to.move %>% nrow(),
+
+                # Indien overwrite is FALSE, verwijderen we alleen de bestanden genoemd in df.file.to.move,
+                # die vooraf nog niet in de destination folder voorkwamen, anders zouden we die verliezen.
+                # We hebben ze immers niet naar de destination gekopieerd.
+                df.file.to.move %>% filter(!in.destination.before) %>% nrow()
+        )
+
+
+        # Alleen als b.delete.from.source gelijk is aan TRUE, dan verwijderen we eventuele bestanden
+        # uit de source folder.
+        if(b.delete.from.source & n.row.temp > 0) {
+
+                # Scenario 'b.overwrite = TRUE':
+                # We verwijderen alle bestanden in df.file.to.move.
                 if(b.overwrite) {
 
                         cat(
-                                "The following", nrow(df.file.to.move), "file(s) were succesfully",
-                                "copied to the destination folder. Now, all these files are removed",
-                                "from the source folder (b.overwrite = TRUE):\n\n",
+                                "The following", nrow(df.file.to.move), "file(s) were succesfully copied to",
+                                "the destination folder (b.overwrite = TRUE). Now, all these files are removed",
+                                "from the source folder:\n\n",
                                 c.path.source, "\n")
 
                         for (i in seq(nrow(df.file.to.move))) { # i <- 1
@@ -519,8 +399,9 @@
                         cat("\n\n")
                 }
 
-                # Scenario 'b.overwrite = FALSE': We verwijderen alleen bestanden in df.file.to.move,
-                # die 'in.destination.before' op FALSE hadden staan.
+                # Scenario 'b.overwrite = FALSE':
+                # We verwijderen alleen bestanden in df.file.to.move, die 'in.destination.before'
+                # op FALSE hadden staan.
                 if(!b.overwrite) {
 
                         # Files that were not in the destination folder before.
@@ -532,7 +413,7 @@
                                         "The following", nrow(df.temp), "file(s) were not in the",
                                         "destination folder before, and were succesfully copied from",
                                         "the source folder to the destination folder. Now, these files",
-                                        "are removed from the source folder (b.overwrite = FALSE):\n\n",
+                                        "are removed from the source folder:\n\n",
                                         c.path.source, "\n")
 
                                 for (i in seq(nrow(df.temp))) { # i <- 1
@@ -556,8 +437,8 @@
                                 cat(
                                         "The following", nrow(df.temp), "file(s) were already in the",
                                         "destination folder before, and were not copied from",
-                                        "the source folder to the destination folder. These files",
-                                        "are not removed from the source folder (b.overwrite = FALSE):\n\n",
+                                        "the source folder to the destination folder (b.overwrite = FALSE).",
+                                        "These files are not removed from the source folder:\n\n",
                                         c.path.source, "\n")
 
                                 for (i in seq(nrow(df.temp))) { # i <- 1
@@ -583,20 +464,9 @@
         #############################
 
         # Bepaal bestanden in de source folder.
-        df.file.source.after <- f_get_filenames_in_folder(c.path       = c.path.source,
-                                                          b.return.md5 = b.check.md5) %>%
+        df.file.source.after <- f_get_filenames_in_folder(c.path = c.path.source) %>%
 
                 rename(full.path.source = full.path)
-
-
-        if(b.check.md5) {
-
-                df.file.source.after <- df.file.source.after %>%
-
-                        rename(file.md5.source  = file.md5) %>%
-
-                        add_count(file.md5.source, name = "n.md5.source")
-                }
 
 
         #############################
@@ -605,114 +475,171 @@
 
         # Bepaal bestanden toegevoegd aan source folder. Mogelijk zijn er alleen bestanden
         # overschreven, dan is dit data frame ook leeg.
-        if(b.check.md5) {
+        df.file.to.move <- df.file.to.move %>%
 
-                # Bepaal bestanden toegevoegd aan source folder, op basis van md5.
-                df.file.to.move <- df.file.to.move %>%
+                mutate(
+                        in.source.after = {file.name.ext %in%
+
+                                        (df.file.source.after %>% pull(file.name.ext))},
+
+                        irregularity = FALSE
+                )
+
+
+        #############################
+        # CHECKS
+        #############################
+
+        f_update_irregularity <- function(df.file.to.move, df.temp) {
+
+                return(df.file.to.move %>%
 
                         mutate(
-                                in.source.after = {file.md5.source %in%
+                                irregularity = ifelse(
 
-                                                (df.file.source.after %>% pull(file.md5.source))}
+                                        file.name.ext %in% df.temp$file.name.ext,
+                                        TRUE,
+                                        irregularity
+                                )
                         )
+                )
+        }
+
+
+        # Do the check
+        if(b.delete.from.source) {
+
+                if(b.overwrite) {
+
+                        # ALL SHOULD HAVE BEEN REMOVED.
+                        df.temp <- df.file.to.move %>% filter(in.source.after)
+
+                        if(nrow(df.temp) > 0) {
+
+                                df.file.to.move <- f_update_irregularity(df.file.to.move, df.temp)
+
+                                warning(
+
+                                        "We expect ALL file(s) to have been removed from the source folder ",
+                                        "(b.delete.from.source = TRUE, b.overwrite = TRUE). However, the following ",
+                                        "files have NOT been removed from the source folder:\n\n",
+
+                                        paste(df.temp %>% pull(file.name.ext), collapse = "\n\n")
+                                )
+                        }
+
+                } else {
+
+                        # Onterecht niet verwijderd uit SOURCE folder.
+                        df.temp <- df.file.to.move %>% filter(!in.destination.before, in.source.after)
+
+                        if(nrow(df.temp) > 0) {
+
+                                df.file.to.move <- f_update_irregularity(df.file.to.move, df.temp)
+
+                                warning(
+                                        "We expect THOSE files(s) to have been removed from the source folder that ",
+                                        "were NOT in the destination folder before (b.delete.from.source = TRUE, ",
+                                        "b.overwrite = FALSE). However, the following ",
+                                        "files have NOT been removed from the source folder:\n\n",
+
+                                        paste(df.temp %>% pull(file.name.ext), collapse = "\n\n")
+                                )
+                        }
+
+
+                        # Onterecht verwijderd uit SOURCE folder.
+                        df.temp <- df.file.to.move %>% filter(in.destination.before, !in.source.after)
+
+                        if(nrow(df.temp) > 0) {
+
+                                df.file.to.move <- f_update_irregularity(df.file.to.move, df.temp)
+
+                                warning(
+                                        "We expect THOSE files(s) to have NOT been removed from the source folder that ",
+                                        "were in the destination folder before (b.delete.from.source = TRUE, ",
+                                        "b.overwrite = FALSE). However, the following ",
+                                        "files have been removed from the source folder:\n\n",
+
+                                        paste(df.temp %>% pull(file.name.ext), collapse = "\n\n")
+                                )
+                        }
+                }
+
         } else {
 
-                # Op basis van file.name.ext
-                df.file.to.move <- df.file.to.move %>%
+                # NONE SHOULD HAVE BEEN REMOVED.
+                df.temp <- df.file.to.move %>% filter(!in.source.after)
 
-                        mutate(
-                                in.source.after = {file.name.ext %in%
+                if(nrow(df.temp) > 0) {
 
-                                                (df.file.source.after %>% pull(file.name.ext))}
+                        df.file.to.move <- f_update_irregularity(df.file.to.move, df.temp)
+
+                        warning(
+                                "We expect NONE of the file(s) to have been removed from the source folder ",
+                                "(b.delete.from.source = FALSE). However, the following ",
+                                "files have been removed from the source folder:\n\n",
+
+                                paste(df.temp %>% pull(file.name.ext), collapse = "\n\n")
                         )
+                }
         }
 
 
-        # Onterecht niet verwijderd - scenario 1.
-        if(b.delete.from.source & b.overwrite &
-           any(df.file.to.move %>% pull(in.source.after))) {
+        # Further comms.
+        if(nrow(df.file.to.move) > 0) {
 
-                dummy2 <- 1
+                cat(paste0(
 
-                warning("We verwachten dat alle bestanden uit de source folder verwijderd zouden ",
-                        "worden (b.delete.from.source = TRUE, b.overwrite = TRUE). Echter, de volgende ",
-                        "bestanden zijn niet uit de source folder verwijderd:\n\n",
-                        paste(
-                                df.file.to.move %>%
-                                        filter(in.source.after) %>%
-                                        pull(file.name.ext),
+                        "We observed ",
 
-                                collapse = "\n\n")
-                )
-        }
+                        ifelse(
+                                any(df.file.to.move$irregularity),
+                                "",
+                                "NO "
+                        ),
 
+                        "irregulaties while ", ifelse(b.delete.from.source, "moving", "copying"),
+                        " file(s) from the source folder:\n\n'",
+                        c.path.source, "'\n\n into the destination folder:\n\n'", c.path.destination, "'\n\n",
 
-        # Onterecht niet verwijderd - scenario 2.
-        if(b.delete.from.source & !b.overwrite &
-           any(df.file.to.move %>% filter(!in.destination.before) %>% pull(in.source.after))) {
+                        ifelse(
+                                any(df.file.to.move$irregularity),
 
-                dummy2 <- 1
+                                paste0(
+                                        "This concerns the following files: ",
+                                        df.file.to.move %>% filter(irregularity) %>% pull(file.name.ext) %>% f_paste(b.quotation = TRUE),
+                                        ".\n\n"
+                                ),
 
-                warning("We verwachten dat de bestanden uit de source folder - die niet in de ",
-                        "destination folder voorkomen - verwijderd zouden ",
-                        "worden (b.delete.from.source = TRUE, b.overwrite = FALSE). Echter, de volgende ",
-                        "bestanden zijn niet uit de source folder verwijderd:\n\n",
-                        paste(
-                                df.file.to.move %>%
-                                        filter(!in.destination.before,
-                                               in.source.after) %>%
-                                        pull(file.name.ext),
+                                ""
+                        ),
 
-                                collapse = "\n\n")
-                )
-        }
+                        ifelse(
+                                b.save.file.list,
 
+                                paste0(
+                                        "An Excel table named '", c.file.name, ".xlsx' listing all ",
+                                        ifelse(b.delete.from.source, "moved", "copied"), " file(s) will be ",
+                                        "saved into folder",
 
-        # Onterecht verwijderd - scenario 1.
-        if(!b.delete.from.source &
-           any(!df.file.to.move %>% pull(in.source.after))) {
+                                        ifelse(
+                                                any(df.file.to.move$irregularity),
+                                                " (see colum 'irregularity')",
+                                                ""
+                                        ),
 
-                dummy2 <- 1
+                                        ":\n\n'", path.data, "'\n\n",
 
-                warning("We verwachten dat er geen bestanden uit de source folder zouden worden verwijderd ",
-                        "(b.delete.from.source = FALSE). Echter, de volgende ",
-                        "bestanden zijn uit de source folder verwijderd:\n\n",
-                        paste(
-                                df.file.to.move %>%
-                                        filter(!in.source.after) %>%
-                                        pull(file.name.ext),
+                                        "The same list is returned from this function.\n\n"
+                                ),
 
-                                collapse = "\n\n")
-                )
-        }
-
-
-        # Onterecht verwijderd - scenario 2.
-        if(b.delete.from.source & !b.overwrite &
-           any(!df.file.to.move %>% filter(in.destination.before) %>% pull(in.source.after))) {
-
-                dummy2 <- 1
-
-                warning("We verwachten dat de bestanden uit de source folder - die in de ",
-                        "destination folder voorkomen - niet verwijderd zouden ",
-                        "worden (b.delete.from.source = TRUE, b.overwrite = FALSE). Echter, de volgende ",
-                        "bestanden zijn uit de source folder verwijderd:\n\n",
-                        paste(
-                                df.file.to.move %>%
-                                        filter(in.destination.before,
-                                               !in.source.after) %>%
-                                        pull(file.name.ext),
-
-                                collapse = "\n\n")
-                )
-        }
-
-
-        if(!exists("dummy2") & nrow(df.file.to.move) > 0) {
-
-                cat(paste0("Alle bestanden zijn - waar van toepassing - correct verwijderd uit de source folder:\n\n",
-                    c.path.source , "\n\nDe tabel met verplaatste bestanden is opgeslagen in Excel file '",
-                    c.file.name, "' in folder:\n\n", c.folder.name, "\n"))
+                                paste0(
+                                        "A list with all ", ifelse(b.delete.from.source, "moved", "copied"),
+                                        " file(s) is returned from this function.\n\n"
+                                )
+                        )
+                ))
         }
 
 
@@ -720,21 +647,17 @@
 # Save data
 #################################################################################
 
-        if(nrow(df.file.to.move) > 0) {
+        if(nrow(df.file.to.move) > 0 & b.save.file.list) {
 
                 # Sla data op.
                 f_write_data_to_file(
 
                         x             = df.file.to.move,
-                        v.path        = c.folder.name,
+                        v.path        = path.data,
                         c.file.string = c.file.name,
                         v.add.time    = TRUE
                 )
         }
-
-        # Print
-        cat("\n\n")
-        print(df.file.to.move %>% select(file.name.ext, in.destination.after, in.source.after) %>% as.data.frame())
 
 
 #################################################################################

@@ -1,8 +1,30 @@
-#################################################################################
-# NAME:         FUNCTION - GET INDEX FROM LIST.
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Retrieve which element in list list of data frames contains v.search in fields v.element.
-#################################################################################
+#' @title Get index of searched items in list
+#'
+#' @description Get index of searched items in list.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param l.input -----
+#' @param v.element -----
+#' @param v.search -----
+#'
+#' @returns Vector with indices of elements that match searched information.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' v.output <- f_get_index_from_list(
+#'
+#'     l.input,
+#'     v.element,
+#'     v.search
+#' )
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_get_index_from_list <- function(
 
@@ -61,6 +83,6 @@
         # Return
         #################################################################################
 
-                return(which(v.result))
+        return(which(v.result))
 
         }

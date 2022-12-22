@@ -1,8 +1,52 @@
-#################################################################################
-# NAME:         FUNCTION - Plot Checkerboard on Leaflet.
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Plot Checkerboard on Leaflet.
-#################################################################################
+#' @title Plot Checkerboard on Leaflet
+#'
+#' @description Plot Checkerboard on Leaflet.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param df.input Data frame containing all info,
+#' @param c.id.polygon Feature name containing unique polygon ID,
+#' @param v.coord.point Vector with feature names of x- and y-coordinate,
+#' @param c.value Feature name to color the checkerboard by,
+#' @param c.leaflet.title Leaflet title (default: "Title")
+#' @param n.layer Feature to layer by (default: NULL)
+#' @param v.layer Vector with number to layer leaflet by (default: NULL)
+#' @param n.round Number to round of by (default: 0)
+#' @param n.dig.lab Number of digits in label (default: 3)
+#' @param v.info.tag.polygon.label ---- (default: NULL)
+#' @param v.info.veld.polygon.label ---- (default: NULL)
+#' @param v.info.tag.polygon.popup ----  (default: NULL)
+#' @param v.info.veld.polygon.popup ----  (default: NULL)
+#' @param b.save.leaflet Should we save the leaflet to file? (default: FALSE)
+#'
+#' @returns Data frame used to plot polygons with f_plot_leaflet.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_plot_checkerboard_on_leaflet(
+#'
+#'        df.input                  = df.del.act.by.cell,
+#'        c.id.polygon              = "cel.id",
+#'        v.coord.point             = c("bord.x.cell.mid", "bord.y.cell.mid"),
+#'        c.value                   = "perc.delivered",
+#'        c.leaflet.title           = paste0("Sign delivery percentage in ", n.step/1000, "km-by-", n.step/1000, "km cells"),
+#'        n.layer                   = NULL,
+#'        v.layer                   = c(0, 0.001, 1, 50, 75, 90, 95, 99.999, 100),
+#'        n.round                   = 1,
+#'        n.dig.lab                 = 3,
+#'        v.info.tag.polygon.label  = v.info.tag.polygon.label.,
+#'        v.info.veld.polygon.label = v.info.veld.polygon.label.,
+#'        v.info.tag.polygon.popup  = v.info.tag.polygon.popup.,
+#'        v.info.veld.polygon.popup = v.info.veld.polygon.popup.,
+#'        b.save.leaflet            = FALSE
+#' )
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_plot_checkerboard_on_leaflet = function(
 

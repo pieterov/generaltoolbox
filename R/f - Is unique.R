@@ -1,18 +1,34 @@
+#' @title Check whether column is unique
+#'
+#' @description Are all elements in vector unique?
+#'
+#' @author Pieter Overdevest
+#'
+#' @param v.vector Vector with elements.
+#' @param v.excluding Vector with elements to exclude, e.g., 0, NA or NULL (default: NA)
+#'
+#' @returns Boolean whether the vector contains unique values.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' b.unique <- f_is_unique(
+#'
+#'     v.vector    = c(1, 2, 3, NA),    ,
+#'     v.excluding = NA
+#' )
+
 #################################################################################
-# NAME:         FUNCTION - Is unique.
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Are all elements in vector unique?
+# FUNCTION.
 #################################################################################
 
-        f_is_unique <- function(v.vector,
-                                v.excluding = NA
-                                ) {
+        f_is_unique <- function(
 
-#########################################################################
-# TEST
-#########################################################################
-
-        #v.vector <- c(1,2,3, NA)
+                v.vector,
+                v.excluding = NA
+        ) {
 
 
 #########################################################################

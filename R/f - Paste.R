@@ -1,18 +1,53 @@
-#################################################################################
-# NAME:         FUNCTION - Paste.
-# AUTHOR:       Pieter Overdevest
-# DESCRIPTION:  Concatenate items in vector.
-#################################################################################
+#' @title Concatenate items in vector
+#'
+#' @description Concatenate items in vector.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param v.string Vector of items to concatenate.
+#' @param c.collapse   (default: ",").
+#' @param c.and        (default: "and").
+#' @param b.capitalize (default: FALSE).
+#' @param b.quotation  (default: FALSE).
+#' @param b.sort       (default: TRUE).
+#' @param b.unique     (default: FALSE).
+#' @param n.top        (default: NULL).
+#'
+#' @returns Concatenated string.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' c.string <- f_paste(
+#'
+#'        v.string     = c("A", "B", "C"),
+#'        c.collapse   = ",",
+#'        c.and        = "and",
+#'        b.capitalize = FALSE,
+#'        b.quotation  = FALSE,
+#'        b.sort       = TRUE,
+#'        b.unique     = FALSE,
+#'        n.top        = NULL
+#' )
 
-        f_paste <- function(v.string,
-                            c.collapse   = ",",
-                            c.and        = "and",
-                            b.capitalize = FALSE,
-                            b.quotation  = FALSE,
-                            b.sort       = TRUE,
-                            b.unique     = FALSE,
-                            n.top        = NULL
-                            ) {
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
+
+        f_paste <- function(
+
+                v.string,
+                c.collapse   = ",",
+                c.and        = "and",
+                b.capitalize = FALSE,
+                b.quotation  = FALSE,
+                b.sort       = TRUE,
+                b.unique     = FALSE,
+                n.top        = NULL
+        ) {
 
 
 #########################################################################

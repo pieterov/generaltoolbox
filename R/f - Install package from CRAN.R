@@ -1,38 +1,57 @@
-#################################################################################
-# NAME:         FUNCTION - Install Packages From CRAN
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Install latest packages from CRAN, and 'library' them.
-#################################################################################
+#' @title Install latest packages from CRAN
+#'
+#' @description Install latest packages from CRAN, and 'library' them.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param v.package Vector with package names to install
+#'
+#' @returns Nothing.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_install_package_from_cran(
+#'
+#'     v.package = c("tmaptools")
+#' )
 
-        # TESTING
-        # v.package <- c("tmaptools")
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
-        f_install_package_from_cran <- function(v.package) {
+        f_install_package_from_cran <- function(
 
-                # Install (if needed) and load libraries.
-                v.loaded <- lapply(v.package,
+                v.package
+        ) {
 
-                                   function(c.package) {
+        # Install (if needed) and load libraries.
+        v.loaded <- lapply(v.package,
 
-                                           # 'require' returns (invisibly) a logical indicating whether the
-                                           # required package is available.
-                                           if (!require(package        = c.package,
-                                                        quietly        = TRUE,
-                                                        character.only = TRUE)
-                                           ) {
+                           function(c.package) {
 
-                                                   install.packages(c.package)
-                                           }
+                                   # 'require' returns (invisibly) a logical indicating whether the
+                                   # required package is available.
+                                   if (!require(package        = c.package,
+                                                quietly        = TRUE,
+                                                character.only = TRUE)
+                                   ) {
 
-                                           # Geeft error met 'tidyverse'
-                                           suppressPackageStartupMessages(
-
-                                                   do.call(
-                                                           what = "library",
-                                                           args = list(c.package)
-                                                   )
-                                           )
+                                           install.packages(c.package)
                                    }
-                )
+
+                                   # Geeft error met 'tidyverse'
+                                   suppressPackageStartupMessages(
+
+                                           do.call(
+                                                   what = "library",
+                                                   args = list(c.package)
+                                           )
+                                   )
+                           }
+        )
+
         }
 

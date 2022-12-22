@@ -1,17 +1,50 @@
-#################################################################################
-# NAME:         FUNCTION - Calculate table
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Prepare table
-#################################################################################
+#' @title Prepare 2D frequency table
+#'
+#' @description Prepares 2D frequency table.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param df.input Data frame containing features c.ver (and c.hor)
+#' @param c.ver Feature name to pivot vertically.
+#' @param c.hor Feature name to pivot horizontally. If provided this will result in a 2D frequency table, and when not
+#' provided the result will be a 1D frequency table (default: NULL).
+#' @param c.useNA How to deal with NAs. Options are: "ifany", "no" "always" (default: "ifany").
+#' @param c.type Type result. Options are: "abs", "rel" (default: "abs").
+#' @param n.round Rounding the numbers (default: 1).
+#' @param b.warning Should warnings be shown? (default: TRUE).
+#'
+#' @returns A 2D (or 1D) frequency table.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_table(
+#'
+#'       df.input  = mtcars,
+#'       c.ver     = "gear",
+#'       c.hor     = "am",
+#'       c.useNA   = "ifany",
+#'       c.type    = "abs",
+#'       n.round   = 1,
+#'       b.warning = TRUE
+#' )
 
-f_table <- function(df.input,
-                    c.ver,
-                    c.hor     = NULL,     # option to have 2D table.
-                    c.useNA   = "ifany",  # options: "no", "ifany", "always"
-                    c.type    = "abs",    # options: "abs", "rel"
-                    n.round   = 1,        # 1 digit roundinbg
-                    b.warning = TRUE      # Warnings are shown (default).
-                    ) {
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
+
+        f_table <- function(
+
+                df.input,
+                c.ver,
+                c.hor     = NULL,     # option to have 2D table.
+                c.useNA   = "ifany",  # options: "no", "ifany", "always"
+                c.type    = "abs",    # options: "abs", "rel"
+                n.round   = 1,        # 1 digit roundinbg
+                b.warning = TRUE      # Warnings are shown (default).
+        ) {
 
 
         #########################################################################

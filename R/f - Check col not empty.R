@@ -1,7 +1,28 @@
-##############################################################################################
-# NAME:         FUNCTION - CHECK COL NOT EMPTY
-# AUTHOR:       Pieter Overdevest
-##############################################################################################
+#' @title Check whether column is empty
+#'
+#' @description Checks whether column is empty.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param df.input -----
+#' @param c.col -----
+#'
+#' @returns Nothing.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_check_col_not_empty(
+#'
+#'        df.input,
+#'        c.col
+#' )
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_check_col_not_empty <- function(
 

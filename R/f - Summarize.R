@@ -1,8 +1,37 @@
-#################################################################################
-# NAME:         FUNCTION - SUMMARIZE
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Give basic info on columns in data frame.
-#################################################################################
+#' @title Give basic info on columns in data frame
+#'
+#' @description Gives basic info on columns in data frame.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param df.input Data frame to summarize.
+#' @param b.sort Should items be sorted? (default: TRUE).
+#' @param b.view Should we display the result? (default: TRUE).
+#' @param b.return Should we return the resulting data frame (default: FALSE).
+#' @param n.char Number of characters to show of each item (default: "all").
+#' @param n.freq Number of items to show (default: 3).
+#'
+#' @returns Data frame summarizing the data in df.input, in case b.return is TRUE.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_summarize(
+#'
+#'      df.input = mtcars,
+#'      b.sort   = TRUE,
+#'      b.view   = TRUE,
+#'      b.return = FALSE,
+#'      n.char   = "all",
+#'      n.freq   = 3
+#' )
+
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_summarize <- function(
 
@@ -13,7 +42,7 @@
                 n.char   = "all",
                 n.freq   = 3
 
-                ) {
+        ) {
 
 
         ##############################################################################################

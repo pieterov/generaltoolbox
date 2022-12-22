@@ -1,7 +1,32 @@
-##############################################################################################
-# NAME:         FUNCTION - CHECK COLS NOT ZERO
-# AUTHOR:       Pieter Overdevest
-##############################################################################################
+#' @title Check whether columns are not zero
+#'
+#' @description Checks whether columns are not zero.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param df.input -----
+#' @param v.col.include ----- (default: NULL)
+#' @param v.col.exclude ----- (default: NULL)
+#' @param c.id -----
+#'
+#' @returns Nothing.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_check_cols_not_zero(
+#'
+#'     df.input,
+#'     v.col.include = NULL,
+#'     v.col.exclude = NULL,
+#'     c.id
+#' )
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_check_cols_not_zero <- function(
 

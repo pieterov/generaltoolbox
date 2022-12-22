@@ -1,9 +1,35 @@
-##############################################################################
-# NAME:         FUNCTION - DOWNLOAD FILE FROM GOOGLE DRIVE
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Upload given file to Google Drive.
-#               https://stackoverflow.com/questions/57792566/how-do-i-upload-download-with-googledrive-package-using-r
-##############################################################################
+#' @title Download file from Google Drive
+#'
+#' @description Downloads file from Google Drive.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param c.file.string -----
+#' @param c.folder -----
+#' @param c.path -----
+#' @param b.overwrite Should local file be overwritten? (default: FALSE)
+#'
+#' @returns Nothing.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_download_file_from_google_drive(
+                #'
+#'     c.file.string,
+#'     c.folder,
+#'     c.path,
+#'     b.overwrite
+#' )
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
+
+        # https://stackoverflow.com/questions/57792566/how-do-i-upload-download-with-googledrive-package-using-r
+
 
         f_download_file_from_google_drive <- function(
 
@@ -18,21 +44,21 @@
 
                 # Exact match or not.
                 b.overwrite = FALSE
-                ) {
+        ) {
 
 
-##############################################################################
-# TEST ONLY!!
-##############################################################################
+        ##############################################################################
+        # TEST ONLY!!
+        ##############################################################################
 
         # c.file.string = "Google Merchant Export"
         # c.folder      = "8. Data Science BUHV-Oletti/Data/Affiliate Marketing/Google/"
         # c.path        = path.data
 
 
-##############################################################################
-# INITIALIZE
-##############################################################################
+        ##############################################################################
+        # INITIALIZE
+        ##############################################################################
 
         cat("\n")
 
@@ -59,9 +85,9 @@
         cat("\n")
 
 
-##############################################################################
-# ERRROR CHECK
-##############################################################################
+        ##############################################################################
+        # ERRROR CHECK
+        ##############################################################################
 
         if(nrow(df.google.drive.folder) > 1) {
 
@@ -81,9 +107,9 @@
         }
 
 
-##############################################################################
-# PROCESS
-##############################################################################
+        ##############################################################################
+        # PROCESS
+        ##############################################################################
 
         # Upload file in my own Google Drive
         drive_download(

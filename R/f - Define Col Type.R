@@ -1,7 +1,32 @@
-##############################################################################################
-# NAME:         FUNCTION - DEFINE COL TYPE
-# AUTHOR:       Pieter Overdevest
-##############################################################################################
+#' @title Define column types
+#'
+#' @description Defines column type.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param v.names -----
+#' @param v.double -----
+#' @param v.integer -----
+#' @param v.date.time -----
+#'
+#' @returns List of column types.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' l.col.type <- f_define_col_type(
+#'
+#'     df.input,
+#'     v.col.include = NULL,
+#'     v.col.exclude = NULL,
+#'     c.id
+#' )
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_define_col_type <- function(
 

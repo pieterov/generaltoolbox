@@ -1,7 +1,35 @@
-##############################################################################################
-# NAME:         FUNCTION - RENDER QUARTO
-# AUTHOR:       Pieter Overdevest
-##############################################################################################
+#' @title Render Quarto document
+#'
+#' @description Renders Quarto document.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param c.folder.source Folder holding the qmd file.
+#' @param c.file.source Core name of the qmd file.
+#' @param c.folder.destination Folder where to write the rendered file.
+#' @param c.file.destination Option to give the rendered file a new name. By default c.file.source is used (default: NULL).
+#' @param b.add.date,b.add.time Should we add date and/or time to the filename (default: TRUE and FALSE, resp.).
+#'
+#' @returns It saves the rendered file; nothing is returned from this function directly.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_render_quarto(
+#'
+#'      c.folder.source      = path.code,
+#'      c.file.source        = "Q - Data Understanding Clickstream - HTML.qmd",
+#'      c.folder.destination = path.deliverables,
+#'      c.file.destination   = NULL,
+#'      b.add.date           = TRUE,
+#'      b.add.time           = FALSE
+#' )
+
+#################################################################################
+# FUNCTION.
+#################################################################################
 
         f_render_quarto <- function(
 

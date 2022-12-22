@@ -1,7 +1,69 @@
-##############################################################################################
-# NAME:         FUNCTION - REACTABLE
-# AUTHOR:       Pieter Overdevest
-##############################################################################################
+#' @title Create reactable table in html document
+#'
+#' @description Creates reactable table in html document.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param df.input Data frame to print as rectable table in html document.
+#' @param c.col.default.align What is default alignment. Options are: "left", "center", and "right" (default: "center").
+#' @param n.col.default.max.width What is the max width of a column (default: 120).
+#' @param v.col.text Vector with feature names that should be formated as text (default: NULL).
+#' @param v.col.text.name Vector with header names that should be used in the table instead (default: NULL).
+#' @param v.col.text.align Vector with alignment of the numbers. Options are: "left", "center", and "right" (default: NULL).
+#' @param v.col.text.width Vector with widths of the concerned columns (default: NULL).
+#' @param v.col.digit Vector with feature names that should be formated as number (default: NULL).
+#' @param v.col.digit.name Vector with header names that should be used in the table instead (default: NULL).
+#' @param v.col.digit.number Vector with number of digits to use (default: NULL).
+#' @param v.col.digit.align Vector with alignment of the numbers. Options are: "left", "center", and "right" (default: NULL).
+#' @param v.col.digit.width Vector with widths of the concerned columns (default: NULL).
+#' @param v.col.euro Vector with feature names that should be formated as euro (default: NULL).
+#' @param v.col.euro.name Vector with header names that should be used in the table instead (default: NULL).
+#' @param v.col.euro.number Vector with number of digits to use (default: NULL).
+#' @param v.col.euro.align Vector with alignment of the numbers. Options are: "left", "center", and "right" (default: NULL).
+#' @param v.col.euro.width Vector with widths of the concerned columns (default: NULL).
+#' @param n.defaultPageSize What is the default page size? (default: 10).
+#' @param b.showPageSizeOptions Should we show page size options? (default: FALSE).
+#' @param v.pageSizeOptions What page size options to provide (default: c(10, 20, 30)).
+#' @param b.filterable Should table be filterable? (default: FALSE).
+#' @param b.searchable Should table be searchable? (default: FALSE).
+#'
+#' @returns Reactable table.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_reactable(
+#'
+#'      df.input                = mtcars,
+#'      c.col.default.align     = "center",
+#'      n.col.default.max.width = 120,
+#'      v.col.text              = NULL,
+#'      v.col.text.name         = NULL,
+#'      v.col.text.align        = NULL,
+#'      v.col.text.width        = NULL,
+#'      v.col.digit             = NULL,
+#'      v.col.digit.name        = NULL,
+#'      v.col.digit.number      = NULL,
+#'      v.col.digit.align       = NULL,
+#'      v.col.digit.width       = NULL,
+#'      v.col.euro              = NULL,
+#'      v.col.euro.name         = NULL,
+#'      v.col.euro.number       = NULL,
+#'      v.col.euro.align        = NULL,
+#'      v.col.euro.width        = NULL,
+#'      n.defaultPageSize       = 10,
+#'      b.showPageSizeOptions   = FALSE,
+#'      v.pageSizeOptions       = c(10, 20, 30),
+#'      b.filterable            = FALSE,
+#'      b.searchable            = FALSE
+#' )
+
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_reactable <- function(
 

@@ -1,8 +1,38 @@
-#################################################################################
-# NAME:         FUNCTION - Get latest file
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Get latest file with given c.file.string and of type c.file.type.
-#################################################################################
+#' @title Get latest file
+#'
+#' @description Get latest file with given c.file.string and of type c.file.type.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param c.file.string String to search for in the filename.
+#' @param c.file.type File type.
+#' @param c.path Path where the files should be searched for.
+#' @param b.exact.match Should the string match the files exactly? (default: FALSE)
+#' @param c.file.string.exclude String in files to exclude (default: NULL)
+#' @param c.sheet.name Sheetname, in case of Excel file. The first sheet will be chosen in case the value is NULL (default: NULL)
+#' @param c.show.report What feedback should we show? Options: 'none', 'minimal', 'all' (default: 'all')
+#'
+#' @returns Full path to latest file in concerned folder.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' c.path.file <- f_get_latest_file(
+#'
+#'        c.file.string         = "allocation",
+#'        c.file.type           = "xls",
+#'        c.path                = path.data,
+#'        b.exact.match         = FALSE,
+#'        c.file.string.exclude = NULL,
+#'        c.sheet.name          = NULL,
+#'        c.show.report         = "all"
+#' )
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_get_latest_file <- function(
 

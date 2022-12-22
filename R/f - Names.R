@@ -1,16 +1,43 @@
-#################################################################################
-# NAME:         FUNCTION - Names.
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Give names of data frame.
-#################################################################################
+#' @title Give names of data frame.
+#'
+#' @description Gives names of data frame.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param df.input Data frame to get names of.
+#' @param b.sort.name Should names be sorted? (default: TRUE).
+#' @param b.sort.class Should types be sorted? (default: TRUE).
+#'
+#' @returns Nothing.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_names(
+#'
+#'        df.input     = mtcars,
+#'        b.sort.name  = TRUE,
+#'        b.sort.class = TRUE
+#' )
 
-        f_names <- function(df,
-                            b.sort.name  = TRUE,
-                            b.sort.class = TRUE) {
 
-##############################################################################
-# TEST ONLY!!
-##############################################################################
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
+
+        f_names <- function(
+
+                df.input,
+                b.sort.name  = TRUE,
+                b.sort.class = TRUE
+        ) {
+
+
+        ##############################################################################
+        # TEST ONLY!!
+        ##############################################################################
 
         # df <- data.frame(pieter = c("sd", "sd", "ds", "ds", "sd"),
         #                 x = c("", "na", "N/A", 0, NA),
@@ -20,9 +47,9 @@
         # df <- df.temp1
 
 
-##############################################################################
-# Initialize // Error checking.
-##############################################################################
+        ##############################################################################
+        # Initialize // Error checking.
+        ##############################################################################
 
         # Check that input is data frame.
         if (!any(class(df) == "data.frame"))
@@ -39,9 +66,9 @@
         }
 
 
-##############################################################################
-# Analyse data.
-##############################################################################
+        ##############################################################################
+        # Analyse data.
+        ##############################################################################
 
         # Print header.
         cat("\nBasic Info Data Frame:\n\n")
@@ -60,8 +87,8 @@
 
                         df.basic.info <- df.basic.info %>% arrange(Name)
                 }
-
         }
+
 
         rownames(df.basic.info) <- c("", seq(nrow(df.basic.info)-1))
 

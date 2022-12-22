@@ -1,8 +1,35 @@
-#################################################################################
-# NAME:         FUNCTION - Return sorted unique elements.
-# AUTHOR:       Pieter Overdevest
-# DESCRIPTION:  Return sorted unique elements.
-#################################################################################
+#' @title  Return sorted unique elements
+#'
+#' @description  Returns sorted unique elements.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param v.vector Vector with elements to get unique values of.
+#' @param b.show.freq Should we add the frequency of values occuring? (default: FALSE).
+#' @param b.sort.by.val Should results be sorted by values? (default: FALSE).
+#' @param b.sort.by.freq Should results be sorted by frequency? (default: FALSE).
+#' @param n.char The number of characters to use of each value (default: "all").
+#'
+#' @returns Concatenated string of items.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' v.result <- f_unique(
+#'
+#'      v.vector       = c(50, 30, 100, 100, 100, 30),
+#'      b.show.freq    = FALSE,
+#'      b.sort.by.val  = FALSE,
+#'      b.sort.by.freq = FALSE,
+#'      n.char         = "all"
+#' )
+
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_unique <- function(
 
@@ -10,7 +37,8 @@
                 b.show.freq    = FALSE,
                 b.sort.by.val  = FALSE,
                 b.sort.by.freq = FALSE,
-                n.char         = "all") {
+                n.char         = "all"
+        ) {
 
 
         #########################################################################

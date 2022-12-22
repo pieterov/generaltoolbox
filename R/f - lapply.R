@@ -1,7 +1,31 @@
-##############################################################################################
-# NAME:         FUNCTION - LAPPLY
-# AUTHOR:       Pieter Overdevest
-##############################################################################################
+#' @title  Apply function to list of items
+#'
+#' @description Applies function to list of items.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param l.input List of items.
+#' @param f.input Function to apply to each item.
+#' @param mc.cores Number of cores (default: NULL)
+#'
+#' @returns List of items that have been processed with said function.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' l.output <- f_lapply(
+#'
+#'      l.input  = list(1, 2, 3),
+#'      f.input  = function(x) {x+2},
+#'      mc.cores = NULL
+#' )
+
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_lapply <- function(
 

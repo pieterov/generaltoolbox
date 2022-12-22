@@ -1,7 +1,148 @@
-##############################################################################################
-# NAME:         FUNCTION - Plot leaflet.
-# AUTHOR:       Pieter Overdevest
-##############################################################################################
+#' @title Plot leaflet
+#'
+#' @description Plots leaflet.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param c.leaflet.title Leaflet title; also used for filename.
+#' @param c.legend.title Legend title.
+#' @param c.layer What feature should be used for layering? (default: NULL).
+#' @param v.coord.point.midpoint Option to set the midpoint, else the center of the data will chosen (default: NULL).
+#' @param n.zoom At what zoom level should leaflet be opened? (default: 13).
+#' @param b.save.leaflet Should we save the leaflet? (default: FALSE).
+#' @param v.add.date,v.add.time Vector of booleans to specify whether date and/or time should be added.
+#' This should be as long as x (default: TRUE and TRUE, resp.).
+#' @param b.add.streetsmart Should we add StreetSmart link to pop-up? (default: TRUE).
+#' @param df.point POINT - (default: NULL).
+#' @param v.coord.point POINT -  (default: c("bord.lon", "bord.lat")).
+#' @param c.id.point POINT - (default: "bord.id").
+#' @param b.show.point.label POINT - (default: TRUE).
+#' @param v.info.tag.point.label POINT - (default: NULL).
+#' @param v.info.veld.point.label POINT -  (default: NULL).
+#' @param b.show.point.popup  POINT - (default: TRUE).
+#' @param v.info.tag.point.popup POINT - (default: NULL).
+#' @param v.info.veld.point.popup  POINT - (default: NULL).
+#' @param df.fill.point POINT -  (default: NULL).
+#' @param c.fill.factor.point POINT -  (default: NULL).
+#' @param c.fill.numeric.point POINT - (default: NULL).
+#' @param df.weight.point  POINT -  (default: NULL).
+#' @param c.weight.point  POINT -  (default: NULL).
+#' @param df.stroke.color.point  POINT -   (default: NULL).
+#' @param c.stroke.factor.point POINT -    (default: NULL).
+#' @param c.stroke.numeric.point POINT -   (default: NULL
+#' @param df.stroke.weight.point POINT -   (default: NULL).
+#' @param c.stroke.weight.point POINT -    (default: NULL).
+#' @param n.opacity.fill POINT - opacity of fill (default: 0.9).
+#' @param n.opacity.stroke POINT - Opacity of stroke (default: 0.9).
+#' @param df.line LINE - (default: NULL).
+#' @param v.coord.line LINE - (default: c("line.lon", "line.lat")).
+#' @param c.id.line LINE - (default: "line.id").
+#' @param b.show.line.label LINE - (default: FALSE).
+#' @param v.info.tag.line.label LINE - (default: NULL).
+#' @param v.info.veld.line.label LINE - (default: NULL).
+#' @param b.show.line.popup LINE - (default: FALSE).
+#' @param v.info.tag.line.popup LINE (default: NULL).
+#' @param v.info.veld.line.popup LINE - (default: NULL).
+#' @param df.color.line LINE - (default: NULL).
+#' @param c.color.line LINE - (default: NULL).
+#' @param df.weight.line LINE - (default: NULL).
+#' @param c.weight.line LINE - (default: NULL).
+#' @param n.opacity.line LINE -  (default: 1).
+#' @param df.polygon POLYGON - (default: NULL).
+#' @param v.coord.polygon POLYGON - (default: c("polygon.lon", "polygon.lat")).
+#' @param c.id.polygon POLYGON - (default: "polygon.id").
+#' @param b.show.polygon.label POLYGON - (default: TRUE).
+#' @param v.info.tag.polygon.label POLYGON - (default: NULL).
+#' @param v.info.veld.polygon.label POLYGON - (default: NULL).
+#' @param b.show.polygon.popup POLYGON - (default: TRUE).
+#' @param v.info.tag.polygon.popup POLYGON - (default: NULL).
+#' @param v.info.veld.polygon.popup POLYGON - (default: NULL).
+#' @param c.fill.numeric.polygon POLYGON -  (default: NULL).
+#' @param n.fill.opacity.polygon POLYGON - (default: 0.3).
+#' @param c.stroke.color.polygon POLYGON - (default: "black").
+#' @param n.stroke.weight.polygon POLYGON - (default: 1).
+#' @param b.show.stroke.polygon POLYGON - (default: TRUE).
+#' @param df.text TEXT - (default: NULL).
+#' @param v.coord.text TEXT - (default: c("text.lon", "text.lat")).
+#' @param c.text.label TEXT - (default: "text.label").
+#'
+#' @returns A beautiful leaflet!
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_plot_leaflet(
+#'
+#'      c.leaflet.title           = "Great Leaflet",
+#'      c.legend.title            = "Legend:",
+#'      c.layer                   = NULL,
+#'      v.coord.point.midpoint    = NULL,
+#'      n.zoom                    = 13,
+#'      b.save.leaflet            = FALSE,
+#'      b.add.date                = TRUE,
+#'      b.add.time                = TRUE,
+#'      b.add.streetsmart         = TRUE,
+#'      df.point                  = NULL,
+#'      v.coord.point             = c("bord.lon", "bord.lat"),
+#'      c.id.point                = "bord.id",
+#'      b.show.point.label        = TRUE,
+#'      v.info.tag.point.label    = NULL,
+#'      v.info.veld.point.label   = NULL,
+#'      b.show.point.popup        = TRUE,
+#'      v.info.tag.point.popup    = NULL,
+#'      v.info.veld.point.popup   = NULL,
+#'      df.fill.point             = NULL,
+#'      c.fill.factor.point       = NULL,
+#'      c.fill.numeric.point      = NULL,
+#'      df.weight.point           = NULL,
+#'      c.weight.point            = NULL,
+#'      df.stroke.color.point     = NULL,
+#'      c.stroke.factor.point     = NULL,
+#'      c.stroke.numeric.point    = NULL,
+#'      df.stroke.weight.point    = NULL,
+#'      c.stroke.weight.point     = NULL,
+#'      n.opacity.fill            = 0.9,
+#'      n.opacity.stroke          = 0.9,
+#'      df.line                   = NULL,
+#'      v.coord.line              = c("line.lon", "line.lat"),
+#'      c.id.line                 = "line.id",
+#'      b.show.line.label         = FALSE,
+#'      v.info.tag.line.label     = NULL,
+#'      v.info.veld.line.label    = NULL,
+#'      b.show.line.popup         = FALSE,
+#'      v.info.tag.line.popup     = NULL,
+#'      v.info.veld.line.popup    = NULL,
+#'      df.color.line             = NULL,
+#'      c.color.line              = NULL,
+#'      df.weight.line            = NULL,
+#'      c.weight.line             = NULL,
+#'      n.opacity.line            = 1,
+#'      df.polygon                = NULL,
+#'      v.coord.polygon           = c("polygon.lon", "polygon.lat"),
+#'      c.id.polygon              = "polygon.id",
+#'      b.show.polygon.label      = TRUE,
+#'      v.info.tag.polygon.label  = NULL,
+#'      v.info.veld.polygon.label = NULL,
+#'      b.show.polygon.popup      = TRUE,
+#'      v.info.tag.polygon.popup  = NULL,
+#'      v.info.veld.polygon.popup = NULL,
+#'      c.fill.numeric.polygon    = NULL,
+#'      n.fill.opacity.polygon    = 0.3,
+#'      c.stroke.color.polygon    = "black",
+#'      n.stroke.weight.polygon   = 1,
+#'      b.show.stroke.polygon     = TRUE,
+#'      df.text                   = NULL,
+#'      v.coord.text              = c("text.lon", "text.lat"),
+#'      c.text.label              = "text.label"
+#' )
+
+
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_plot_leaflet <- function(
 
@@ -37,7 +178,7 @@
                 v.info.tag.point.popup  = NULL,
                 v.info.veld.point.popup = NULL,
 
-                df.fill.point           = NULL,  # e.g. brewer.pal(4, "Dark2") / Alleen voor factor gebruikt? Ja! dan factor in naam zetten.
+                df.fill.point           = NULL,
                 c.fill.factor.point     = NULL,
                 c.fill.numeric.point    = NULL,
 
@@ -110,9 +251,9 @@
                 # PERMANENT TEXT LABEL.
                 ##############################################
 
-                df.text                 = NULL,
-                v.coord.text            = c("text.lon", "text.lat"),
-                c.text.label            = "text.label"
+                df.text                   = NULL,
+                v.coord.text              = c("text.lon", "text.lat"),
+                c.text.label              = "text.label"
         ) {
 
 
@@ -152,7 +293,7 @@
         # v.info.tag.point.popup  = NULL
         # v.info.veld.point.popup = NULL
         #
-        # df.fill.point           = NULL  # e.g. brewer.pal(4 "Dark2") / Alleen voor factor gebruikt? Ja! dan factor in naam zetten.
+        # df.fill.point           = NULL
         # c.fill.factor.point     = NULL
         # c.fill.numeric.point    = NULL
         #

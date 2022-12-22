@@ -1,7 +1,33 @@
-##############################################################################################
-# NAME:         FUNCTION - CALCULATE STD ERROR
-# AUTHOR:       Pieter Overdevest
-##############################################################################################
+#' @title Calculate standard error
+#'
+#' @description Calculates standard error.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param df.input -----
+#' @param c.group.by ----- (default: NULL).
+#' @param c.model -----
+#' @param c.data -----
+#'
+#' @returns Vector with standard errors.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' v.output <- f_calculate_std_error(
+#'
+#'      df.input   = df.sc,
+#'      c.group.by = NULL,
+#'      c.model    = "solids.median",
+#'      c.data     = "solids"
+#'
+#' )
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_calculate_std_error <- function(
 

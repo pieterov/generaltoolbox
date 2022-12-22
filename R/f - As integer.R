@@ -1,7 +1,30 @@
-##############################################################################################
-# NAME:         FUNCTION - AS INTEGER
-# AUTHOR:       Pieter Overdevest
-##############################################################################################
+#' @title Convert string columns to integer columns.
+#'
+#' @description Converts data frame columns of type character to integers.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param df.input Data frame with columns you want to convert from char to integer.
+#' @param v.col Names of columns you want to convert from char to integer.
+#' @param c.id Column name with unique identifier for each row. This is used to report on parsing errors.
+#'
+#' @returns Data frame with updated columns.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' df.output <- f_as_integer(
+#'
+#'            df.input  = tibble(id = c("A", "B"), id.product = c("1", "2"), id.variant = c("32", "45")),
+#'            v.col     = c("id.product", "id.variant"),
+#'            c.id      = "id"
+#' )
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_as_integer <- function(
 

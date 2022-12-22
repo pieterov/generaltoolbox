@@ -1,35 +1,40 @@
-##############################################################################################
-# FUNCITON NAME:  INSTALL PACKAGE FROM GITHUB
-# AUTHOR:         Pieter Overdevest
-# DESCRIPTION:    Installeer laatste versie van github en zet in memory.
-##############################################################################################
+#' @title Install last version of package on GitHub
+#'
+#' @description Install last version of package on GitHub.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param c.package Package name.
+#' @param c.auth.token Authentication token to access private repo. (default: NULL)
+#'
+#' @returns Nothing.
+#'
+#' @details Note - Never insert a token in the script. GitHub recognizes these tokens when committing and
+#' revokes the concerned tokens. Great for security, bit unhandy in use!
+#'
+#' @export
+#'
+#' @examples
+#' f_install_package_from_github(
+#'
+#'     c.package    = "generaltoolbox"
+#'     c.auth.token = NULL
+#' )
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_install_package_from_github <- function(
 
-                c.package,            # name of package
-                c.auth.token = NULL   # authentication token to access private repo.
+                c.package,
+                c.auth.token = NULL
         ) {
 
 
-##############################################################################################
-# TESTING ONLY!!
-##############################################################################################
-
-        # LET  OP - NOOIT EEN TOKEN IN DIT TEST BLOK PLAKKEN. GITHUB HERKENT DEZE TOKENS
-        # IN COMMITS EN REVOKES VERVOLGENS HET TOKEN. GOED VOOR SECURITY! MAAR ONHANDIG IN
-        # GEBRUIK!
-
-        # c.package    <- "generaltoolbox"
-        # c.package    <- "ipsmtoolbox"
-        # c.auth.token <- ""
-
-        # f_install_package_from_github("generaltoolbox")
-        # f_install_package_from_github("ipsmtoolbox", c.auth.token)
-
-
-##############################################################################################
-# ERROR CHECK
-##############################################################################################
+        ##############################################################################################
+        # ERROR CHECK
+        ##############################################################################################
 
         # Warning when
         # if( ) {
@@ -53,9 +58,9 @@
         }
 
 
-##############################################################################################
-# INITIALIZE
-##############################################################################################
+        ##############################################################################################
+        # INITIALIZE
+        ##############################################################################################
 
         if(c.package == "generaltoolbox") {
 
@@ -74,9 +79,9 @@
         }
 
 
-##############################################################################################
-# MAIN BODY
-##############################################################################################
+        ##############################################################################################
+        # MAIN BODY
+        ##############################################################################################
 
         # Get local hash
         # https://stackoverflow.com/questions/67842907/find-installed-package-sha-hash-in-r
@@ -109,8 +114,8 @@
         do.call(what = "library", args = list(c.package))
 
 
-##############################################################################################
-# RETURN
-##############################################################################################
+        ##############################################################################################
+        # RETURN
+        ##############################################################################################
 
 }

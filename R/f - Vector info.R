@@ -1,8 +1,36 @@
-#################################################################################
-# NAME:         FUNCTION - Give basic info of vector.
-# AUTHOR:       Pieter Overdevest
-# DESCRIPTION:  Provide informartion on vector.
-#################################################################################
+#' @title Provide information on vector
+#'
+#' @description Provides informartion on vector. Typically, you will use f_info() and not use f_vector_info().
+#' The function f_info() calls f_vector_info() for each feature in the object entered in f_info().
+#'
+#' @author Pieter Overdevest
+#'
+#' @param v.input Vector of items to check statistics of.
+#' @param name Name to print above the table.
+#' @param n.top Max number of items to show in the list.
+#' @param show.freq Should frequency be shown?
+#' @param n.width Number of characters of the items to show in the list.
+#'
+#' @returns Nothing. Only prints to console.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_vector_info(
+#'
+#'      v.input   = c(0, 2, 2, NA, NA, NA, 0/0, -0/0, -0/0, 0/0, 6/0, -7/0, -8/0, 9/0, 10/0),
+#'      name      = "Pieter",
+#'      n.top     = 10,
+#'      show.freq = TRUE,
+#'      n.width   = 29
+#' )
+
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_vector_info <- function(
 
@@ -13,9 +41,10 @@
                 n.width
         ) {
 
-##############################################################################
-# Error check.
-##############################################################################
+
+        ##############################################################################
+        # Error check.
+        ##############################################################################
 
         # v.input   = df.datachamp.baseline$id.sku.vendor[1:3]
         # name      = "df.datachamp.baseline$id.sku.vendor"
@@ -33,9 +62,9 @@
         # v.input <- c(6/0, 7/0, 8/0, 9/0, 10/0)
 
 
-##############################################################################
-# Error check.
-##############################################################################
+        ##############################################################################
+        # Error check.
+        ##############################################################################
 
         if(!is.numeric(n.top) & n.top != "all") {
 
@@ -43,9 +72,9 @@
         }
 
 
-##############################################################################
-# Analyse data.
-##############################################################################
+        ##############################################################################
+        # Analyse data.
+        ##############################################################################
 
         # Initialization. We take max of nchar and 3 to prevent count errors below. Width is at least 3.
         n.count.true <- nchar(format(length(v.input), big.mark = ","))

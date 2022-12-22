@@ -1,29 +1,51 @@
-##############################################################################################
-# NAME:         f_gs_row_number - Number of rows of sheet in Google Sheet.
-# AUTHOR:       Pieter Overdevest
-##############################################################################################
+#' @title Get number of rows in Google Sheet
+#'
+#' @description Get number of rows in Google Sheet.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param c.gs.code Google Sheet code.
+#' @param c.sheet Sheet name (default: "Sheet1")
+#'
+#' @returns Number of rows.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' n.row <- f_gs_row_number(
+#'
+#'       c.gs.code = "1Gc7Z1fxLgz60xg5wGpROMyfdwubk9mqeFaMzXh6WIjU"
+#'       c.sheet   = "Delta"
+#' )
 
-        f_gs_row_number <- function(c.gs.code, c.sheet = "Sheet1") {
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
-                # Testing.
-                # c.gs.code <- "1Gc7Z1fxLgz60xg5wGpROMyfdwubk9mqeFaMzXh6WIjU"
-                # c.sheet   <- "Delta"
+        f_gs_row_number <- function(
 
-
-                # Initialize.
-                df.gs <- f_gs_url(c.gs.code, c.sheet) %>%
-
-                        gs4_get(.) %>%
-
-                        .[[6]]
+                c.gs.code,
+                c.sheet = "Sheet1"
+        ) {
 
 
-                return(
-                        df.gs %>%
+        # Initialize.
+        df.gs <- f_gs_url(c.gs.code, c.sheet) %>%
 
-                                filter(name == c.sheet) %>%
+                gs4_get(.) %>%
 
-                                pull(grid_rows)
-                )
+                .[[6]]
+
+
+        return(
+                df.gs %>%
+
+                        filter(name == c.sheet) %>%
+
+                        pull(grid_rows)
+        )
+
         }
 

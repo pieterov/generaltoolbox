@@ -1,7 +1,36 @@
+#' @title Interpolate between points
+#'
+#' @description Interpolate between points when their distance exceeds threshold.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param df.input -----
+#' @param v.coord.point Vector with names of x- and y-coordinate (default: c("point.x", "point.y")).
+#' @param n.threshold.distance Distance between interpolated points will not exceed n.threshold.distance.
+#'
+#' @returns Data frame with interpolated coordinates.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' df.output <- f_interpolate(
+#'
+#'    df.input             = tibble(
+#'
+#'         point.x = c(110000, 130000, 150000, 130000, 110000),
+#'
+#'         point.y = c(400000, 430000, 400000, 370000, 400000)
+#'    ),
+#'
+#'    v.coord.point        = c("point.x", "point.y"),
+#'
+#'    n.threshold.distance = 500
+#' )
+
 #################################################################################
-# NAME:         FUNCTION - INTERPOLATE.
-# AUTHOR:       Pieter Overdevest
-# DESCRIPTION:  Interpolate between points when their distance exceeds threshold.
+# FUNCTION.
 #################################################################################
 
         f_interpolate <- function(
@@ -9,7 +38,7 @@
                 df.input,
                 v.coord.point = c("point.x", "point.y"),
                 n.threshold.distance
-                ) {
+        ) {
 
 
 #########################################################################

@@ -1,8 +1,60 @@
-#################################################################################
-# NAME:         FUNCTION - Read data from file
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Read data from file.
-#################################################################################
+#' @title Read data from file
+#'
+#' @description Reads data from file.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param v.file.string String to search for in the filename. In case of Google Sheet this can be kept NULL (default: NULL).
+#' @param c.file.type Options: 'xls', 'csv', 'tsv', 'txt', 'delim', 'rds', 'fst', 'xml', 'parquet', 'sqlite', 'shp', 'dbf', 'gs'
+#' @param c.path Path where file should be searched for (default: NULL).
+#' @param b.exact.match Exact match or not (default: FALSE).
+#' @param c.file.string.exclude Means to filter out files by providing a string that should not exist in the filename
+#' (default: NULL).
+#' @param b.show.info Should we show info? (default: FALSE).
+#' @param c.sheet.name In case of xls (default: NULL).
+#' @param n.skip.rows In case of xls (default: 0).
+#' @param c.delim In case of txt, csv, delim (default: NULL).
+#' @param b.col.names Do the data contain header names? (default: TRUE).
+#' @param l.col.type List with column types, see also Details (default: NULL).
+#' @param n.guess.max Number of rows to check on data type (default: 1000).
+#' @param c.table.name In case of SQLITE (default: NULL).
+#' @param c.show.report Options: "none", "minimal", "all" (default: "all").
+#' @param b.add.mod.date.path.file Should we add auxiliry features: mod.date, path.file? (default: FALSE).
+#' @param b.clean.up.header.names Should we clean up the header names? (default: TRUE).
+#'
+#' @returns Data frame containing the data read from the file.
+#'
+#' @details In case of Excel file, l.col.type should consist of list of: "skip", "guess", "logical", "numeric", "date",
+#' "text" or "list". In case of delimited file, l.col.type should consist of list of: c = character, i = integer,
+#' n = number, d = double, l = logical, D = date, T = date time, t = time, ? = guess, or _/- to skip the column.
+#'
+#' @export
+#'
+#' @examples
+#' f_read_data_from_file(
+#'
+#'      v.file.string            = "bord.allocation",
+#'      c.file.type              = "xls",
+#'      c.path                   = path.data,
+#'      b.exact.match            = FALSE,
+#'      c.file.string.exclude    = NULL,
+#'      b.show.info              = FALSE,
+#'      c.sheet.name             = NULL,
+#'      n.skip.rows              = 0,
+#'      c.delim                  = NULL,
+#'      b.col.names              = TRUE,
+#'      l.col.type               = NULL,
+#'      n.guess.max              = 1000,
+#'      c.table.name             = NULL,
+#'      c.show.report            = "all",
+#'      b.add.mod.date.path.file = FALSE,
+#'      b.clean.up.header.names  = TRUE
+#' )
+
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_read_data_from_file <- function(
 

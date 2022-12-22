@@ -1,8 +1,27 @@
-#################################################################################
-# NAME:         FUNCTION - COMPARE TWO VECTORS
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Assess similarity between two vectors.
-#################################################################################
+#' @title Compare two vectors
+#'
+#' @description Compares two vectors.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param v1,v2 Vectors with elements.
+#'
+#' @returns Nothing.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_compare_two_vectors(
+#'
+#'     v1 = c(1,2,1),
+#'     v2 = c(1,1,2)
+#' )
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_compare_two_vectors <- function(v1, v2) {
 

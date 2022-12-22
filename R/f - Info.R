@@ -1,8 +1,35 @@
-#################################################################################
-# NAME:         FUNCTION - Info
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Give basic info on vector or data frame.
-#################################################################################
+#' @title Print basic statistics on vector or data frame with elements
+#'
+#' @description Print basic statistics on vector of elements or for each feature in a data frame. For each vector
+#' (or feature) the function f_vector_info() is called.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param x Vector or data frame with items to check statistics of.
+#' @param n.top Max number of items to show in the list (default: 10).
+#' @param show.freq Should frequency be shown? (default: TRUE).
+#' @param n.width Number of characters to show in the list (default: 29).
+#'
+#'
+#' @returns Nothing. Only prints to console.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_info(
+#'
+#'       x         = c("A", "B", "C", "A", "B", "A"),
+#'       n.top     = 10,
+#'       show.freq = TRUE,
+#'       n.width   = 29
+#' )
+
+
+        #################################################################################
+        # FUNCTIONS.
+        #################################################################################
 
         f_info <- function(
 
@@ -53,5 +80,6 @@
                         n.width   = n.width
                 )
         }
-}
+
+        }
 

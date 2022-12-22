@@ -1,28 +1,58 @@
-#################################################################################
-# NAME:         FUNCTION - Paste regex.
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Concatenate regex items in vector separated by "|".
-#################################################################################
+#' @title Concatenate regex items in vector separated by "|"
+#'
+#' @description Concatenate regex items in vector separated by "|".
+#'
+#' @author Pieter Overdevest
+#'
+#' @param v.string Vector with items.
+#' @param c.pre String to pre-pend (default: "^").
+#' @param c.collapse String to collapse items (default: "|").
+#' @param c.post String to append (default: "$").
+#' @param b.sort Should items be sorted? (default: TRUE).
+#'
+#' @returns .
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' c.string <- f_paste_regex(
+#'
+#'        v.string     = c("pieter", "bart", "theo", "kees", "aad"),
+#'        c.pre        = "^",
+#'        c.collapse   = "|",
+#'        c.post       = "$",
+#'        b.sort       = TRUE
+#' )
 
-        f_paste_regex <- function(v.string,
-                                  c.pre        = "^",
-                                  c.collapse   = "|",
-                                  c.post       = "$",
-                                  b.sort       = TRUE) {
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
+
+        f_paste_regex <- function(
+
+                v.string,
+                c.pre        = "^",
+                c.collapse   = "|",
+                c.post       = "$",
+                b.sort       = TRUE
+        ) {
 
 
-#########################################################################
-# TEST ONLY
-#########################################################################
+        #########################################################################
+        # TEST ONLY
+        #########################################################################
 
         # v.bord.type.fietspad <- c("G09", "G10", "G11", "G12", "G13", "G14")
         # v.bord.type.voetpad  <- c("G15", "G07", "G08", "G09", "G10")
         # v.string <- c(v.bord.type.fietspad, v.bord.type.voetpad)
 
 
-#########################################################################
-# INITIALIZATION
-#########################################################################
+        #########################################################################
+        # INITIALIZATION
+        #########################################################################
 
         # Return NULL als input NULL is.
         if(is.null(v.string)) return(NULL)
@@ -39,18 +69,18 @@
         v.string <- unique(v.string)
 
 
-#########################################################################
-# Concatenate
-#########################################################################
+        #########################################################################
+        # Concatenate
+        #########################################################################
 
         c.string <- paste0(c.pre,
                            paste(v.string, collapse = paste0(c.post, "|", c.pre)),
                            c.post)
 
 
-#########################################################################
-# Return xxxxx.
-#########################################################################
+        #########################################################################
+        # Return.
+        #########################################################################
 
         return(c.string)
 

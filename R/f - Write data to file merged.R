@@ -1,15 +1,53 @@
-##############################################################################################
-# NAME:         FUNCTION - WRITE DATA TO FILE MERGED
-# AUTHOR:       Pieter Overdevest
-##############################################################################################
+#' @title Reads files, appends data and writes merged file
+#'
+#' @description Reads, appends and writes data to merged file. Function looks for files with same core name in folder -
+#' usually only the date (and time) differs. The files can be filtered on their age (number of days). Only files older
+#' than n.day.max are merged and written to a new file. New data can be appended through df.input. The files that were
+#' merged are moved to an Archive\ folder.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param df.input Data frame with data to append to merged data,
+#' @param c.path Path where file(s) are searched for.
+#' @param c.file.string Core of the filename of the files to be merged. The same is used for the file that is written.
+#' @param c.file.type File type of files to merge. The merged file will also be saved in this format.
+#' @param c.sheet.name Sheetname containing the data to be merged. Is relevant in case of c.file.type being xls
+#' (default: "Sheet1").
+#' @param v.add.date,v.add.time Vector of booleans to specify whether data and/or time should be added.
+#' This should be as long as x (default: TRUE and FALSE, resp.).
+#' @param n.day.max Files newer than the number of days given in n.day.max are merged. The high default value essentially
+#' means that all files are merged (default: 1000000).
+#'
+#' @returns Boolean whether the vector contains unique values.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_write_data_to_file_merged(
+#'
+#'      df.input       = mtcars,
+#'      c.path         = path.data,
+#'      c.file.string  = "dummy file",
+#'      c.sheet.name   = "Sheet1",
+#'      c.file.type    = "xls",
+#'      v.add.date     = TRUE,
+#'      v.add.time     = FALSE,
+#'      n.day.max      = 1000000
+#' )
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_write_data_to_file_merged <- function(
 
                   df.input,
                   c.path,
                   c.file.string,
-                  c.sheet.name   = "Sheet1",
                   c.file.type,
+                  c.sheet.name   = "Sheet1",
                   v.add.date     = TRUE,
                   v.add.time     = FALSE,
                   n.day.max      = 1000000
@@ -74,14 +112,14 @@
 
                                 ymd_hms(),
 
-                        interval = difftime(
+                        n.day         = difftime(
 
                                 now(), timestamp.file, units = "days"
                         )
                 ) %>%
 
                 filter(
-                        interval < n.day.max
+                        n.day < n.day.max
                 )
 
 

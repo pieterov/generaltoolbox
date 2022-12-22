@@ -1,7 +1,29 @@
-##############################################################################################
-# NAME:         FUNCTION - AS DATE
-# AUTHOR:       Pieter Overdevest
-##############################################################################################
+#' @title Convert string to date.
+#'
+#' @description Converts a string to a date.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param v.input Vector with strings to be converted.
+#' @param c.format Format of date in the strings (default: "%d/%m/%Y").
+#' @param c.origin Starting date (default: "1899-12-30")
+#'
+#' @returns Vector with dates.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' v.output <- f_as_date(
+#'            v.input  = c("16/03/2022", "16/03/2022", "16/03/2022"),
+#'            c.format = "%d/%m/%Y",
+#'            c.origin = "1899-12-30"
+#' )
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_as_date <- function(
 

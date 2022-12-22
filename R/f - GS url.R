@@ -1,13 +1,35 @@
-##############################################################################################
-# NAME:         f_gs_url - URL van Google Sheet.
-# AUTHOR:       Pieter Overdevest
-##############################################################################################
+#' @title Get URL to Google Sheet
+#'
+#' @description Get URL to Google Sheet.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param c.gs.code Google Sheet code.
+#' @param c.sheet Sheet name (default: "Sheet1")
+#'
+#' @returns URL to Google Sheet.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' c.url <- f_gs_url(
+#'
+#'       c.gs.code = "1Gc7Z1fxLgz60xg5wGpROMyfdwubk9mqeFaMzXh6WIjU"
+#'       c.sheet   = "Delta"
+#' )
 
-        f_gs_url <- function(c.gs.code, c.sheet = "Sheet1") {
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
-                # Testing.
-                # c.gs.code <- "1Gc7Z1fxLgz60xg5wGpROMyfdwubk9mqeFaMzXh6WIjU"
-                # c.sheet   <- "Delta"
+        f_gs_url <- function(
+
+                c.gs.code,
+                c.sheet = "Sheet1"
+        ) {
+
 
                 # Initialize.
                 c.url.gs <- paste0(

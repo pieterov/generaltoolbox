@@ -1,8 +1,47 @@
-#################################################################################
-# NAME:         FUNCTION - Kable.
-# AUTHOR:       Pieter Overdevest.
-# DESCRIPTION:  Print Kable in R-Markdown.
-#################################################################################
+#' @title Print Kable in R-Markdown
+#'
+#' @description Prints Kable in R-Markdown (PDF only, not HTML).
+#'
+#' @author Pieter Overdevest
+#'
+#' @param df.input Data frame to put in kable table.
+#' @param c.caption Add nice caption.
+#' @param c.position Options: "center", "left" (default: "center")
+#' @param v.align Vector containing "l", "c", "r" indicating how to align each column (default: NULL)
+#' @param v.width.cm Width of column (default: 2)
+#' @param n.angle Angle of text in header (default: NULL).
+#' @param n.font.size Font size (default: 8).
+#' @param c.latex_options String of latex options (default: "basic").
+#' @param v.grey.col Column numbers to give grey background (default: NULL).
+#' @param b.grey.col Add grey column to columns with total in header? (default: TRUE).
+#' @param n.top Number of rows to print (default: "all").
+#'
+#' @returns Kable output.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' kable.output <- f_kable(
+#'
+#'        df.input            = mtcars,
+#'        c.caption           = "Add nice caption",
+#'        c.position          = "center",
+#'        v.align             = NULL,
+#'        v.width.cm          = 2,
+#'        n.angle             = NULL,
+#'        n.font.size         = 8,
+#'        c.latex_options     = "basic",
+#'        v.grey.col          = NULL,
+#'        b.grey.col          = TRUE,
+#'        n.top               = "all"
+#' )
+
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_kable <- function(
 

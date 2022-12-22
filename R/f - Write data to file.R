@@ -1,10 +1,83 @@
-#################################################################################
-# NAME:         FUNCTION - Write data to file.
-# AUTHOR:       Pieter Overdevest
-# DESCRIPTION:  Write data to file
-#################################################################################
+#' @title Write data to file
+#'
+#' @description Writes data to file.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param x Data frame or list of data frames to write to file.
+#' @param c.file.string Core of the filename. Optionally, you can add date and time through v.add.date and v.add.time
+#' (default: "Data Export").
+#' @param v.path Path where file(s) should be stored.
+#' @param v.sheet.name Vector with sheet names. This should be as long as x. Is relevant in case of xls, csv, txt, and
+#' delim (default: NULL).
+#' @param v.table.name Vector with sheet names. This should be as long as x. Is relevant in case of sqlite.
+#' (default: NULL).
+#' @param v.add.date,v.add.time Vector of booleans to specify whether date and/or time should be added.
+#' This should be as long as x (default: TRUE and FALSE, resp.).
+#' @param v.xls,v.csv,v.txt,v.delim,v.rds,v.fst,v.sqlite,v.parquet,v.xml Vector of booleans to specify whether object is
+#' saved in respective format. When provided, these vector should be as long as x. In case of xls and if x is a list of
+#' data frames, each data frame will be saved as a separate sheet in the workbook. In case you choose one of v.delim to
+#' be TRUE, you must specify c.delim. Note, fst is faster to read and write than rds, but the files are bigger.
+#' In case all are false the data will be saved as xls (default: FALSE).
+#' @param c.delim Character used as delimiter. In case you choose this option, you must also set one of v.delim to TRUE
+#' (default: NULL).
+#' @param b.col.names Should header names be added. Note, this is only optional in case of csv, txt, and delim (default: TRUE).
+#' @param b.append Should data frame be appended to existing file? Note, this is only optional in case of csv, txt, and
+#' delim (default: FALSE).
+#' @param v.freeze.row,v.freeze.col Vector with number of rows and columns resp. to freeze in each data frame in x (default: NULL).
+#' @param v.col.dark.blue,v.col.light.blue,v.col.green,v.col.purple,v.col.lila,v.col.orange,v.col.red Vector with column
+#' numbers of which the first row - i.e., the header - should be colored by the respective color (default: NULL).
+#' @param c.conditional.eval Conditional formula to color rows (default: NULL).
+#' @param c.conditional.color Color to apply with conditional formula (default: "#ABB2B9").
+#' @param b.banded.rows Should rows be colored? Only applicable to xls (default: TRUE).
+#'
+#' @returns Nothing.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_write_data_to_file(
+#'
+#'      x                    = mtcars,
+#'      c.file.string        = "Data Export",
+#'      v.path               = path.data,
+#'      v.sheet.name         = "Sheet1",
+#'      v.table.name         = NULL,
+#'      v.add.date           = TRUE,
+#'      v.add.time           = FALSE,
+#'      v.xls                = FALSE,
+#'      v.csv                = FALSE,
+#'      v.txt                = FALSE,
+#'      v.delim              = FALSE,
+#'      v.rds                = FALSE,
+#'      v.fst                = FALSE,
+#'      v.sqlite             = FALSE,
+#'      v.parquet            = FALSE,
+#'      v.xml                = FALSE,
+#'      c.delim              = NULL,
+#'      b.col.names          = TRUE,
+#'      b.append             = FALSE,
+#'      v.freeze.row         = NULL,
+#'      v.freeze.col         = NULL,
+#'      v.col.dark.blue      = NULL,
+#'      v.col.light.blue     = NULL,
+#'      v.col.green          = NULL,
+#'      v.col.purple         = NULL,
+#'      v.col.lila           = NULL,
+#'      v.col.orange         = NULL,
+#'      v.col.red            = NULL,
+#'      c.conditional.eval   = "$I2==0",
+#'      c.conditional.color  = "#ABB2B9",
+#'      b.banded.rows        = TRUE
+#' )
 
-f_write_data_to_file <- function(
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
+
+        f_write_data_to_file <- function(
 
                         x,
 
@@ -599,7 +672,7 @@ f_write_data_to_file <- function(
 
                         # Create filename, and append to vector.
                         c.file.i <- paste0(c.file, ".xlsx")
-                        v.file <- c(v.file, c.file.i)
+                        v.file   <- c(v.file, c.file.i)
 
                         # Save workbook to disc.
                         openxlsx::saveWorkbook(
@@ -865,5 +938,4 @@ f_write_data_to_file <- function(
 
         cat("\n==========================\n")
 
-
-}
+        }

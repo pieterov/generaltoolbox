@@ -1,7 +1,28 @@
-##############################################################################################
-# NAME:         FUNCTION - CHECK COLS PRESENT
-# AUTHOR:       Pieter Overdevest
-##############################################################################################
+#' @title Check whether columns are present
+#'
+#' @description Checks whether columns are present.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param df.input -----
+#' @param c.id -----
+#'
+#' @returns Nothing.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_check_cols_present(
+#'
+#'     df.input,
+#'     v.col
+#' )
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_check_cols_present <- function(
 

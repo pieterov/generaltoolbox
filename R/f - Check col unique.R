@@ -1,7 +1,28 @@
-##############################################################################################
-# NAME:         FUNCTION - CHECK COL UNIQUE
-# AUTHOR:       Pieter Overdevest
-##############################################################################################
+#' @title Check whether column is unique
+#'
+#' @description Checks whether column is unique.
+#'
+#' @author Pieter Overdevest
+#'
+#' @param df.input -----
+#' @param c.col -----
+#'
+#' @returns Nothing.
+#'
+#' @details -
+#'
+#' @export
+#'
+#' @examples
+#' f_check_col_unique(
+#'
+#'        df.input,
+#'        c.col
+#' )
+
+        #################################################################################
+        # FUNCTION.
+        #################################################################################
 
         f_check_col_unique <- function(
 

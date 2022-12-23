@@ -42,6 +42,7 @@ f_render_quarto(
      c.file.destination   = NULL,
      b.add.date           = TRUE,
      b.add.time           = FALSE
+     l.execute.params     = list(species = penguin)
 )
 }
 \author{

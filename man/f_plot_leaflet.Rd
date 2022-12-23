@@ -194,7 +194,7 @@ This should be as long as x (default: TRUE and TRUE, resp.).}
 A beautiful leaflet!
 }
 \description{
-Plots leaflet.
+Plots leaflet. Ik moet de beschrijving van de input parameters nog verder uitwerken
 }
 \details{
 -

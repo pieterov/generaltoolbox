@@ -1,6 +1,6 @@
 #' @title Plot leaflet
 #'
-#' @description Plots leaflet.
+#' @description Plots leaflet. Ik moet de beschrijving van de input parameters nog verder uitwerken
 #'
 #' @author Pieter Overdevest
 #'

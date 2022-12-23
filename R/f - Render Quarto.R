@@ -25,6 +25,7 @@
 #'      c.file.destination   = NULL,
 #'      b.add.date           = TRUE,
 #'      b.add.time           = FALSE
+#'      l.execute.params     = list(species = penguin)
 #' )
 
 #################################################################################
@@ -66,6 +67,14 @@
         # c.file.source        = "Q - Data Understanding Clickstream - HTML.qmd"
         # c.folder.destination = path.deliverables
         # c.file.destination   = "Clickstream Data Understanding"
+
+        # c.folder.source      = path.code
+        # c.file.source        = "Verkoopoverzicht - Per Partner - PDF.qmd"
+        # c.folder.destination = paste0(path.deliverables, "Verkoopoverzichten/")
+        # c.file.destination   = glue("{c.partner.order} - {c.period.report}")
+        # b.add.date           = FALSE
+        # b.add.time           = FALSE
+        # l.execute.params     = list(c.partner.order_ = c.partner.order)
 
         #################################################################################
         # ERROR CHECK
@@ -153,9 +162,9 @@
         # Render Quarto file.
         quarto_render(
 
-                input       = c.file.source,
+                input          = c.file.source,
 
-                output_file = c.file.destination
+                output_file    = c.file.destination
         )
 
 

@@ -98,7 +98,7 @@
 
                 f_who_am_i() %in% c(
 
-                        # MAcBook Pro
+                        # MacBook Pro
                         "Pieters-MacBook-Pro.local", "Pieters-MBP.home",
 
                         # Mac Studio

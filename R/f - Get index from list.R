@@ -46,6 +46,10 @@
         # v.element = "bord.fid"
         # v.search  = "00a0fdd7-997b-4406-bc24-0200f32f2718"
 
+        # l.input   = l.bord.allocation
+        # v.element = c("bord.type")
+        # l.search  = list(c("A01120", "A01100"))
+
 
         #################################################################################
         # Error check

@@ -11,21 +11,21 @@
 #'
 #' @details How to obtain a Slack Hook:
 #'
-#' - Go to https://api.slack.com/apps
+#' * Go to https://api.slack.com/apps
 #'
-#' - If needed, create a new app
+#' * If needed, create a new app
 #'
-#' - Go to ‘Incoming Webhooks’
+#' * Go to ‘Incoming Webhooks’
 #'
-#' - If not already, activate Incoming Webhooks
+#' * If not already, activate Incoming Webhooks
 #'
-#' - Add new webhook to workspace
+#' * Add new webhook to workspace
 #'
-#' - Select channel
+#' * Select channel
 #'
-#' - Copy webhook and use for POST() function.
+#' * Copy webhook and use for POST() function.
 #'
-#' - Add app to Slack by ‘Add apps’, or the channel may already be pointing to it for you
+#' * Add app to Slack by ‘Add apps’, or the channel may already be pointing to it for you
 #'
 #' @export
 #'

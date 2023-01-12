@@ -65,7 +65,13 @@
 
         if(length(v.element) != length(l.search) & length(v.element) != length(v.strategy)) {
 
-                stop("Note, v.element, l.search, and v.strategy must have equal length!")
+                stop("v.element, l.search, and v.strategy must have equal length!")
+        }
+
+
+        if(class(l.search) != "list") {
+
+                stop("l.search must be a list!")
         }
 
 

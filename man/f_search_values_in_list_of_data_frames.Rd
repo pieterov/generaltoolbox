@@ -6,21 +6,21 @@
 \usage{
 f_search_values_in_list_of_data_frames(
   l.input,
-  v.element,
-  l.search,
+  v.key,
+  l.value,
   v.strategy = NULL
 )
 }
 \arguments{
 \item{l.input}{List of data frames, in which we want to determine which data frame(s) contain the requested values.}
 
-\item{v.element}{Vector of volumn name(s) in the data frames in which we search for requested values.}
+\item{v.key}{Vector of volumn name(s) in the data frames in which we search for requested values.}
 
-\item{l.search}{List of vectors with value(s) to search for in said column(s).}
+\item{l.value}{List of vectors with value(s) to search for in said column(s).}
 
 \item{v.strategy}{Vector of "all" and/or "any", corresponding to each column name that is searched in. This allows to
-match all values or to match any of the values in the respective vector in l.search. In case of the default (NULL)
-all values in the respective vector in l.search must match.}
+match all values or to match any of the values in the respective vector in l.value. In case of the default (NULL)
+all values in the respective vector in l.value must match.}
 }
 \value{
 Vector of list indices that contain requested values.
@@ -29,14 +29,14 @@ Vector of list indices that contain requested values.
 Search values in list of data frames.
 }
 \details{
-Note, v.element, l.search, and v.strategy (if given) must have equal length.
+Note, v.key, l.value, and v.strategy (if given) must have equal length.
 }
 \examples{
 v.output <- f_search_values_in_list_of_data_frames(
 
     l.input    = l.bord.allocation,
-    v.element  = c("bord.type", "jaar.laatste.vastlegging"),
-    l.search   = list(c("A01120", "A01100"), "2021"),
+    v.key      = c("bord.type", "jaar.laatste.vastlegging"),
+    l.value    = list(c("A01120", "A01100"), "2021"),
     v.strategy = NULL
 )
 }

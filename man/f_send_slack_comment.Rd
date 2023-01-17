@@ -4,12 +4,27 @@
 \alias{f_send_slack_comment}
 \title{Send Slack Comment.}
 \usage{
-f_send_slack_comment(c.slack.hook, c.message)
+f_send_slack_comment(
+  c.slack.hook,
+  c.marker,
+  c.title,
+  c.message.main,
+  v.message.list,
+  c.image.url = NULL
+)
 }
 \arguments{
 \item{c.slack.hook}{String with slack hook.}
 
-\item{c.message}{Message to communicate.}
+\item{c.marker}{String to code the marker: 'v' for checkbox and 'x' for white cross.}
+
+\item{c.title}{Title of message (string).}
+
+\item{c.message.main}{Main message (string).}
+
+\item{v.message.list}{Message to communicate (list with strings).}
+
+\item{c.image.url}{Link to image to show in Slack message (default NULL).}
 }
 \value{
 None
@@ -38,8 +53,12 @@ How to obtain a Slack Hook:
 }
 \examples{
 f_send_slack_comment(
-       c.slack.hook = "https://hooks.slack.com/services/........./......../...........",
-       c.message    = "Hello World!"
+       c.slack.hook   = "https://hooks.slack.com/services/........./......../...........",
+       c.marker       = "xxx",
+       c.title        = "A greate title!",
+       c.message.main = "The main message.",
+       v.message.list = c("Hello World!", "This is item 2", "And a third item"),
+       c.image.url    = "https://images.indianexpress.com/2022/09/del-traffic-3col.jpg"
 )
 }
 \author{

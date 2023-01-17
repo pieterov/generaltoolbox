@@ -9,7 +9,7 @@
 #' @param c.title Title of message (string).
 #' @param c.message.main Main message (string).
 #' @param v.message.list Message to communicate (list with strings).
-#' @param c.image.url Link to image to show in Slack message.
+#' @param c.image.url Link to image to show in Slack message (default NULL).
 #'
 #' @returns None
 #'
@@ -55,7 +55,7 @@
                 c.title,
                 c.message.main,
                 v.message.list,
-                c.image.url = NULL,
+                c.image.url = NULL
         ) {
 
 

@@ -39,12 +39,12 @@
         # TEST ONLY!!
         ##############################################################################
 
-        # df <- data.frame(pieter = c("sd", "sd", "ds", "ds", "sd"),
+        # df.input <- data.frame(pieter = c("sd", "sd", "ds", "ds", "sd"),
         #                 x = c("", "na", "N/A", 0, NA),
         #                 y = c(1,2,3,4,5),
         #                 w = as.factor(c("ioo","oioi", "oio", "oio", "ioo")))
 
-        # df <- df.temp1
+        # df.input <- df.temp1
 
 
         ##############################################################################
@@ -52,12 +52,12 @@
         ##############################################################################
 
         # Check that input is data frame.
-        if (!any(class(df) == "data.frame"))
+        if (!any(class(df.input) == "data.frame"))
 
                 stop("Input should be data frame.")
 
 
-        if (identical(names(df), character(0))) {
+        if (identical(names(df.input), character(0))) {
 
                 warning("Data frame has no names.")
 
@@ -74,8 +74,8 @@
         cat("\nBasic Info Data Frame:\n\n")
 
         # Create basic info data frame.
-        df.basic.info <- data.frame(Name  = c("=============", names(df)),
-                                    Class = c("=============", unlist(sapply(df, function(x) paste(class(x), collapse = "; "))))
+        df.basic.info <- data.frame(Name  = c("=============", names(df.input)),
+                                    Class = c("=============", unlist(sapply(df.input, function(x) paste(class(x), collapse = "; "))))
                                     )
 
         if (b.sort.name) {

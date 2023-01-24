@@ -58,7 +58,7 @@ f_send_slack_comment(
        c.title        = "A greate title!",
        c.message.main = "The main message.",
        v.message.list = c("Hello World!", "This is item 2", "And a third item"),
-       c.image.url    = "https://images.indianexpress.com/2022/09/del-traffic-3col.jpg"
+       c.image.url    = "https://media.licdn.com/dms/image/C560BAQEGsMeS8zRHcg/company-logo_200_200/0/1612876167821?e=1682553600&v=beta&t=ypO6V4vhFioktDnqLdCKra0K6IGaI2bl6klfHaxA0lw"
 )
 }
 \author{

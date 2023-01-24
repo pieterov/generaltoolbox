@@ -4,7 +4,7 @@
 #'
 #' @author Pieter Overdevest
 #'
-#' @param v.string Vector of items to concatenate.
+#' @param v.string     Vector of items to concatenate.
 #' @param c.collapse   (default: ",").
 #' @param c.and        (default: "and").
 #' @param b.capitalize (default: FALSE).
@@ -33,9 +33,9 @@
 #' )
 
 
-        #################################################################################
-        # FUNCTION.
-        #################################################################################
+#################################################################################
+# FUNCTION.
+#################################################################################
 
         f_paste <- function(
 

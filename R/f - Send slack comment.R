@@ -58,6 +58,13 @@
                 c.image.url = NULL
         ) {
 
+        # TESTING - Succesfull download
+        # c.marker        = "v"
+        # c.title         = c.file.string
+        # c.message.main  = "File was successfully downloaded from Dumps."
+        # v.message.list  = "See Synology"
+        # c.image.url     = c.image.url.hrgroep
+
 
         # Translate marker(s).
         c.marker  <- lapply(
@@ -83,7 +90,16 @@
 
 
         # Prepare message from list.
-        c.message.list <- paste(paste("-", v.message.list), collapse = "\n")
+        c.message.list <- paste(
+
+                paste0(
+                        # Don't add '-' in case v.message.list contains one element.
+                        ifelse(length(v.message.list) == 1, "", "- "),
+                        v.message.list
+                ),
+
+                collapse = "\n"
+        )
 
 
         # URL message in case URL is provided.
@@ -201,7 +217,7 @@
 
 
                 # Check result of attempt. If attempt was succesful.
-                if(class(result) == "NULL") {
+                if(result$status_code == 200) {
 
                         b_continue <- FALSE
 

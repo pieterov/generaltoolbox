@@ -123,8 +123,17 @@
                         				'type': 'plain_text',
                         				'text': ':spiral_note_pad: Dumps'
                         			},
-                        			'url': '", "https://ipsm.nl/dumps/", "'
+                        			'url': '", c.ipsm.dumps, "'
                         		},
+
+                                        {
+                        			'type': 'button',
+                        			'text': {
+                        				'type': 'plain_text',
+                        				'text': ':spiral_note_pad: Log'
+                        			},
+                        			'url': '", c.ipsm.allocatie.log, "'
+                                        },
 
                                         {
                         			'type': 'button',
@@ -132,7 +141,7 @@
                         				'type': 'plain_text',
                         				'text': ':spiral_note_pad: Synology'
                         			},
-                        			'url': '", "http://gofile.me/5TdQw/7dJbToZlO/", "'
+                        			'url': '", c.ipsm.synology.data, "'
                         		},
 
                                         {
@@ -165,10 +174,52 @@
 
 
 
-        POST(
-                url    = c.slack.hook,
-                encode = "json",
-                body   = c.message
-        )
+
+        # How many times to attempt to send Slack.
+        n_counter_max <- 5
+
+        # Initialize
+        b_continue <- TRUE
+        n_counter  <- 1
+
+        # Try for at most n_counter_max times.
+        while (n_counter <= n_counter_max & b_continue) {
+
+                # Comms to user.
+                cat("Send message to Slack - Attempt", n_counter, "of", n_counter_max, "\n")
+
+                # Ask R to try to download each hour.
+                result <- try({
+
+                        POST(
+                                url    = c.slack.hook,
+                                encode = "json",
+                                body   = c.message
+                        )
+
+                }, silent = FALSE)
+
+
+                # Check result of attempt. If attempt was succesful.
+                if(class(result) == "NULL") {
+
+                        b_continue <- FALSE
+
+                        cat("Send message to Slack - Succesfull!\n")
+
+                        return()
+
+                # If attempt was not succesfull, we try again after we wait 15 sec.
+                } else {
+
+                        cat("Send message to Slack - We make another attempt!\n")
+
+                        Sys.sleep(15)
+
+                        n_counter <- n_counter + 1
+                }
+        }
+
+        cat("Send message to Slack - Not succesfull!\n")
 
         }

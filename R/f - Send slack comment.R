@@ -202,33 +202,53 @@
         while (n_counter <= n_counter_max & b_continue) {
 
                 # Comms to user.
-                cat("Send message to Slack - Attempt", n_counter, "of", n_counter_max, "\n")
+                cat(paste0("\n\n", now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max, ".\n"))
 
                 # Ask R to try to download each hour.
                 result <- try({
 
-                        POST(
+                        httr::POST(
                                 url    = c.slack.hook,
                                 encode = "json",
                                 body   = c.message
                         )
 
+                        # Testing.
+                        #b=a+2
+
                 }, silent = FALSE)
 
+                # Comms to user.
+                cat(paste0(
+                        "\n", now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max,
+                        " passed the 'POST()' function. The result is as follows:\n\n"
+                ))
+
+                print(result)
+
+                #cat("\n")
 
                 # Check result of attempt. If attempt was succesful.
-                if(result$status_code == 200) {
+                if(class(result) == "NULL") {
 
                         b_continue <- FALSE
 
-                        cat("Send message to Slack - Succesfull!\n")
+                        # Comms to user.
+                        cat(paste0(
+                                "\n", now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max,
+                                " was successful!\n"
+                        ))
 
                         return()
 
                 # If attempt was not succesfull, we try again after we wait 15 sec.
                 } else {
 
-                        cat("Send message to Slack - We make another attempt!\n")
+                        # Comms to user.
+                        cat(paste0(
+                                "\n", now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max,
+                                " was not successful. We will try again.\n"
+                        ))
 
                         Sys.sleep(15)
 
@@ -236,6 +256,12 @@
                 }
         }
 
-        cat("Send message to Slack - Not succesfull!\n")
+        # Comms to user.
+        cat(paste0(
+                "\n", now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max,
+                " was not successful. We tried ", n_counter_max,
+                " times and we will not try again.\n"
+        ))
+
 
         }

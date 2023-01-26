@@ -221,21 +221,24 @@
                 # Comms to user.
                 cat(paste0(
                         "\n", now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max,
-                        " passed the 'POST()' function. The result is as follows:\n\n"
+                        " passed the 'POST()' function. The result is as follows (class: '",
+                        class(result), "'):\n\n"
                 ))
 
                 print(result)
 
+                #print(class(result))
+
                 #cat("\n")
 
                 # Check result of attempt. If attempt was succesful.
-                if(class(result) == "NULL") {
+                if(class(result) != "try-error") {
 
                         b_continue <- FALSE
 
                         # Comms to user.
                         cat(paste0(
-                                "\n", now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max,
+                                now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max,
                                 " was successful!\n"
                         ))
 
@@ -246,7 +249,7 @@
 
                         # Comms to user.
                         cat(paste0(
-                                "\n", now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max,
+                                now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max,
                                 " was not successful. We will try again.\n"
                         ))
 

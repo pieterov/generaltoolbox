@@ -70,11 +70,11 @@
         ######################################################################################
 
         # Error check.
-        if(!x %in% names(df.plot)) {
+        if(!c.x %in% names(df.plot)) {
                 stop(glue("Column name {x} does not occur in the data frame to plot."))
         }
 
-        if(!y %in% names(df.plot)) {
+        if(!c.y %in% names(df.plot)) {
                 stop(glue("Column name {y} does not occur in the data frame to plot."))
         }
 
@@ -102,8 +102,8 @@
                 geom_point(
                         mapping = aes(
 
-                                x = get(x),
-                                y = get(y)
+                                x = get(c.x),
+                                y = get(c.y)
                         ),
 
                         alpha = n.alpha

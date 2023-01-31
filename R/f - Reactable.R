@@ -153,7 +153,7 @@
 
         # Replace NA with "NA" in first column. First check that first column is non-numeric. This
         # is to prevent 'Can't convert <character> to <double>.' error.
-        if(class(df.test[[1]]) != "numeric") {
+        if(class(df.input[[1]]) != "numeric") {
 
                 df.input[is.na(df.input[[1]]), 1] <- "NA"
         }

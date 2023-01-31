@@ -104,7 +104,7 @@
 
         # ALWAYS
         # c.col.default.align     = "center"
-        # n.col.default.max.width = 100
+        # n.col.default.max.width = 120
         #
         # v.col.text              = NULL
         # v.col.text.name         = NULL
@@ -151,8 +151,12 @@
         # INITIALIZATION
         ######################################################################################
 
-        # Replace NA with "NA" in first column.
-        df.input[is.na(df.input[[1]]), 1] <- "NA"
+        # Replace NA with "NA" in first column. First check that first column is non-numeric. This
+        # is to prevent 'Can't convert <character> to <double>.' error.
+        if(class(df.test[[1]]) != "numeric") {
+
+                df.input[is.na(df.input[[1]]), 1] <- "NA"
+        }
 
 
         ######################################################################################

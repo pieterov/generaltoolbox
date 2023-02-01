@@ -926,16 +926,16 @@
 # Communicate stats to the user.
 ##############################################################################
 
-        cat(paste0("\nWrite    : ", deparse(substitute(x))))
+        cat(paste0("\nWrite : ", deparse(substitute(x))))
 
-        cat(paste0("\nAs       : ", paste(c("xls", "csv", "rds", "txt", "fst", "parquet", "xml")[c(any(v.xls), any(v.csv), any(v.rds), any(v.txt), any(v.fst), any(v.parquet), any(v.xml))], collapse = ", ") ))
+        cat(paste0("\nName  : ", v.file))
 
-        cat(paste0("\nName     : ", v.file))
+        cat(paste0("\nAs    : ", paste(c("xls", "csv", "rds", "txt", "fst", "parquet", "xml")[c(any(v.xls), any(v.csv), any(v.rds), any(v.txt), any(v.fst), any(v.parquet), any(v.xml))], collapse = ", ") ))
 
-        cat(paste0("\n\nPath     : ", v.path))
+        cat(paste0("\nPath  : ", v.path))
 
-        cat("\n")
+        cat(paste0("\nAt    : ", now()))
 
-        cat("\n==========================\n")
+        cat("\n==========================\n\n\n")
 
         }

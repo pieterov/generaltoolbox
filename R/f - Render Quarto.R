@@ -83,19 +83,19 @@
         # Does c.file.source end with '.qmd'?
         if(!grepl("\\.qmd$", c.file.source)) {
 
-                f_stop(
+                stop(glue(
                         "The source file (c.file.source) '{c.file.source}' must end with '.qmd'!\n"
-                )
+                ))
         }
 
 
         # Does c.file.source contain 'HTML' or 'PDF'?
         if(!(grepl("HTML", c.file.source) | grepl("PDF", c.file.source))) {
 
-                f_stop(
+                stop(glue(
                         "The source file (c.file.source) '{c.file.source}' does not contain
                         'HTML' or 'PDF'!\n"
-                )
+                ))
         }
 
 
@@ -113,10 +113,10 @@
                 pull(file.name.ext)
         )) {
 
-                f_stop(
-                        "The source file (c.file.source), '{c.file.source}', does not occur
-                        in the source folder (c.folder.source), '{c.folder.source}'!"
-                )
+                stop(glue(
+                        "The source file (c.file.source), '{c.file.source}', does not occur ",
+                        "in the source folder (c.folder.source), '{c.folder.source}'!"
+                ))
         }
 
 

@@ -143,6 +143,7 @@
         #
         # n.defaultPageSize  = 30
 
+
         ######################################################################################
         # ERROR CHECKS
         ######################################################################################
@@ -163,10 +164,48 @@
         # Align text.
         ######################################################################################
 
-        # Update v.col.text vectors.
-        if(!is.null(v.col.text) & is.null(v.col.text.name))   v.col.text.name   <- v.col.text
-        if(!is.null(v.col.text) & is.null(v.col.text.align))  v.col.text.align  <- rep("left", length(v.col.text))
-        if(!is.null(v.col.text) & is.null(v.col.text.width))  v.col.text.width  <- rep(120,    length(v.col.text))
+        # Update and check on v.col.text vectors.
+        if(!is.null(v.col.text)) {
+
+                # 'v.col.text.name'.
+                if(is.null(v.col.text.name)) {
+
+                        v.col.text.name <- v.col.text
+
+                } else {
+
+                        if(length(v.col.text) != length(v.col.text.name)) {
+
+                                stop("Objects 'v.col.text' and 'v.col.text.name' must have equal number of items.")
+                        }
+                }
+
+                # 'v.col.text.align'.
+                if(is.null(v.col.text.align)) {
+
+                        v.col.text.align  <- rep("left", length(v.col.text))
+
+                } else {
+
+                        if(length(v.col.text) != length(v.col.text.align)) {
+
+                                stop("Objects 'v.col.text' and 'v.col.text.align' must have equal number of items.")
+                        }
+                }
+
+                # 'v.col.text.width'.
+                if(is.null(v.col.text.width)) {
+
+                        v.col.text.width <- rep(120, length(v.col.text))
+
+                } else {
+
+                        if(length(v.col.text) != length(v.col.text.width)) {
+
+                                stop("Objects 'v.col.text' and 'v.col.text.width' must have equal number of items.")
+                        }
+                }
+        }
 
 
         l.colDef.text <- sapply(
@@ -198,11 +237,62 @@
         # Round and align regular numbers.
         ######################################################################################
 
-        # Update v.col.digit vectors.
-        if(!is.null(v.col.digit) & is.null(v.col.digit.name))   v.col.digit.name   <- v.col.digit
-        if(!is.null(v.col.digit) & is.null(v.col.digit.number)) v.col.digit.number <- rep(2,       length(v.col.digit))
-        if(!is.null(v.col.digit) & is.null(v.col.digit.align))  v.col.digit.align  <- rep("right", length(v.col.digit))
-        if(!is.null(v.col.digit) & is.null(v.col.digit.width))  v.col.digit.width  <- rep(120,     length(v.col.digit))
+        # Update and check on v.col.digit vectors.
+        if(!is.null(v.col.digit)) {
+
+                # 'v.col.digit.name'.
+                if(is.null(v.col.digit.name)) {
+
+                        v.col.digit.name <- v.col.digit
+
+                } else {
+
+                        if(length(v.col.digit) != length(v.col.digit.name)) {
+
+                                stop("Objects 'v.col.digit' and 'v.col.digit.name' must have equal number of items.")
+                        }
+                }
+
+                # 'v.col.digit.align'.
+                if(is.null(v.col.digit.align)) {
+
+                        v.col.digit.align  <- rep("right", length(v.col.digit))
+
+                } else {
+
+                        if(length(v.col.digit) != length(v.col.digit.align)) {
+
+                                stop("Objects 'v.col.digit' and 'v.col.digit.align' must have equal number of items.")
+                        }
+                }
+
+                # 'v.col.digit.number'.
+                if(is.null(v.col.digit.number)) {
+
+                        v.col.digit.number <- rep(2, length(v.col.digit))
+
+                } else {
+
+                        if(length(v.col.digit) != length(v.col.digit.number)) {
+
+                                stop("Objects 'v.col.digit' and 'v.col.digit.number' must have equal number of items.")
+                        }
+                }
+
+                # 'v.col.digit.width'.
+                if(is.null(v.col.digit.width)) {
+
+                        v.col.digit.width <- rep(120, length(v.col.digit))
+
+                } else {
+
+                        if(length(v.col.digit) != length(v.col.digit.width)) {
+
+                                stop("Objects 'v.col.digit' and 'v.col.digit.width' must have equal number of items.")
+                        }
+                }
+        }
+
 
         # Update formatting of variable column names. Using sapply allows keeping the
         # item names (not available in lapply). Using simplify is false prevents
@@ -212,7 +302,7 @@
 
                 v.col.digit,
 
-                function(x) { # x = v.col.digit[1]
+                function(x) { # x = v.col.digit[9]
 
                         colDef(
                                 name  = v.col.digit.name[x == v.col.digit],
@@ -235,11 +325,63 @@
         # Round and align euro amounts.
         ######################################################################################
 
-        # Update v.col.euro vectors.
-        if(!is.null(v.col.euro) & is.null(v.col.euro.name))   v.col.euro.name   <- v.col.euro
-        if(!is.null(v.col.euro) & is.null(v.col.euro.number)) v.col.euro.number <- rep(2,       length(v.col.euro))
-        if(!is.null(v.col.euro) & is.null(v.col.euro.align))  v.col.euro.align  <- rep("right", length(v.col.euro))
-        if(!is.null(v.col.euro) & is.null(v.col.euro.width))  v.col.euro.width  <- rep(120,     length(v.col.euro))
+        # Update and check on v.col.euro vectors.
+        if(!is.null(v.col.euro)) {
+
+                # 'v.col.euro.name'.
+                if(is.null(v.col.euro.name)) {
+
+                        v.col.euro.name <- v.col.euro
+
+                } else {
+
+                        if(length(v.col.euro) != length(v.col.euro.name)) {
+
+                                stop("Objects 'v.col.euro' and 'v.col.euro.name' must have equal number of items.")
+                        }
+                }
+
+                # 'v.col.euro.align'.
+                if(is.null(v.col.euro.align)) {
+
+                        v.col.euro.align  <- rep("right", length(v.col.euro))
+
+                } else {
+
+                        if(length(v.col.euro) != length(v.col.euro.align)) {
+
+                                stop("Objects 'v.col.euro' and 'v.col.euro.align' must have equal number of items.")
+                        }
+                }
+
+                # 'v.col.euro.number'.
+                if(is.null(v.col.euro.number)) {
+
+                        v.col.euro.number <- rep(2, length(v.col.euro))
+
+                } else {
+
+                        if(length(v.col.euro) != length(v.col.euro.number)) {
+
+                                stop("Objects 'v.col.euro' and 'v.col.euro.number' must have equal number of items.")
+                        }
+                }
+
+                # 'v.col.euro.width'.
+                if(is.null(v.col.euro.width)) {
+
+                        v.col.euro.width <- rep(120, length(v.col.euro))
+
+                } else {
+
+                        if(length(v.col.euro) != length(v.col.euro.width)) {
+
+                                stop("Objects 'v.col.euro' and 'v.col.euro.width' must have equal number of items.")
+                        }
+                }
+        }
+
+
 
 
         l.colDef.euro <- sapply(

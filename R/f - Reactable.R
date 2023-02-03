@@ -21,6 +21,8 @@
 #' @param v.col.euro.number Vector with number of digits to use (default: NULL).
 #' @param v.col.euro.align Vector with alignment of the numbers. Options are: "left", "center", and "right" (default: NULL).
 #' @param v.col.euro.width Vector with widths of the concerned columns (default: NULL).
+#' @param v.row.number.color Row numbers that need to be colored with c.row.number.color (default: NULL).
+#' @param c.row.number.color Color to give to the concerned rows (default: NULL).
 #' @param n.defaultPageSize What is the default page size? (default: 10).
 #' @param b.showPageSizeOptions Should we show page size options? (default: FALSE).
 #' @param v.pageSizeOptions What page size options to provide (default: c(10, 20, 30)).
@@ -53,6 +55,8 @@
 #'      v.col.euro.number       = NULL,
 #'      v.col.euro.align        = NULL,
 #'      v.col.euro.width        = NULL,
+#'      v.row.number.color      = NULL,
+#'      c.row.number.color      = NULL,
 #'      n.defaultPageSize       = 10,
 #'      b.showPageSizeOptions   = FALSE,
 #'      v.pageSizeOptions       = c(10, 20, 30),
@@ -89,8 +93,8 @@
                 v.col.euro.align        = NULL,
                 v.col.euro.width        = NULL,
 
-                v_row_number_color      = NULL,
-                c_row_number_color      = NULL,
+                v.row.number.color      = NULL,
+                c.row.number.color      = NULL,
 
                 n.defaultPageSize       = 10,
                 b.showPageSizeOptions   = FALSE,
@@ -125,6 +129,9 @@
         # v.col.euro.number       = NULL
         # v.col.euro.align        = NULL
         # v.col.euro.width        = NULL
+        #
+        # v.row.number.color      = NULL
+        # c.row.number.color      = NULL
         #
         # n.defaultPageSize       = 10
         # b.showPageSizeOptions   = FALSE
@@ -440,9 +447,9 @@
                                 list(fontWeight = "bold")
                         }
 
-                        if (index %in% v_row_number_color) {
+                        if (index %in% v.row.number.color) {
 
-                                list(background = c_row_number_color)
+                                list(background = c.row.number.color)
                         }
                 },
 

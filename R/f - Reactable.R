@@ -89,6 +89,9 @@
                 v.col.euro.align        = NULL,
                 v.col.euro.width        = NULL,
 
+                v_row_number_color      = NULL,
+                c_row_number_color      = NULL,
+
                 n.defaultPageSize       = 10,
                 b.showPageSizeOptions   = FALSE,
                 v.pageSizeOptions       = c(10, 20, 30),
@@ -435,6 +438,11 @@
                         if (df.input[index, 1] == "Total") {
 
                                 list(fontWeight = "bold")
+                        }
+
+                        if (index %in% v_row_number_color) {
+
+                                list(background = c_row_number_color)
                         }
                 },
 

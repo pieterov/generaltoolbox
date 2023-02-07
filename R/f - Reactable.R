@@ -164,10 +164,8 @@
 
         # Replace NA with "NA" in first column. First check that first column is non-numeric. This
         # is to prevent 'Can't convert <character> to <double>.' error.
-        if(class(df.input[[1]]) != "numeric") {
-
-                df.input[is.na(df.input[[1]]), 1] <- "NA"
-        }
+        #if(class(df.input[[1]]) != "numeric") {df.input[is.na(df.input[[1]]), 1] <- "NA"}
+        if(!is.numeric(df.input[[1]])) {df.input[is.na(df.input[[1]]), 1] <- "NA"}
 
 
         ######################################################################################

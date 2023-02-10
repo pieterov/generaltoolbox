@@ -155,9 +155,9 @@
                         			'type': 'button',
                         			'text': {
                         				'type': 'plain_text',
-                        				'text': ':spiral_note_pad: Synology'
+                        				'text': ':spiral_note_pad: RDS'
                         			},
-                        			'url': '", c.ipsm.synology.data, "'
+                        			'url': '", c.data.repo, "'
                         		},
 
                                         {

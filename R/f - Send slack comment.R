@@ -55,6 +55,8 @@
                 c.title,
                 c.message.main,
                 v.message.list,
+                v.button.txt,
+                v.button.url,
                 c.image.url = NULL
         ) {
 
@@ -63,6 +65,8 @@
         # c.title         = c.file.string
         # c.message.main  = "File was successfully downloaded from Dumps."
         # v.message.list  = "See Synology"
+        # v.button.txt    = c('Dumps', 'Log', 'RDS', 'IPSm')
+        # v.button.url    = c(c.ipsm.dumps, c.ipsm.allocatie.log, c.data.repo, "https://ipsm.nl/")
         # c.image.url     = c.image.url.hrgroep
 
 
@@ -135,44 +139,32 @@
                         {
                         	'type': 'actions',
 
-                        	'elements': [
+                        	'elements': [",
 
-                                         {
-                        			'type': 'button',
-                        			'text': {
-                        				'type': 'plain_text',
-                        				'text': ':spiral_note_pad: Dumps'
-                        			},
-                        			'url': '", c.ipsm.dumps, "'
-                        		},
+                                paste(
+                                        mapply(
+                                                function(c.button.txt, c.button.url) {
 
-                                        {
-                        			'type': 'button',
-                        			'text': {
-                        				'type': 'plain_text',
-                        				'text': ':spiral_note_pad: Log'
-                        			},
-                        			'url': '", c.ipsm.allocatie.log, "'
-                                        },
+                                                paste0(
+                                                        "{
+                                                        'type': 'button',
+                                                        'text': {
+                                                                'type': 'plain_text',
+                                                                'text': ':spiral_note_pad: ", c.button.txt, "'
+                                                        },
+                                                        'url': '", c.button.url, "'
+                                                        }"
+                                                )
+                                                },
 
-                                        {
-                        			'type': 'button',
-                        			'text': {
-                        				'type': 'plain_text',
-                        				'text': ':spiral_note_pad: RDS'
-                        			},
-                        			'url': '", c.data.repo, "'
-                        		},
+                                                c.button.txt = v.button.txt,
+                                                c.button.url = v.button.url
+                                        ),
 
-                                        {
-                        			'type': 'button',
-                        			'text': {
-                        				'type': 'plain_text',
-                        				'text': ':spiral_note_pad: IPSm'
-                        			},
-                        			'url': '", "https://ipsm.nl/", "'
-                                        }
-                        	]
+                                        collapse = ","
+                                ),
+
+                        	"]
                         },
 
                 	{

@@ -67,7 +67,7 @@
 
 
         # Translate marker(s).
-        c.marker  <- lapply(
+        c.marker.updated  <- lapply(
 
                 c.marker %>% strsplit("") %>% unlist(),
 
@@ -86,7 +86,11 @@
                                 stop("Unknown marker.")
                         }
 
-                }) %>% unlist() %>% paste0(collapse = "")
+                }) %>%
+
+                unlist() %>%
+
+                paste0(collapse = "")
 
 
         # Prepare message from list.
@@ -123,7 +127,7 @@
 
                                         'type': 'mrkdwn',
                                         'text': '*",
-                                                c.marker, "\t" , c.title, "*\n\n",
+                                                c.marker.updated, "\t" , c.title, "*\n\n",
                                                 c.message.main, "\n\n", c.message.list, "'
                                 }", c.image.url.message,
                         "},

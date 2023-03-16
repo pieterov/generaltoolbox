@@ -22,6 +22,8 @@ f_reactable(
   v.col.euro.number = NULL,
   v.col.euro.align = NULL,
   v.col.euro.width = NULL,
+  v.row.number.color = NULL,
+  c.row.number.color = NULL,
   n.defaultPageSize = 10,
   b.showPageSizeOptions = FALSE,
   v.pageSizeOptions = c(10, 20, 30),
@@ -64,6 +66,10 @@ f_reactable(
 
 \item{v.col.euro.width}{Vector with widths of the concerned columns (default: NULL).}
 
+\item{v.row.number.color}{Row numbers that need to be colored with c.row.number.color (default: NULL).}
+
+\item{c.row.number.color}{Color to give to the concerned rows (default: NULL).}
+
 \item{n.defaultPageSize}{What is the default page size? (default: 10).}
 
 \item{b.showPageSizeOptions}{Should we show page size options? (default: FALSE).}
@@ -103,6 +109,8 @@ f_reactable(
      v.col.euro.number       = NULL,
      v.col.euro.align        = NULL,
      v.col.euro.width        = NULL,
+     v.row.number.color      = NULL,
+     c.row.number.color      = NULL,
      n.defaultPageSize       = 10,
      b.showPageSizeOptions   = FALSE,
      v.pageSizeOptions       = c(10, 20, 30),

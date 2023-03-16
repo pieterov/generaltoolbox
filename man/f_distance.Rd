@@ -4,12 +4,12 @@
 \alias{f_distance}
 \title{Calculate distances}
 \usage{
-f_distance(x1, y1, x2, y2)
+f_distance(x1, y1 = NULL, x2 = NULL, y2 = NULL)
 }
 \arguments{
-\item{x1, y1}{Coordinates of first point.}
+\item{x1, y1}{Coordinates of first point (default: y1 = NULL).}
 
-\item{x2, y2}{Coordinates of second point.}
+\item{x2, y2}{Coordinates of second point (default: x2, y2 = NULL).}
 }
 \value{
 Vector with distances.
@@ -18,7 +18,8 @@ Vector with distances.
 Calculates distances.
 }
 \details{
--
+In case a single vector of 4 elements is provided, then x1, x2, x2, and y2 are
+reassigned using x1.
 }
 \examples{
 v.distance <- f_distance(

@@ -10,6 +10,8 @@ f_send_slack_comment(
   c.title,
   c.message.main,
   v.message.list,
+  v.button.txt,
+  v.button.url,
   c.image.url = NULL
 )
 }
@@ -22,7 +24,11 @@ f_send_slack_comment(
 
 \item{c.message.main}{Main message (string).}
 
-\item{v.message.list}{Message to communicate (list with strings).}
+\item{v.message.list}{Message to communicate (vector with strings).}
+
+\item{v.button.txt}{Text labels on the buttons (vector with strings).}
+
+\item{v.button.url}{URL behind the buttons (vector with strings).}
 
 \item{c.image.url}{Link to image to show in Slack message (default NULL).}
 }
@@ -58,6 +64,8 @@ f_send_slack_comment(
        c.title        = "A greate title!",
        c.message.main = "The main message.",
        v.message.list = c("Hello World!", "This is item 2", "And a third item"),
+       v.button.txt   = c('Dumps', 'Log', 'RDS', 'IPSm'),
+       v.button.url   = c(c.ipsm.dumps, c.ipsm.allocatie.log, c.data.repo, "https://ipsm.nl/"),
        c.image.url    = "https://media.licdn.com/dms/image/C560BAQEGsMeS8zRHcg/company-logo_200_200/0/1612876167821?e=1682553600&v=beta&t=ypO6V4vhFioktDnqLdCKra0K6IGaI2bl6klfHaxA0lw"
 )
 }

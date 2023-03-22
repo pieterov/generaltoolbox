@@ -52,7 +52,7 @@
         # Als x een dataframe is.
         if(is.data.frame(x)) {
 
-                for (c.column in colnames(x)) { # c.column <- colnames(x)[7]
+                for (c.column in colnames(x)) { # c.column <- colnames(x)[1]
 
                         cat(
                                 paste0(

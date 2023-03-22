@@ -81,8 +81,8 @@
         n.count      <- max(3, n.count.true)
         c.class      <- class(v.input)
 
-        # Reformat date to character, since Date give an error in 'v.input[v.input %in% NA]  <- "NA "', see below.
-        if (c.class == "Date") {
+        # Reformat date(time) to character, since it gives an error in 'v.input[v.input %in% NA]  <- "NA "', see below.
+        if (any(c("Date", "POSIXct", "POSIXt") %in% c.class)) {
 
                 v.input = as.character(v.input)
         }

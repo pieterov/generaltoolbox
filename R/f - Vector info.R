@@ -79,6 +79,13 @@
         # Initialization. We take max of nchar and 3 to prevent count errors below. Width is at least 3.
         n.count.true <- nchar(format(length(v.input), big.mark = ","))
         n.count      <- max(3, n.count.true)
+        c.class      <- class(v.input)
+
+        # Reformat date to character, since Date give an error in 'v.input[v.input %in% NA]  <- "NA "', see below.
+        if (c.class == "Date") {
+
+                v.input = as.character(v.input)
+        }
 
         # Calculate basic info.
         df.basic.info <- data.frame(
@@ -164,7 +171,7 @@
         # Print header.
         cat(
                 paste0(
-                        "\n ", name, " (", class(v.input), ")\n\n"
+                        "\n ", name, " (", c.class, ")\n\n"
                 )
         )
 

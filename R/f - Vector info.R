@@ -79,13 +79,12 @@
         # Initialization. We take max of nchar and 3 to prevent count errors below. Width is at least 3.
         n.count.true <- nchar(format(length(v.input), big.mark = ","))
         n.count      <- max(3, n.count.true)
-        c.class      <- class(v.input)
+        c.class      <- paste(class(v.input), collapse = '/')
 
         # Reformat date(time) to character, since it gives an error in 'v.input[v.input %in% NA]  <- "NA "', see below.
-        if (any(c("Date", "POSIXct", "POSIXt") %in% c.class)) {
-
-                v.input = as.character(v.input)
-        }
+        #if (any(c("Date", "POSIXct", "POSIXt") %in% c.class)) {
+        v.input = as.character(v.input)
+        #}
 
         # Calculate basic info.
         df.basic.info <- data.frame(

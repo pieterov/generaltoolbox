@@ -81,10 +81,11 @@
         n.count      <- max(3, n.count.true)
         c.class      <- paste(class(v.input), collapse = '/')
 
-        # Reformat date(time) to character, since it gives an error in 'v.input[v.input %in% NA]  <- "NA "', see below.
-        #if (any(c("Date", "POSIXct", "POSIXt") %in% c.class)) {
+
+        # Reformat data to character, since date(time) gives an error in 'v.input[v.input %in% NA]  <- "NA "',
+        # see below. To be sure, all are converted to character.
         v.input = as.character(v.input)
-        #}
+
 
         # Calculate basic info.
         df.basic.info <- data.frame(
@@ -271,10 +272,13 @@
                         head(n.top)
 
 
-                # Puntjes toevoegen als n.top een getal is.
+                # Puntjes toevoegen als n.top een getal is, en kleiner of gelijk is aan het aantal rijen in df.freq.
                 if(is.numeric(n.top)) {
 
-                        df.freq <- rbind(df.freq, df.dots)
+                        if(nrow(df.freq) >= n.top) {
+
+                                df.freq <- rbind(df.freq, df.dots)
+                        }
                 }
 
 

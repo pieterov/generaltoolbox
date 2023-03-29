@@ -24,10 +24,10 @@
 #' @param v.row.number.color Row numbers that need to be colored with c.row.number.color (default: NULL).
 #' @param c.row.number.color Color to give to the concerned rows (default: NULL).
 #' @param n.defaultPageSize What is the default page size? (default: 10).
-#' @param b.showPageSizeOptions Should we show page size options? (default: FALSE).
+#' @param b.showPageSizeOptions Should we show page size options? (default: TRUE).
 #' @param v.pageSizeOptions What page size options to provide (default: c(10, 20, 30)).
-#' @param b.filterable Should table be filterable? (default: FALSE).
-#' @param b.searchable Should table be searchable? (default: FALSE).
+#' @param b.filterable Should table be filterable? (default: TRUE).
+#' @param b.searchable Should table be searchable? (default: TRUE).
 #'
 #' @returns Reactable table.
 #'
@@ -58,10 +58,10 @@
 #'      v.row.number.color      = NULL,
 #'      c.row.number.color      = NULL,
 #'      n.defaultPageSize       = 10,
-#'      b.showPageSizeOptions   = FALSE,
+#'      b.showPageSizeOptions   = TRUE,
 #'      v.pageSizeOptions       = c(10, 20, 30),
-#'      b.filterable            = FALSE,
-#'      b.searchable            = FALSE
+#'      b.filterable            = TRUE,
+#'      b.searchable            = TRUE
 #' )
 
 
@@ -97,11 +97,11 @@
                 c.row.number.color      = NULL,
 
                 n.defaultPageSize       = 10,
-                b.showPageSizeOptions   = FALSE,
+                b.showPageSizeOptions   = TRUE,
                 v.pageSizeOptions       = c(10, 20, 30),
 
-                b.filterable            = FALSE,
-                b.searchable            = FALSE
+                b.filterable            = TRUE,
+                b.searchable            = TRUE
         ) {
 
 

@@ -179,20 +179,18 @@
 
                         contains.date     = !is.na(date.in.file.name),
                         contains.time     = !is.na(time.in.file.name)
-                        )
+                )
 
 
         # Added suppresswarnings because hms() gives warning when it cannot parse time.
-        suppressWarnings(
+        df.output <- df.output %>%
 
-                df.output <- df.output %>%
+                mutate(
+                        time.in.file.name = lubridate::hms(time.in.file.name)
+                ) %>%
 
-                        mutate(
-                                time.in.file.name = hms(time.in.file.name)
-                        ) %>%
+                arrange(date.in.file.name, time.in.file.name)
 
-                        arrange(date.in.file.name, time.in.file.name)
-        )
 
 
         # Voeg md5 toe, indien gevraagd.

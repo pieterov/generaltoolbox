@@ -48,10 +48,12 @@
         # TESTING
         ###############################################################################
 
-        # c.folder.source      = paste0(path.code, "2022-06-02_Quarto - R-Ladies Freiburg/")
-        # c.file.source        = "Quarto demonstration - test.qmd"
-        # c.folder.destination = path.deliverables
-        # c.file.destination   = NULL
+        # BLC
+        # c.folder.source      = path.code
+        # c.file.source        = "Q - N-line Modelling - HTML.qmd"
+        # c.folder.destination = paste0(path.deliverables, "Reports/")
+        # c.file.destination   = c.file.root
+        # b.add.time           = TRUE
 
         # c.folder.source      = path.code
         # c.file.source        = "Verkoopoverzicht.qmd"
@@ -75,6 +77,7 @@
         # b.add.date           = FALSE
         # b.add.time           = FALSE
         # l.execute.params     = list(c.partner.order_ = c.partner.order)
+
 
         #################################################################################
         # ERROR CHECK

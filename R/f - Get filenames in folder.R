@@ -71,8 +71,12 @@
         # c.file.type  = "qmd"
         # b.return.md5 = FALSE
 
-        # c.path      = paste0(path.images, "PRODUCT PICTURES KOKOON")
-        # b.recursive = TRUE
+        # BLC
+        # c.path       = c.folder.source
+        # b.recursive  = FALSE
+        # c.file.type  = "qmd"
+        # b.return.md5 = FALSE
+
 
         #################################################################################
         # ERROR CHECK
@@ -182,11 +186,11 @@
                 )
 
 
-        # Added suppresswarnings because hms() gives warning when it cannot parse time.
+        # Added 'quiet = TRUE' because hms() gives warning when it cannot parse time, or all are NA.
         df.output <- df.output %>%
 
                 mutate(
-                        time.in.file.name = lubridate::hms(time.in.file.name)
+                        time.in.file.name = lubridate::hms(time.in.file.name, quiet = TRUE)
                 ) %>%
 
                 arrange(date.in.file.name, time.in.file.name)

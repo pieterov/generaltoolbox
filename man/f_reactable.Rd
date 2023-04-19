@@ -25,10 +25,10 @@ f_reactable(
   v.row.number.color = NULL,
   c.row.number.color = NULL,
   n.defaultPageSize = 10,
-  b.showPageSizeOptions = FALSE,
+  b.showPageSizeOptions = TRUE,
   v.pageSizeOptions = c(10, 20, 30),
-  b.filterable = FALSE,
-  b.searchable = FALSE
+  b.filterable = TRUE,
+  b.searchable = TRUE
 )
 }
 \arguments{
@@ -72,13 +72,13 @@ f_reactable(
 
 \item{n.defaultPageSize}{What is the default page size? (default: 10).}
 
-\item{b.showPageSizeOptions}{Should we show page size options? (default: FALSE).}
+\item{b.showPageSizeOptions}{Should we show page size options? (default: TRUE).}
 
 \item{v.pageSizeOptions}{What page size options to provide (default: c(10, 20, 30)).}
 
-\item{b.filterable}{Should table be filterable? (default: FALSE).}
+\item{b.filterable}{Should table be filterable? (default: TRUE).}
 
-\item{b.searchable}{Should table be searchable? (default: FALSE).}
+\item{b.searchable}{Should table be searchable? (default: TRUE).}
 }
 \value{
 Reactable table.
@@ -112,10 +112,10 @@ f_reactable(
      v.row.number.color      = NULL,
      c.row.number.color      = NULL,
      n.defaultPageSize       = 10,
-     b.showPageSizeOptions   = FALSE,
+     b.showPageSizeOptions   = TRUE,
      v.pageSizeOptions       = c(10, 20, 30),
-     b.filterable            = FALSE,
-     b.searchable            = FALSE
+     b.filterable            = TRUE,
+     b.searchable            = TRUE
 )
 }
 \author{

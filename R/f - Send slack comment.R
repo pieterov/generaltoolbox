@@ -75,7 +75,7 @@
 
 
         # Translate marker(s).
-        c.marker.updated  <- lapply(
+        c.marker.updated <- lapply(
 
                 c.marker %>% strsplit("") %>% unlist(),
 
@@ -101,7 +101,7 @@
                 paste0(collapse = "")
 
 
-        # Prepare message from list.
+        # Prepare message from list. Remove "'", because "'" results in issues rendering the JSON.
         c.message.list <- paste(
 
                 paste0(
@@ -111,7 +111,8 @@
                 ),
 
                 collapse = "\n"
-        )
+
+        ) %>% gsub("'", "", .)
 
 
         # URL message in case URL is provided.
@@ -199,7 +200,7 @@
         n_counter  <- 1
 
         # Try for at most n_counter_max times.
-        while (n_counter <= n_counter_max & b_continue) {
+        while ((n_counter <= n_counter_max) & b_continue) {
 
                 # Comms to user.
                 cat(paste0("\n\n", now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max, ".\n"))
@@ -210,7 +211,7 @@
                         httr::POST(
                                 url    = c.slack.hook,
                                 encode = "json",
-                                body   = c.message
+                                body   =  c.message
                         )
 
                         # Testing.
@@ -221,7 +222,7 @@
                 # Comms to user.
                 cat(paste0(
                         "\n", now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max,
-                        " passed the 'POST()' function. The result is as follows (class: '",
+                        " passed the 'POST()' function. The class of the result is as follows (class: '",
                         class(result), "'):\n\n"
                 ))
 
@@ -232,30 +233,59 @@
                 #cat("\n")
 
                 # Check result of attempt. If attempt was succesful.
-                if(class(result) != "try-error") {
-
-                        b_continue <- FALSE
+                if(!"status_code" %in% attributes(result)$names) {
 
                         # Comms to user.
                         cat(paste0(
                                 now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max,
-                                " was successful!\n"
+                                " was not successful due to a bug in the script and there was no status code returned.",
+                                " We will not try again. Fix the bug.\n"
                         ))
 
                         return()
 
-                # If attempt was not succesfull, we try again after we wait 15 sec.
                 } else {
 
-                        # Comms to user.
-                        cat(paste0(
-                                now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max,
-                                " was not successful. We will try again.\n"
-                        ))
+                        if(result$status_code == 200) {
 
-                        Sys.sleep(15)
+                                b_continue <- FALSE
 
-                        n_counter <- n_counter + 1
+                                # Comms to user.
+                                cat(paste0(
+                                        now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max,
+                                        " was successful (Status: 200)!\n"
+                                ))
+
+                                return()
+
+                        # If attempt was not succesfull, we try again after we wait 15 sec.
+                        } else if(result$status_code == 400) {
+
+                                # Comms to user.
+                                cat(paste0(
+                                        now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max,
+                                        " was not successful (Status: 400). We will try again.\n"
+                                ))
+
+                                Sys.sleep(15)
+
+                                n_counter <- n_counter + 1
+
+
+                        } else {
+
+                                # Comms to user.
+                                cat(paste0(
+                                        now(), " - Attempt send to Slack ", n_counter, " of ", n_counter_max,
+                                        " was not successful (Status: ", result$status_code,"). We will try again.\n"
+                                ))
+
+                                Sys.sleep(15)
+
+                                n_counter <- n_counter + 1
+
+
+                        }
                 }
         }
 

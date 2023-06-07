@@ -2877,7 +2877,11 @@
         # Save kaart.
         if(b.save.leaflet) {
 
-                saveWidget(
+                # We get an '[WARNING] Deprecated: --self-contained. use --embed-resources --standalone'.
+                # See also https://stackoverflow.com/questions/74379298/argument-selfcontained-deprecated-in-htmlwidgetssavewidget
+                # There is not much we can do now.
+
+                htmlwidgets::saveWidget(
 
                         widget = plot.leaflet,
 

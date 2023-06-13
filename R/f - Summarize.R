@@ -7,6 +7,7 @@
 #' @param df.input Data frame to summarize.
 #' @param b.sort Should items be sorted? (default: TRUE).
 #' @param b.view Should we display the result? (default: TRUE).
+#' @param b.write Should we write the summary table to XLS? (default: FALSE).
 #' @param b.return Should we return the resulting data frame (default: FALSE).
 #' @param n.char Number of characters to show of each item (default: "all").
 #' @param n.freq Number of items to show (default: 3).
@@ -23,6 +24,7 @@
 #'      df.input = mtcars,
 #'      b.sort   = TRUE,
 #'      b.view   = TRUE,
+#'      b.write  = FALSE,
 #'      b.return = FALSE,
 #'      n.char   = "all",
 #'      n.freq   = 3
@@ -38,6 +40,7 @@
                 df.input,
                 b.sort   = TRUE,
                 b.view   = TRUE,
+                b.write  = FALSE,
                 b.return = FALSE,
                 n.char   = "all",
                 n.freq   = 3
@@ -222,7 +225,21 @@
         # Return.
         ##############################################################################################
 
-        if(b.view & !b.return) {View(df.info.per.column)}
-        if(b.return)           {return(df.info.per.column)}
+        if(b.write)  {
+
+                # Write data to XLS.
+                f_write_data_to_file(
+
+                        x             = df.info.per.column,
+                        c.file.string = "df.info.per.column",
+                        v.sheet.name  = "Sheet1",
+                        v.path        = path.data,
+                        v.xls         = TRUE,
+                        v.add.time    = TRUE
+                )
+        }
+
+        if(b.view)   {View(df.info.per.column)}
+        if(b.return) {return(df.info.per.column)}
 }
 

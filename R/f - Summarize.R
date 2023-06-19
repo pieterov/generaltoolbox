@@ -158,7 +158,7 @@
 
                                         ifelse(
                                                 any(c("numeric", "integer", "Date") %in% class(v.temp)),
-                                                min(v.temp),
+                                                min(v.temp, na.rm = TRUE),
                                                 NA
                                         )
                                 }),
@@ -169,7 +169,7 @@
 
                                         ifelse(
                                                 any(c("numeric", "integer", "Date") %in% class(v.temp)),
-                                                max(v.temp),
+                                                max(v.temp, na.rm = TRUE),
                                                 NA
                                         )
                                 }),

@@ -67,7 +67,7 @@
         # n.char   = 20
         # n.freq   = 3
 
-        # df.input = df.temp
+        # df.input = l.result1[[1]][[1]]
         # b.view   = FALSE
         # b.return = TRUE
 
@@ -154,16 +154,24 @@
 
                         min = sapply(
 
-                                df.input, function(v.temp) {
+                                df.input, function(v.temp) { # v.temp <- df.input$wvk.id
 
-                                        ifelse("numeric" %in% class(v.temp), min(v.temp), NA)
+                                        ifelse(
+                                                any(c("numeric", "integer", "Date") %in% class(v.temp)),
+                                                min(v.temp),
+                                                NA
+                                        )
                                 }),
 
                         max = sapply(
 
                                 df.input, function(v.temp) {
 
-                                        ifelse("numeric" %in% class(v.temp), max(v.temp), NA)
+                                        ifelse(
+                                                any(c("numeric", "integer", "Date") %in% class(v.temp)),
+                                                max(v.temp),
+                                                NA
+                                        )
                                 }),
 
                         example = sapply(

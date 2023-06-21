@@ -308,6 +308,22 @@
                                                                )
 
 
+                                                       # Check whether one or more of the columns is empty. If so,
+                                                       # advice to increase 'guess_max'
+                                                       walk(names(df.temp), function(x) {
+
+                                                               if(all(is.na(df.temp[x]))) {
+
+                                                                        cat(paste0(
+                                                                               "\nAll cells in column '", x, "' are empty. ",
+                                                                               "Consider increasing 'n.guess.max' to a ",
+                                                                               "number close to the number of rows in the ",
+                                                                               "data frame (",
+                                                                               format(nrow(df.temp), big.mark = ","), ").\n"
+                                                                        ))
+                                                               }
+                                                       })
+
                                                        return(df.temp)
                                                })
                                        )

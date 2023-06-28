@@ -49,6 +49,7 @@
                 df.plot,
                 c.x,
                 c.y,
+                c.facet         = NULL,
                 n.alpha         = 0.2,
                 b.log.x         = FALSE,
                 b.log.y         = FALSE,
@@ -76,6 +77,12 @@
 
         if(!c.y %in% names(df.plot)) {
                 stop(glue("Column name {y} does not occur in the data frame to plot."))
+        }
+
+        if(!is.null(c.facet)) {
+                if(!c.facet %in% names(df.plot)) {
+                        stop(glue("Column name {c.facet} does not occur in the data frame to plot."))
+                }
         }
 
         if(!is.null(v.abline)) {
@@ -118,6 +125,11 @@
                 ) +
 
                 theme.figure
+
+        if(!is.null(c.facet)) {
+
+                gg.output <- gg.output + facet_wrap(~get(c.facet))
+        }
 
         # Set axis to log scale if requested.
         if(b.log.x) {

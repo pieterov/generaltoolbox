@@ -13,6 +13,8 @@
 #' @param v.abline Slope and intercept in a vector (default: NULL)
 #' @param c.labs.x Label for x-axis (default: NULL)
 #' @param c.labs.y Label for y-axis (default: NULL)
+#' @param b.grid.major.x Should grid added on x-axis (default: FALSE)
+#' @param b.grid.major.y Should grid added on y-axis (default: FALSE)
 #' @param c.labs.title Main title (default: waiver())
 #' @param c.labs.subtitle Subtitle (default: waiver())
 #' @param c.labs.caption Caption under the plot (default: waiver())
@@ -56,6 +58,8 @@
                 v.abline        = NULL,
                 c.labs.x        = NULL,
                 c.labs.y        = NULL,
+                b.grid.major.x  = FALSE,
+                b.grid.major.y  = FALSE,
                 c.labs.title    = waiver(),
                 c.labs.subtitle = waiver(),
                 c.labs.caption  = waiver()
@@ -161,6 +165,32 @@
                                 linetype  = 2
                         )
         }
+
+
+        if(b.grid.major.x) {
+
+                gg.output <- gg.output + theme(
+
+                        panel.grid.major.x = element_line(
+
+                                color     = "grey60",
+                                linewidth = 0.5,
+                                linetype  = 2)
+                        )
+        }
+
+        if(b.grid.major.y) {
+
+                gg.output <- gg.output + theme(
+
+                        panel.grid.major.y = element_line(
+
+                                color     = "grey60",
+                                linewidth = 0.5,
+                                linetype  = 2)
+                )
+        }
+
 
         ######################################################################################
         # RETURN

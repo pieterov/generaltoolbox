@@ -137,10 +137,10 @@
         # b.showPageSizeOptions   = FALSE
         # v.pageSizeOptions       = c(10, 20, 30)
         #
-        # b.filterable            = FALSE
-        # b.searchable            = FALSE
+        # b.filterable            = TRUE
+        # b.searchable            = TRUE
 
-        # # Set 1
+        # Set 1
         # df.input            = df.tg.target
         # c.col.default.align = "left"
         #
@@ -152,6 +152,25 @@
         # v.col.digit.number = 2
         #
         # n.defaultPageSize  = 30
+
+        # Set 2
+        # df.input                = df.distances.rmse %>%
+        #
+        #         count(dist.thd, rmse.max, name = "count") %>%
+        #
+        #         mutate(fraction = count / n_distinct(df.score$name.tp)) %>%
+        #
+        #         select(dist.thd, count, fraction, rmse.max)
+        #
+        # c.col.default.align     = 'center'
+        # n.col.default.max.width = 120
+        #
+        # v.col.digit             = c('dist.thd', 'count', 'fraction', 'rmse.max')
+        # v.col.digit.name        = c('Distance', 'Count', 'Fraction', 'RMSE max')
+        # v.col.digit.number      = c(2, 0, 2, 1)
+        # v.col.digit.width       = c(150, 150, 150, 150)
+        # b.filterable            = FALSE
+        # b.searchable            = FALSE
 
 
         ######################################################################################

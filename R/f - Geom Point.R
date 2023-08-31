@@ -15,6 +15,7 @@
 #' @param c.labs.y Label for y-axis (default: NULL)
 #' @param b.grid.major.x Should grid added on x-axis (default: FALSE)
 #' @param b.grid.major.y Should grid added on y-axis (default: FALSE)
+#' @param b.coord.fixed Should x-axis and y-axis have fixed ratio of 1 (default: FALSE)
 #' @param c.labs.title Main title (default: waiver())
 #' @param c.labs.subtitle Subtitle (default: waiver())
 #' @param c.labs.caption Caption under the plot (default: waiver())
@@ -60,6 +61,7 @@
                 c.labs.y        = NULL,
                 b.grid.major.x  = FALSE,
                 b.grid.major.y  = FALSE,
+                b.coord.fixed   = FALSE,
                 c.labs.title    = waiver(),
                 c.labs.subtitle = waiver(),
                 c.labs.caption  = waiver()
@@ -69,6 +71,38 @@
         ######################################################################################
         # TEST
         ######################################################################################
+
+        # ALWAYS
+        # c.facet         = NULL
+        # n.alpha         = 0.2
+        # b.log.x         = FALSE
+        # b.log.y         = FALSE
+        # v.abline        = NULL
+        # c.labs.x        = NULL
+        # c.labs.y        = NULL
+        # b.grid.major.x  = FALSE
+        # b.grid.major.y  = FALSE
+        # b.coord.fixed   = FALSE
+        # c.labs.title    = waiver()
+        # c.labs.subtitle = waiver()
+        # c.labs.caption  = waiver()
+
+        # SET 1:
+        # df.plot  = df.ttemp.error.nn.temp.dist.cog %>%
+        #         select(dist.thd, name.tp, ttemp, error.ttemp, error.ttemp.both) %>% na.omit()
+        # c.x             = 'error.ttemp'
+        # c.y             = 'error.ttemp.both'
+        # b.grid.major.x  = TRUE
+        # b.grid.major.y  = TRUE
+        # b.log.x         = FALSE
+        # b.log.y         = FALSE
+        # b.coord.fixed   = TRUE
+        # c.facet         = 'dist.thd'
+        # v.abline        = c(1, 1e-15)
+        # n.alpha         = 0.3
+        # c.labs.x        = paste('Error using', c.use,  'source')
+        # c.labs.y        = 'Error using both sources'
+
 
         ######################################################################################
         # ERROR CHECK
@@ -153,6 +187,12 @@
                         labels = trans_format("log10", math_format(10^.x))
                 )
         }
+
+
+        if(b.coord.fixed) {
+                gg.output <- gg.output + coord_fixed(ratio=1)
+        }
+
 
         if(!is.null(v.abline)) {
 

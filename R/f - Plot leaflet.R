@@ -2232,7 +2232,7 @@
 
                         options = providerTileOptions(
 
-                                                minZoom = 7,
+                                                minZoom = 1,
                                                 maxZoom = 19,
                                                 opacity = 0.5),
 
@@ -2247,7 +2247,7 @@
 
                         options = providerTileOptions(
 
-                                                minZoom = 7,
+                                                minZoom = 1,
                                                 maxZoom = 19,
                                                 opacity = 0.5),
 

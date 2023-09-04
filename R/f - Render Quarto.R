@@ -52,9 +52,11 @@
         # c.folder.source      = path.code
         # c.file.source        = "Q - N-line Modelling - HTML.qmd"
         # c.folder.destination = paste0(path.deliverables, "Reports/")
-        # c.file.destination   = c.file.root
+        # c.file.destination   = paste(c.file.root, "- Distance", n.distance)
         # b.add.time           = TRUE
 
+
+        # Oletti
         # c.folder.source      = path.code
         # c.file.source        = "Verkoopoverzicht.qmd"
         # c.folder.destination = paste0(path.deliverables, "Verkoopoverzichten/")

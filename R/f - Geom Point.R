@@ -16,6 +16,8 @@
 #' @param b.grid.major.x Should grid added on x-axis (default: FALSE)
 #' @param b.grid.major.y Should grid added on y-axis (default: FALSE)
 #' @param b.coord.fixed Should x-axis and y-axis have fixed ratio of 1 (default: FALSE)
+#' @param v.scale.x.continuous Breaks along x-axis (default: NULL)
+#' @param v.scale.y.continuous Breaks along y-axis (default: NULL)
 #' @param c.labs.title Main title (default: waiver())
 #' @param c.labs.subtitle Subtitle (default: waiver())
 #' @param c.labs.caption Caption under the plot (default: waiver())
@@ -52,19 +54,21 @@
                 df.plot,
                 c.x,
                 c.y,
-                c.facet         = NULL,
-                n.alpha         = 0.2,
-                b.log.x         = FALSE,
-                b.log.y         = FALSE,
-                v.abline        = NULL,
-                c.labs.x        = NULL,
-                c.labs.y        = NULL,
-                b.grid.major.x  = FALSE,
-                b.grid.major.y  = FALSE,
-                b.coord.fixed   = FALSE,
-                c.labs.title    = waiver(),
-                c.labs.subtitle = waiver(),
-                c.labs.caption  = waiver()
+                c.facet              = NULL,
+                n.alpha              = 0.2,
+                b.log.x              = FALSE,
+                b.log.y              = FALSE,
+                v.abline             = NULL,
+                c.labs.x             = NULL,
+                c.labs.y             = NULL,
+                b.grid.major.x       = FALSE,
+                b.grid.major.y       = FALSE,
+                b.coord.fixed        = FALSE,
+                v.scale.x.continuous = NULL,
+                v.scale.y.continuous = NULL,
+                c.labs.title         = waiver(),
+                c.labs.subtitle      = waiver(),
+                c.labs.caption       = waiver()
         ) {
 
 
@@ -102,6 +106,8 @@
         # n.alpha         = 0.3
         # c.labs.x        = paste('Error using', c.use,  'source')
         # c.labs.y        = 'Error using both sources'
+        # v.scale.x.continuous = seq(0, 45, by = 5)
+        # v.scale.y.continuous = seq(0, 45, by = 5)
 
 
         ######################################################################################
@@ -164,10 +170,12 @@
 
                 theme.figure
 
+
         if(!is.null(c.facet)) {
 
                 gg.output <- gg.output + facet_wrap(~get(c.facet))
         }
+
 
         # Set axis to log scale if requested.
         if(b.log.x) {
@@ -178,6 +186,7 @@
                         labels = trans_format("log10", math_format(10^.x))
                 )
         }
+
 
         if(b.log.y) {
 
@@ -229,6 +238,24 @@
                                 linewidth = 0.5,
                                 linetype  = 2)
                 )
+        }
+
+
+        # Breaks along x-axis.
+        if(!is.null(v.scale.x.continuous)) {
+
+                gg.output <- gg.output +
+
+                        scale_x_continuous(breaks = v.scale.x.continuous)
+        }
+
+
+        # Breaks along y-axis.
+        if(!is.null(v.scale.y.continuous)) {
+
+                gg.output <- gg.output +
+
+                        scale_y_continuous(breaks = v.scale.y.continuous)
         }
 
 

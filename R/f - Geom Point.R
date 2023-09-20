@@ -87,6 +87,8 @@
         # b.grid.major.x  = FALSE
         # b.grid.major.y  = FALSE
         # b.coord.fixed   = FALSE
+        # v.scale.x.continuous = NULL
+        # v.scale.y.continuous = NULL
         # c.labs.title    = waiver()
         # c.labs.subtitle = waiver()
         # c.labs.caption  = waiver()
@@ -108,6 +110,23 @@
         # c.labs.y        = 'Error using both sources'
         # v.scale.x.continuous = seq(0, 45, by = 5)
         # v.scale.y.continuous = seq(0, 45, by = 5)
+
+        # SET 2:
+        # df.plot              = df %>% filter(final.name.nn == x)
+        # c.x                  = paste0(c.axis, '.ttemp')
+        # c.y                  = paste0(c.axis, '.ttemp.both')
+        # b.grid.major.x       = TRUE
+        # b.grid.major.y       = TRUE
+        # b.log.x              = FALSE
+        # b.log.y              = FALSE
+        # b.coord.fixed        = TRUE
+        # v.scale.x.continuous = seq(0, 45, by = 5)
+        # v.scale.y.continuous = seq(0, 45, by = 5)
+        # c.facet              = 'dist.thd'
+        # v.abline             = c(1, 1e-15)
+        # n.alpha              = 0.3
+        # c.labs.x             = paste(c.lab, 'using', c.use, 'source')
+        # c.labs.y             = paste(c.lab, 'using both sources')
 
 
         ######################################################################################
@@ -246,7 +265,11 @@
 
                 gg.output <- gg.output +
 
-                        scale_x_continuous(breaks = v.scale.x.continuous)
+                        scale_x_continuous(
+                                breaks = v.scale.x.continuous,
+                                limits = c(min(v.scale.x.continuous), max(v.scale.x.continuous))
+                        )
+
         }
 
 
@@ -255,7 +278,10 @@
 
                 gg.output <- gg.output +
 
-                        scale_y_continuous(breaks = v.scale.y.continuous)
+                        scale_y_continuous(
+                                breaks = v.scale.y.continuous,
+                                limits = c(min(v.scale.y.continuous), max(v.scale.y.continuous))
+                        )
         }
 
 

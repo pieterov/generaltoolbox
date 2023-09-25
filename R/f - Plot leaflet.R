@@ -11,7 +11,6 @@
 #' @param n.zoom At what zoom level should leaflet be opened? (default: 13).
 #' @param b.save.leaflet Should we save the leaflet? (default: FALSE).
 #' @param v.add.date,v.add.time Vector of booleans to specify whether date and/or time should be added.
-#' This should be as long as x (default: TRUE and TRUE, resp.).
 #' @param b.add.streetsmart Should we add StreetSmart link to pop-up? (default: TRUE).
 #' @param df.point POINT - (default: NULL).
 #' @param v.coord.point POINT -  (default: c("bord.lon", "bord.lat")).
@@ -25,13 +24,15 @@
 #' @param df.fill.point POINT -  (default: NULL).
 #' @param c.fill.factor.point POINT -  (default: NULL).
 #' @param c.fill.numeric.point POINT - (default: NULL).
-#' @param df.weight.point  POINT -  (default: NULL).
-#' @param c.weight.point  POINT -  (default: NULL).
+#' @param df.weight.point POINT -  (default: NULL).
+#' @param c.weight.point POINT -  (default: NULL).
+#' @param n.weight.point Point marker size, in case you want to tune alle markers - (default: NULL).
 #' @param df.stroke.color.point  POINT -   (default: NULL).
 #' @param c.stroke.factor.point POINT -    (default: NULL).
 #' @param c.stroke.numeric.point POINT -   (default: NULL
 #' @param df.stroke.weight.point POINT -   (default: NULL).
 #' @param c.stroke.weight.point POINT -    (default: NULL).
+#' @param n.stroke.weight.point Stroke marker size, in case you want to tune alle markers - (default: NULL).
 #' @param n.opacity.fill POINT - opacity of fill (default: 0.9).
 #' @param n.opacity.stroke POINT - Opacity of stroke (default: 0.9).
 #' @param df.line LINE - (default: NULL).
@@ -98,11 +99,13 @@
 #'      c.fill.numeric.point      = NULL,
 #'      df.weight.point           = NULL,
 #'      c.weight.point            = NULL,
+#'      n.weight.point            = NULL,
 #'      df.stroke.color.point     = NULL,
 #'      c.stroke.factor.point     = NULL,
 #'      c.stroke.numeric.point    = NULL,
 #'      df.stroke.weight.point    = NULL,
 #'      c.stroke.weight.point     = NULL,
+#'      n.stroke.weight.point     = NULL,
 #'      n.opacity.fill            = 0.9,
 #'      n.opacity.stroke          = 0.9,
 #'      df.line                   = NULL,
@@ -184,6 +187,7 @@
 
                 df.weight.point         = NULL,
                 c.weight.point          = NULL,
+                n.weight.point          = NULL,
 
                 df.stroke.color.point   = NULL,
                 c.stroke.factor.point   = NULL,
@@ -191,6 +195,7 @@
 
                 df.stroke.weight.point  = NULL,
                 c.stroke.weight.point   = NULL,
+                n.stroke.weight.point   = NULL,
 
                 n.opacity.fill          = 0.9,
                 n.opacity.stroke        = 0.9,
@@ -712,13 +717,21 @@
                         } else {
 
                                 stop("Let op, als c.weight.point is gegeven, moet ook df.weight.point zijn gegeven!")
-
                         }
 
                 } else if(!is.null(df.weight.point)) {
 
                         stop("Let op, als df.weight.point is gegeven, moet ook c.weight.point zijn gegeven!")
                 }
+
+
+                # Check n.weight.point.
+                if(!is.null(df.weight.point) & !is.null(c.weight.point) & !is.null(n.weight.point)) {
+
+                        stop(
+                                "Let op, als df.weight.point en c.weight.point zijn gegeven, moet n.weight.point NULL zijn!")
+                }
+
 
 
                 # Check df.stroke.color.point.
@@ -746,6 +759,8 @@
                         }
                 }
 
+
+
                 # Check df.stroke.weight.point.
                 if(!is.null(c.stroke.weight.point)) {
 
@@ -771,6 +786,14 @@
                 } else if(!is.null(df.stroke.weight.point)) {
 
                         stop("Let op, als df.stroke.weight.point is gegeven, moet ook c.stroke.weight.point zijn gegeven!")
+                }
+
+
+                # Check n.stroke.weight.point.
+                if(!is.null(df.stroke.weight.point) & !is.null(c.stroke.weight.point) & !is.null(n.stroke.weight.point)) {
+
+                        stop(
+                                "Let op, als df.stroke.weight.point en c.stroke.weight.point zijn gegeven, moet n.stroke.weight.point NULL zijn!")
                 }
         }
 
@@ -823,12 +846,15 @@
                         }
 
                         # Check df.color.line.
-                        if(!is.null(df.color.line) & nrow(df.color.line) != n.level.stroke.color.line) {
+                        if(!is.null(df.color.line)) {
 
-                                stop(
-                                        "Let op, v.color.line moet net zo veel waarden hebben als er unieke waarden zijn in ",
-                                        c.color.line, ", nl. ", n.level.stroke.color.line, "!"
-                                )
+                                if(nrow(df.color.line) != n.level.stroke.color.line) {
+
+                                        stop(
+                                                "Let op, v.color.line moet net zo veel waarden hebben als er unieke waarden zijn in ",
+                                                c.color.line, ", nl. ", n.level.stroke.color.line, "!"
+                                        )
+                                }
                         }
                 }
 
@@ -839,12 +865,15 @@
                         n.level.stroke.weight.line <- length(unique(pull(df.line, c.weight.line)))
 
                         # Check df.weight.line.
-                        if(!is.null(df.weight.line) & nrow(df.weight.line) != n.level.stroke.weight.line) {
+                        if(!is.null(df.weight.line)) {
 
-                                stop(
-                                        "Let op, v.weight.line moet net zo veel waarden hebben als er unieke waarden zijn in ",
-                                        c.weight.line, ", nl. ", n.level.stroke.weight.line, "!"
-                                )
+                                if(nrow(df.weight.line) != n.level.stroke.weight.line) {
+
+                                        stop(
+                                                "Let op, v.weight.line moet net zo veel waarden hebben als er unieke waarden zijn in ",
+                                                c.weight.line, ", nl. ", n.level.stroke.weight.line, "!"
+                                        )
+                                }
                         }
                 }
         }
@@ -1251,7 +1280,6 @@
                                                         ";EPSG:28992"
                                                         )
                                         )
-
                 }
 
 
@@ -1277,7 +1305,13 @@
 
                         df.point <- df.point %>%
 
-                                mutate(weight.point.value = 4)
+                                mutate(
+                                        weight.point.value = ifelse(
+                                                is.null(n.weight.point),
+                                                4,
+                                                n.weight.point
+                                        )
+                                )
                 }
 
 
@@ -1303,7 +1337,13 @@
 
                         df.point <- df.point %>%
 
-                                mutate(stroke.weight.point.value = 2)
+                                mutate(
+                                        stroke.weight.point.value = ifelse(
+                                                is.null(n.stroke.weight.point),
+                                                2,
+                                                n.stroke.weight.point
+                                        )
+                                )
                 }
         }
 

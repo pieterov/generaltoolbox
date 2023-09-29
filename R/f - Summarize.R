@@ -71,6 +71,8 @@
         # b.view   = FALSE
         # b.return = TRUE
 
+        # df.input <- tibble(a=sample(LETTERS[1:3],20, replace = TRUE), b=sample(c(now(), today()+100),20, replace = TRUE))
+
         ##############################################################################################
         # Error check.
         ##############################################################################################
@@ -154,11 +156,11 @@
 
                         min = sapply(
 
-                                df.input, function(v.temp) { # v.temp <- df.input$wvk.id
+                                df.input, function(v.temp) { # v.temp <- df.input$b
 
                                         ifelse(
-                                                any(c("numeric", "integer", "Date") %in% class(v.temp)),
-                                                min(v.temp, na.rm = TRUE),
+                                                any(c("numeric", "integer", "Date", "POSIXct", "POSIXt") %in% class(v.temp)),
+                                                as.character(min(v.temp, na.rm = TRUE)),
                                                 NA
                                         )
                                 }),
@@ -168,8 +170,8 @@
                                 df.input, function(v.temp) {
 
                                         ifelse(
-                                                any(c("numeric", "integer", "Date") %in% class(v.temp)),
-                                                max(v.temp, na.rm = TRUE),
+                                                any(c("numeric", "integer", "Date", "POSIXct", "POSIXt") %in% class(v.temp)),
+                                                as.character(max(v.temp, na.rm = TRUE)),
                                                 NA
                                         )
                                 }),
@@ -178,7 +180,7 @@
 
                                 df.input,
 
-                                function(v.temp) { # v.temp = df.input[["line.quantity"]]
+                                function(v.temp) { # v.temp = df.input[["b"]]
 
                                         n.freq.present <- v.temp %>% unique() %>% length()
 
@@ -194,31 +196,22 @@
 
                                                 .[1:n.freq.used] %>%
 
-                                                purrr::when(
+                                                {
+                                                        if(n.freq.used == n.freq.present) {
 
-                                                        # We show all elements.
-                                                        (n.freq.used == n.freq.present) ~ f_paste(
+                                                                f_paste(v.string = ., b.sort = FALSE)
 
-                                                                v.string = .,
-                                                                b.sort   = FALSE
-                                                        ),
+                                                        } else {
 
-                                                        # We show fewer elements then present.
-                                                        TRUE ~ paste0(
-
-                                                                f_paste(
-                                                                        v.string = .,
-                                                                        c.and    = "",
-                                                                        b.sort   = FALSE
-                                                                ),
-
-                                                                ", ..."
-                                                        )
-                                                )
-
-
+                                                                paste0(
+                                                                        f_paste(v.string = ., c.and = "", b.sort = FALSE),
+                                                                        ", ..."
+                                                                )
+                                                        }
+                                                }
                                 })
                 )
+
 
         # Sort column names?
         if(b.sort) {

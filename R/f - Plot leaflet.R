@@ -287,8 +287,8 @@
         # ##############################################
         #
         # df.point                = NULL
-        # v.coord.point           = c("point.lon", "point.lat")
-        # c.id.point              = "point.id"
+        # v.coord.point           = c("bord.lon", "bord.lat")
+        # c.id.point              = "bord.id"
         #
         # b.show.point.label      = TRUE
         # v.info.tag.point.label  = NULL
@@ -304,6 +304,7 @@
         #
         # df.weight.point         = NULL
         # c.weight.point          = NULL
+        # n.weight.point          = NULL
         #
         # df.stroke.color.point   = NULL
         # c.stroke.factor.point   = NULL
@@ -311,6 +312,7 @@
         #
         # df.stroke.weight.point  = NULL
         # c.stroke.weight.point   = NULL
+        # n.stroke.weight.point   = NULL
         #
         # n.opacity.fill          = 0.9
         # n.opacity.stroke        = 0.9
@@ -2276,23 +2278,36 @@
                                                 maxZoom = 19,
                                                 opacity = 0.5),
 
+
                         group = "OSM (default)"
-                        ) %>%
+                ) %>%
 
 
                 # Set base map - Toner Light.
                 addProviderTiles(
 
-                        providers$Stamen.TonerLite,
+                        # https://maps.stamen.com/stadia-partnership/
+                        # I replaced Stamen maps by OSM, because we are getting warnings that the
+                        # service will stop operating as it did and that we need to make an account.
+                        # Let's keep things simple.
+                        #provider = providers$Stamen.TonerLite,
+                        #group    = "Toner Lite",
+
+                        # Same map as OSM
+                        #provider = "Esri.WorldStreetMap",
+                        #group    = "Esri Maps",
+
+                        #provider = "CartoDB.Positron",
+                        #group    = "CartoDB Maps",
+
+                        provider  = "OpenStreetMap",
 
                         options = providerTileOptions(
 
                                                 minZoom = 1,
                                                 maxZoom = 19,
-                                                opacity = 0.5),
-
-                        group = "Toner Lite"
-                        ) %>%
+                                                opacity = 0.5)
+                ) %>%
 
 
                 # Set distance measurement tool.

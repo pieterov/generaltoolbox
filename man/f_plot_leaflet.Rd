@@ -28,11 +28,13 @@ f_plot_leaflet(
   c.fill.numeric.point = NULL,
   df.weight.point = NULL,
   c.weight.point = NULL,
+  n.weight.point = NULL,
   df.stroke.color.point = NULL,
   c.stroke.factor.point = NULL,
   c.stroke.numeric.point = NULL,
   df.stroke.weight.point = NULL,
   c.stroke.weight.point = NULL,
+  n.stroke.weight.point = NULL,
   n.opacity.fill = 0.9,
   n.opacity.stroke = 0.9,
   df.line = NULL,
@@ -111,6 +113,8 @@ f_plot_leaflet(
 
 \item{c.weight.point}{POINT -  (default: NULL).}
 
+\item{n.weight.point}{Point marker size, in case you want to tune alle markers - (default: NULL).}
+
 \item{df.stroke.color.point}{POINT -   (default: NULL).}
 
 \item{c.stroke.factor.point}{POINT -    (default: NULL).}
@@ -120,6 +124,8 @@ f_plot_leaflet(
 \item{df.stroke.weight.point}{POINT -   (default: NULL).}
 
 \item{c.stroke.weight.point}{POINT -    (default: NULL).}
+
+\item{n.stroke.weight.point}{Stroke marker size, in case you want to tune alle markers - (default: NULL).}
 
 \item{n.opacity.fill}{POINT - opacity of fill (default: 0.9).}
 
@@ -187,8 +193,7 @@ f_plot_leaflet(
 
 \item{c.text.label}{TEXT - (default: "text.label").}
 
-\item{v.add.date, v.add.time}{Vector of booleans to specify whether date and/or time should be added.
-This should be as long as x (default: TRUE and TRUE, resp.).}
+\item{v.add.date, v.add.time}{Vector of booleans to specify whether date and/or time should be added.}
 }
 \value{
 A beautiful leaflet!
@@ -225,11 +230,13 @@ f_plot_leaflet(
      c.fill.numeric.point      = NULL,
      df.weight.point           = NULL,
      c.weight.point            = NULL,
+     n.weight.point            = NULL,
      df.stroke.color.point     = NULL,
      c.stroke.factor.point     = NULL,
      c.stroke.numeric.point    = NULL,
      df.stroke.weight.point    = NULL,
      c.stroke.weight.point     = NULL,
+     n.stroke.weight.point     = NULL,
      n.opacity.fill            = 0.9,
      n.opacity.stroke          = 0.9,
      df.line                   = NULL,

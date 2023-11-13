@@ -79,6 +79,10 @@
         if(is.null(v.string) | length(v.string) == 0) return(NULL)
 
 
+        # Return "" als input "" is.
+        if(all(v.string == "")) return("")
+
+
         # Verwijder NA en "" uit lijst.
         v.string <- v.string[!is.na(v.string)]
         v.string <- v.string[v.string != ""]

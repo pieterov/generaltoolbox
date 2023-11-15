@@ -243,6 +243,7 @@
                         perc = paste0(strrep(" ", 5       - 3), "...")
                 )
 
+
                 df.total <- data.frame(
 
                         v.input    = c(
@@ -269,7 +270,7 @@
 
                         rename(Freq = Freq2, perc = perc2) %>%
 
-                        head(n.top)
+                        if(is.numeric(n.top)) head(., n.top) else .
 
 
                 # Puntjes toevoegen als n.top een getal is, en kleiner of gelijk is aan het aantal rijen in df.freq.
@@ -283,7 +284,7 @@
 
 
                 # Total toevoegen.
-                df.freq <- rbind(df.freq, df.total)
+                df.freq       <- rbind(df.freq, df.total)
 
                 names(df.freq) <- names(df.basic.info)
 

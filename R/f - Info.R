@@ -8,6 +8,7 @@
 #' @param x Vector or data frame with items to check statistics of.
 #' @param n.top Max number of items to show in the list (default: 10).
 #' @param show.freq Should frequency be shown? (default: TRUE).
+#' @param c.sort.by How to sort the items in the frequency table, by its 'frequency' or 'value' (default: 'frequency').
 #' @param n.width Number of characters to show in the list (default: 29).
 #'
 #'
@@ -23,6 +24,7 @@
 #'       x         = c("A", "B", "C", "A", "B", "A"),
 #'       n.top     = 10,
 #'       show.freq = TRUE,
+#'       c.sort.by = "frequency",
 #'       n.width   = 29
 #' )
 
@@ -36,7 +38,8 @@
                 x,
                 n.top     = 10,
                 show.freq = TRUE,
-                n.width   = 29
+                n.width   = 29,
+                c.sort.by = "frequency" # alternatives: "frequency", "value"
         ) {
 
 
@@ -66,6 +69,7 @@
                                 name      = c.column,
                                 n.top     = n.top,
                                 show.freq = show.freq,
+                                c.sort.by = c.sort.by,
                                 n.width   = n.width
                         ) }
 
@@ -77,6 +81,7 @@
                         name      = deparse(substitute(x)),
                         n.top     = n.top,
                         show.freq = show.freq,
+                        c.sort.by = c.sort.by,
                         n.width   = n.width
                 )
         }

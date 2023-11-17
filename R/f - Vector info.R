@@ -9,6 +9,7 @@
 #' @param name Name to print above the table.
 #' @param n.top Max number of items to show in the list.
 #' @param show.freq Should frequency be shown?
+#' @param c.sort.by How to sort the items in the frequency table, by its 'frequency' or 'value' (default: 'frequency').
 #' @param n.width Number of characters of the items to show in the list.
 #'
 #' @returns Nothing. Only prints to console.
@@ -24,6 +25,7 @@
 #'      name      = "Pieter",
 #'      n.top     = 10,
 #'      show.freq = TRUE,
+#'      c.sort.by = 'frequency',
 #'      n.width   = 29
 #' )
 
@@ -38,6 +40,7 @@
                 name,
                 n.top,
                 show.freq,
+                c.sort.by,
                 n.width
         ) {
 
@@ -206,7 +209,7 @@
 
 
         # Show frequency table.
-        if (show.freq) {
+        if(show.freq) {
 
                 # Replace any NA by "NA", and NaN by "NaN"
                 v.input[v.input %in% NA]  <- "NA "
@@ -216,7 +219,22 @@
                 # Calculate frequency of levels in vector.
                 df.freq.source <- as.data.frame(table(v.input)) %>%
 
-                        arrange(desc(Freq), v.input) %>%
+                        {
+                                if(c.sort.by == "frequency") {
+
+                                        arrange(., desc(Freq), v.input)
+
+                                } else if(c.sort.by == "value") {
+
+                                        arrange(., v.input)
+
+                                } else {
+                                        cat(paste(
+                                                "You did not provide a valid value for 'c.sort.by', this must be",
+                                                "'frequency' or 'value'."
+                                        ))
+                                }
+                        } %>%
 
                         mutate(
                                 v.input     = as.character(v.input),

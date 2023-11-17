@@ -4,7 +4,7 @@
 \alias{f_vector_info}
 \title{Provide information on vector}
 \usage{
-f_vector_info(v.input, name, n.top, show.freq, n.width)
+f_vector_info(v.input, name, n.top, show.freq, c.sort.by, n.width)
 }
 \arguments{
 \item{v.input}{Vector of items to check statistics of.}
@@ -14,6 +14,8 @@ f_vector_info(v.input, name, n.top, show.freq, n.width)
 \item{n.top}{Max number of items to show in the list.}
 
 \item{show.freq}{Should frequency be shown?}
+
+\item{c.sort.by}{How to sort the items in the frequency table, by its 'frequency' or 'value' (default: 'frequency').}
 
 \item{n.width}{Number of characters of the items to show in the list.}
 }
@@ -34,6 +36,7 @@ f_vector_info(
      name      = "Pieter",
      n.top     = 10,
      show.freq = TRUE,
+     c.sort.by = 'frequency',
      n.width   = 29
 )
 }

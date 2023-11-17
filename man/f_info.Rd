@@ -4,7 +4,7 @@
 \alias{f_info}
 \title{Print basic statistics on vector or data frame with elements}
 \usage{
-f_info(x, n.top = 10, show.freq = TRUE, n.width = 29)
+f_info(x, n.top = 10, show.freq = TRUE, n.width = 29, c.sort.by = "frequency")
 }
 \arguments{
 \item{x}{Vector or data frame with items to check statistics of.}
@@ -14,6 +14,8 @@ f_info(x, n.top = 10, show.freq = TRUE, n.width = 29)
 \item{show.freq}{Should frequency be shown? (default: TRUE).}
 
 \item{n.width}{Number of characters to show in the list (default: 29).}
+
+\item{c.sort.by}{How to sort the items in the frequency table, by its 'frequency' or 'value' (default: 'frequency').}
 }
 \value{
 Nothing. Only prints to console.
@@ -31,6 +33,7 @@ f_info(
       x         = c("A", "B", "C", "A", "B", "A"),
       n.top     = 10,
       show.freq = TRUE,
+      c.sort.by = "frequency",
       n.width   = 29
 )
 }

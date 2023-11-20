@@ -19,15 +19,15 @@
 #' @export
 #'
 #' @examples
-#' f_vector_info(
-#'
-#'      v.input   = c(0, 2, 2, NA, NA, NA, 0/0, -0/0, -0/0, 0/0, 6/0, -7/0, -8/0, 9/0, 10/0),
-#'      name      = "Pieter",
-#'      n.top     = 10,
-#'      show.freq = TRUE,
-#'      c.sort.by = 'frequency',
-#'      n.width   = 29
-#' )
+# f_vector_info(
+#
+#      v.input   = c(0, 2, 2, NA, NA, NA, 0/0, -0/0, -0/0, 0/0, 6/0, -7/0, -8/0, 9/0, 10/0),
+#      name      = "Pieter",
+#      n.top     = 10,
+#      show.freq = TRUE,
+#      c.sort.by = 'frequency',
+#      n.width   = 29
+# )
 
 
         #################################################################################
@@ -64,6 +64,17 @@
         # v.input <- c(0/0, 0/0, 0/0, 0/0)
         # v.input <- c(6/0, 7/0, 8/0, 9/0, 10/0)
 
+        # f_info(
+        #         c(0, 2, 2, NA, NA, NA, 0/0, -0/0, -0/0, 0/0, 6/0, -7/0, -8/0, 9/0, 10/0)
+        # )
+
+        # f_info(
+        #         c(as_date("2023 11 06"), -6/0, NA, NA, as_date("2023 11 05"), as_date("2023 10 06"))
+        # )
+
+        # f_info(
+        #         sample(c("A", "B", "C"), 10000, replace = TRUE)
+        # )
 
         ##############################################################################
         # Error check.
@@ -87,7 +98,8 @@
 
         # Reformat data to character, since date(time) gives an error in 'v.input[v.input %in% NA]  <- "NA "',
         # see below. To be sure, all are converted to character.
-        v.input = as.character(v.input)
+        # Als het weer een issue wordt dan deze conversie hieronder zetten, bijv. in regel 222.
+        #v.input = as.character(v.input)
 
 
         # Calculate basic info.
@@ -181,7 +193,7 @@
 
         cat(
                 paste0(
-                        strrep(" ", n.width + n.count),
+                        strrep(" ", n.width + n.count - 1), # -1
 
                         "n",
 
@@ -193,7 +205,7 @@
 
         names(df.basic.info) <- c(
 
-                strrep("=", n.width-1),
+                strrep("=", n.width - 1),
 
                 strrep("=", n.count),
 
@@ -212,9 +224,9 @@
         if(show.freq) {
 
                 # Replace any NA by "NA", and NaN by "NaN"
-                v.input[v.input %in% NA]  <- "NA "
-                v.input[v.input %in% NaN] <- "NaN "
-                v.input[v.input %in% Inf] <- "Inf "
+                v.input[v.input %in% NA]  <- " NA"
+                v.input[v.input %in% NaN] <- " NaN"
+                v.input[v.input %in% Inf] <- " Inf"
 
                 # Calculate frequency of levels in vector.
                 df.freq.source <- as.data.frame(table(v.input)) %>%
@@ -348,7 +360,7 @@
                 print(
                         x         = df.freq,
                         row.names = FALSE,
-                        right     = FALSE
+                        right     = TRUE
                 )
         }
 }

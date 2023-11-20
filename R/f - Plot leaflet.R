@@ -9,7 +9,9 @@
 #' @param c.layer What feature should be used for layering? (default: NULL).
 #' @param v.coord.point.midpoint Option to set the midpoint, else the center of the data will chosen (default: NULL).
 #' @param n.zoom At what zoom level should leaflet be opened? (default: 13).
+#' @param b.zoom.control Should we include zoom control (default: TRUE).
 #' @param b.save.leaflet Should we save the leaflet? (default: FALSE).
+#' @param b.save.pdf Should we save the leaflet also as pdf? (default: FALSE).
 #' @param v.add.date,v.add.time Vector of booleans to specify whether date and/or time should be added.
 #' @param b.add.streetsmart Should we add StreetSmart link to pop-up? (default: TRUE).
 #' @param df.point POINT - (default: NULL).
@@ -63,9 +65,13 @@
 #' @param c.stroke.color.polygon POLYGON - (default: "black").
 #' @param n.stroke.weight.polygon POLYGON - (default: 1).
 #' @param b.show.stroke.polygon POLYGON - (default: TRUE).
-#' @param df.text TEXT - (default: NULL).
-#' @param v.coord.text TEXT - (default: c("text.lon", "text.lat")).
-#' @param c.text.label TEXT - (default: "text.label").
+#' @param df.text TEXT - data frame with text data (default: NULL).
+#' @param v.coord.text TEXT - features containing coordinates (default: c("text.lon", "text.lat")).
+#' @param c.text.label TEXT - feature containing text label (default: "text.label").
+#' @param c.text.direction TEXT - Text direction (default: 'left').
+#' @param c.text.color TEXT - Test color (default: 'black').
+#' @param c.text.font.size TEXT - Text size (default: '25px').
+#' @param n.text.opacity TEXT - Text and box opacity (default: 1).
 #'
 #' @returns A beautiful leaflet!
 #'
@@ -159,7 +165,10 @@
 
                 v.coord.point.midpoint  = NULL,
                 n.zoom                  = 13,
+                b.zoom.control          = TRUE,
                 b.save.leaflet          = FALSE,
+                b.save.pdf              = FALSE,
+                n.zoom.pdf              = 4,
                 b.add.date              = TRUE,
                 b.add.time              = TRUE,
                 b.add.streetsmart       = TRUE,
@@ -258,7 +267,11 @@
 
                 df.text                   = NULL,
                 v.coord.text              = c("text.lon", "text.lat"),
-                c.text.label              = "text.label"
+                c.text.label              = "text.label",
+                c.text.direction          = 'left',
+                c.text.color              = 'black',
+                c.text.font.size          = '25px',
+                n.text.opacity            = 1
         ) {
 
 
@@ -276,6 +289,7 @@
         #
         # v.coord.point.midpoint  = NULL
         # n.zoom                  = 13
+        # b.zoom.control          = TRUE
         # b.save.leaflet          = FALSE
         # b.add.date              = TRUE
         # b.add.time              = TRUE
@@ -2267,7 +2281,10 @@
 ##############################################################################
 
 
-        plot.leaflet <- leaflet() %>%
+        plot.leaflet <- leaflet(
+
+                options = leafletOptions(zoomControl = b.zoom.control)
+        ) %>%
 
                 # Set base map - Default OSM.
                 addTiles(
@@ -2903,19 +2920,22 @@
 
                                         noHide    = T,
 
-                                        direction = 'left',
+                                        direction = c.text.direction,
 
                                         style     = list(
 
-                                                "color"        = "black",
-                                                "font-size"     = "25px",
+                                                "color"        = c.text.color,
+                                                "font-size"    = c.text.font.size,
                                                 "font-style"   = "bold",
                                                 "box-shadow"   = "5px 5px rgba(0,0,0,0.25)",
-                                                "border-color" = "rgba(0,0,0,0.5)"
-                                        )
+                                                "border-color" = "rgba(0,0,0,0)"
+                                        ),
+
+                                        opacity    = n.text.opacity
                                 )
                         )
         }
+
 
 ##############################################################################
 # PRINT LEAFLET.
@@ -2929,20 +2949,37 @@
 # SAVE LEAFLET.
 ##############################################################################
 
-        # Save kaart.
+        # Save kaart as HTML.
         if(b.save.leaflet) {
 
-                # We get an '[WARNING] Deprecated: --self-contained. use --embed-resources --standalone'.
-                # See also https://stackoverflow.com/questions/74379298/argument-selfcontained-deprecated-in-htmlwidgetssavewidget
-                # There is not much we can do now.
+                # File name.
+                c.file.html <- paste0(
+
+                        path.leaflets,
+
+                        ifelse(b.add.date, paste0(format(Sys.time(), "%Y %m %d"), " - "), ""),
+
+                        ifelse(b.add.time, paste0(format(Sys.time(), "%H %M %S"), " - "), ""),
+
+                        c.leaflet.title,
+
+                        ".html"
+                )
+
 
                 htmlwidgets::saveWidget(
 
-                        widget = plot.leaflet,
+                        widget        = plot.leaflet,
+                        file          = c.file.html,
+                        selfcontained = TRUE
+                )
 
-                        file   = paste0(
 
-                                path.leafets,
+                if(b.save.pdf) {
+
+                        c.file.pdf <- paste0(
+
+                                path.deliverables,
 
                                 ifelse(b.add.date, paste0(format(Sys.time(), "%Y %m %d"), " - "), ""),
 
@@ -2950,18 +2987,29 @@
 
                                 c.leaflet.title,
 
-                                ".html"
+                                ".pdf"
                         )
-                )
+
+
+                        webshot(c.file.html, c.file.pdf, vwidth = 297*n.zoom.pdf, vheight = 210*n.zoom.pdf)
+
+                        # Alternative: Wrapper around webshot
+                        #mapview::mapshot(plot.leaflet, file = "mapshot.pdf")
+                }
+
 
                 cat("Leaflet saved.\n\n")
         }
+
 
 
 ##############################################################################
 # RETURN.
 ##############################################################################
 
-        #return(ifelse(!is.null(df.point), df.point, ifelse(!is.null(df.polygon), df.polygon, ifelse(!is.null(df.line), df.line, NULL))))
+        # return(
+        #         plot.leaflet
+        #         #ifelse(!is.null(df.point), df.point, ifelse(!is.null(df.polygon), df.polygon, ifelse(!is.null(df.line), df.line, NULL)))
+        # )
 
         }

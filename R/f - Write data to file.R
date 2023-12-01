@@ -309,7 +309,12 @@
         # Define c.extension, in case of v.delim.
         if(any(v.delim)) {
 
-                c.extension <- "txt"
+                c.extension <- case_when(
+
+                        c.delim == '\t' ~ "tsv",
+
+                        TRUE            ~ "txt"
+                )
         }
 
 
@@ -783,10 +788,10 @@
                                 )
 
 
-                                # Check whether file already exists. In case b.append is TRUE, then set b.col.names to FALSE.
-                                # This is to prevent writing the column names again. POINT FOR IMPROVEMENT: TEST NUMBER OF COLUMNS
-                                # IN THE FILE THAT IS ALREADY THERE AND COMPARE TO THE NUMBER OF COLUMNS IN THE DATA FRAME TO
-                                # BE WRITTEN.
+                                # Check whether file already exists. In case b.append is TRUE, then set b.col.names
+                                # to FALSE. This is to prevent writing the column names again. POINT FOR IMPROVEMENT:
+                                # TEST NUMBER OF COLUMNS IN THE FILE THAT IS ALREADY THERE AND COMPARE TO THE NUMBER
+                                # OF COLUMNS IN THE DATA FRAME TO BE WRITTEN.
                                 if(file.exists(paste0(v.path[i], c.file.k)) & b.append) {
 
                                         b.col.names <- FALSE
@@ -797,9 +802,10 @@
                                 v.file <- c(v.file, c.file.k)
 
 
-                                # Write data to csv file. Eerder had ik BOM op TRUE gezet ivm diakritische tekens. Nu weer op FALSE omdat er probleem
-                                # is met inlezen van allocatie tabel. Diakritische tekens heeft Rian intern opgelost.
-                                # "If TRUE a BOM (Byte Order Mark) sequence (EF BB BF) is added at the beginning of the file; format 'UTF-8 with BOM'."
+                                # Write data to csv file. Eerder had ik BOM op TRUE gezet ivm diakritische tekens.
+                                # Nu weer op FALSE omdat er probleem is met inlezen van allocatie tabel. Diakritische
+                                # tekens heeft Rian intern opgelost. "If TRUE a BOM (Byte Order Mark) sequence
+                                # (EF BB BF) is added at the beginning of the file; format 'UTF-8 with BOM'."
                                 data.table::fwrite(x         = data.table::as.data.table(x.object.k),
                                                    file      = paste0(v.path[i], c.file.k),
                                                    bom       = FALSE,

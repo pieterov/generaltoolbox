@@ -42,6 +42,11 @@
                 c.sort.by = "frequency" # alternatives: "frequency", "value"
         ) {
 
+        # ALTIJD:
+        # n.top     = 10
+        # show.freq = TRUE
+        # n.width   = 29
+        # c.sort.by = "frequency"
 
         # Error Check
         if(n.width < 29) {
@@ -81,8 +86,8 @@
                         name      = deparse(substitute(x)),
                         n.top     = n.top,
                         show.freq = show.freq,
-                        c.sort.by = c.sort.by,
-                        n.width   = n.width
+                        n.width   = n.width,
+                        c.sort.by = c.sort.by
                 )
         }
 

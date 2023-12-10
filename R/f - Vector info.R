@@ -40,14 +40,21 @@
                 name,
                 n.top,
                 show.freq,
-                c.sort.by,
-                n.width
+                n.width,
+                c.sort.by
         ) {
 
 
         ##############################################################################
-        # Error check.
+        # TESTING.
         ##############################################################################
+
+        # ALTIJD:
+        # name      = "pieter"
+        # n.top     = 10
+        # show.freq = TRUE
+        # n.width   = 29
+        # c.sort.by = "frequency"
 
         # v.input   = df.datachamp.baseline$id.sku.vendor[1:3]
         # name      = "df.datachamp.baseline$id.sku.vendor"
@@ -63,6 +70,8 @@
         # v.input <- c(NA, NA, NA)
         # v.input <- c(0/0, 0/0, 0/0, 0/0)
         # v.input <- c(6/0, 7/0, 8/0, 9/0, 10/0)
+        # v.input <- as.factor(LETTERS[1:10])
+        # v.input <- c(today(), today(), today(), today()+1, today()+1, today()+2, NA, Inf)
 
         # f_info(
         #         c(0, 2, 2, NA, NA, NA, 0/0, -0/0, -0/0, 0/0, 6/0, -7/0, -8/0, 9/0, 10/0)
@@ -73,7 +82,7 @@
         # )
 
         # f_info(
-        #         sample(c("A", "B", "C"), 10000, replace = TRUE)
+        #         sample(c("A", "B", "C"), 10000, replace = TRUE) %>% as.factor()
         # )
 
         ##############################################################################
@@ -98,7 +107,8 @@
 
         # Reformat data to character, since date(time) gives an error in 'v.input[v.input %in% NA]  <- "NA "',
         # see below. To be sure, all are converted to character.
-        # Als het weer een issue wordt dan deze conversie hieronder zetten, bijv. in regel 222.
+        # Als het weer een issue wordt dan deze conversie hieronder zetten, bijv. in regel 222. Gedaan, ik heb
+        # de regel rond regel 222 toegevoegd.
         #v.input = as.character(v.input)
 
 
@@ -219,6 +229,9 @@
                 right     = FALSE
         )
 
+        # Reformat data to character, since date(time) and factor give an error in
+        # 'v.input[v.input %in% NA]  <- "NA "', see below. To be sure, all are converted to character.
+        v.input = as.character(v.input)
 
         # Show frequency table.
         if(show.freq) {

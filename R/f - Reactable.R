@@ -6,10 +6,10 @@
 #'
 #' @param df.input Data frame to print as rectable table in html document.
 #' @param c.col.default.align What is default alignment. Options are: "left", "center", and "right" (default: "center").
-#' @param n.col.default.max.width What is the max width of a column (default: 120).
+#' @param n.col.default.max.width What is the max width of a column (default: 500).
 #' @param v.col.text Vector with feature names that should be formated as text (default: NULL).
 #' @param v.col.text.name Vector with header names that should be used in the table instead (default: NULL).
-#' @param v.col.text.align Vector with alignment of the numbers. Options are: "left", "center", and "right" (default: NULL).
+#' @param v.col.text.align Vector with alignment of the text. Options are: "left", "center", and "right" (default: NULL).
 #' @param v.col.text.width Vector with widths of the concerned columns (default: NULL).
 #' @param v.col.digit Vector with feature names that should be formated as number (default: NULL).
 #' @param v.col.digit.name Vector with header names that should be used in the table instead (default: NULL).
@@ -19,8 +19,13 @@
 #' @param v.col.euro Vector with feature names that should be formated as euro (default: NULL).
 #' @param v.col.euro.name Vector with header names that should be used in the table instead (default: NULL).
 #' @param v.col.euro.number Vector with number of digits to use (default: NULL).
-#' @param v.col.euro.align Vector with alignment of the numbers. Options are: "left", "center", and "right" (default: NULL).
+#' @param v.col.euro.align Vector with alignment of the euro's. Options are: "left", "center", and "right" (default: NULL).
 #' @param v.col.euro.width Vector with widths of the concerned columns (default: NULL).
+#' @param v.col.link.label Vector with feature names that should be used as link label (default: NULL).
+#' @param v.col.link.url Vector with feature names that should be used as link url (default: NULL).
+#' @param v.col.link.name Vector with header names that should be used in the table instead (default: NULL).
+#' @param v.col.link.align Vector with alignment of the links. Options are: "left", "center", and "right" (default: NULL).
+#' @param v.col.link.width Vector with widths of the concerned columns (default: NULL).
 #' @param v.row.number.color Row numbers that need to be colored with c.row.number.color (default: NULL).
 #' @param c.row.number.color Color to give to the concerned rows (default: NULL).
 #' @param n.defaultPageSize What is the default page size? (default: 10).
@@ -40,7 +45,7 @@
 #'
 #'      df.input                = mtcars,
 #'      c.col.default.align     = "center",
-#'      n.col.default.max.width = 120,
+#'      n.col.default.max.width = 500,
 #'      v.col.text              = NULL,
 #'      v.col.text.name         = NULL,
 #'      v.col.text.align        = NULL,
@@ -55,6 +60,11 @@
 #'      v.col.euro.number       = NULL,
 #'      v.col.euro.align        = NULL,
 #'      v.col.euro.width        = NULL,
+#'      v.col.link.label        = NULL,
+#'      v.col.link.url          = NULL,
+#'      v.col.link.name         = NULL,
+#'      v.col.link.align        = NULL,
+#'      v.col.link.width        = NULL,
 #'      v.row.number.color      = NULL,
 #'      c.row.number.color      = NULL,
 #'      n.defaultPageSize       = 10,
@@ -74,7 +84,7 @@
                 df.input,
 
                 c.col.default.align     = "center",
-                n.col.default.max.width = 120,
+                n.col.default.max.width = 500,
 
                 v.col.text              = NULL,
                 v.col.text.name         = NULL,
@@ -92,6 +102,12 @@
                 v.col.euro.number       = NULL,
                 v.col.euro.align        = NULL,
                 v.col.euro.width        = NULL,
+
+                v.col.link.label        = NULL,
+                v.col.link.url          = NULL,
+                v.col.link.name         = NULL,
+                v.col.link.align        = NULL,
+                v.col.link.width        = NULL,
 
                 v.row.number.color      = NULL,
                 c.row.number.color      = NULL,
@@ -111,7 +127,7 @@
 
         # ALWAYS
         # c.col.default.align     = "center"
-        # n.col.default.max.width = 120
+        # n.col.default.max.width = 500
         #
         # v.col.text              = NULL
         # v.col.text.name         = NULL
@@ -130,6 +146,12 @@
         # v.col.euro.align        = NULL
         # v.col.euro.width        = NULL
         #
+        # v.col.link.label         = NULL
+        # v.col.link.url           = NULL
+        # v.col.link.name          = NULL
+        # v.col.link.align         = NULL
+        # v.col.link.width         = NULL
+        #
         # v.row.number.color      = NULL
         # c.row.number.color      = NULL
         #
@@ -140,36 +162,21 @@
         # b.filterable            = TRUE
         # b.searchable            = TRUE
 
-        # Set 1
-        # df.input            = df.tg.target
-        # c.col.default.align = "left"
-        #
-        # v.col.text          = "name"
-        # v.col.text.width    = 150
-        #
-        # v.col.digit        = "target"
-        # v.col.digit.name   = "target (%)"
-        # v.col.digit.number = 2
-        #
-        # n.defaultPageSize  = 30
-
-        # Set 2
-        # df.input                = df.distances.rmse %>%
-        #
-        #         count(dist.thd, rmse.max, name = "count") %>%
-        #
-        #         mutate(fraction = count / n_distinct(df.score$name.tp)) %>%
-        #
-        #         select(dist.thd, count, fraction, rmse.max)
-        #
-        # c.col.default.align     = 'center'
-        # n.col.default.max.width = 120
-        #
-        # v.col.digit             = c('dist.thd', 'count', 'fraction', 'rmse.max')
-        # v.col.digit.name        = c('Distance', 'Count', 'Fraction', 'RMSE max')
-        # v.col.digit.number      = c(2, 0, 2, 1)
-        # v.col.digit.width       = c(150, 150, 150, 150)
-        # b.filterable            = FALSE
+        # DQ
+        # df.input                = df.result
+        # v.col.text              = c.col
+        # v.col.text.name         = c.col
+        # v.col.text.align        = "center"
+        # v.col.text.width        = 300
+        # v.col.link.label        = "pub.label"
+        # v.col.link.url          = "pub.link"
+        # v.col.link.name         = "Pub Link"
+        # v.col.link.align        = "center"
+        # v.col.link.width        = 150
+        # n.defaultPageSize       = 5
+        # b.showPageSizeOptions   = TRUE
+        # v.pageSizeOptions       = c(5, 25, 50)
+        # b.filterable            = TRUE
         # b.searchable            = FALSE
 
 
@@ -188,7 +195,7 @@
 
 
         ######################################################################################
-        # Align text.
+        # Format text.
         ######################################################################################
 
         # Update and check on v.col.text vectors.
@@ -261,7 +268,7 @@
 
 
         ######################################################################################
-        # Round and align regular numbers.
+        # Format regular numbers.
         ######################################################################################
 
         # Update and check on v.col.digit vectors.
@@ -349,7 +356,7 @@
 
 
         ######################################################################################
-        # Round and align euro amounts.
+        # Format euro amounts.
         ######################################################################################
 
         # Update and check on v.col.euro vectors.
@@ -438,12 +445,117 @@
 
 
         ######################################################################################
+        # Format hyperlinks (link's).
+        ######################################################################################
+
+        # Update and check on v.col.link.label vectors.
+        if(!is.null(v.col.link.label) | !is.null(v.col.link.url)) {
+
+                # v.col.link.label. In case we have no label specified, we use the url itself
+                # as label.
+                if(is.null(v.col.link.label)) {
+
+                        v.col.link.label <- v.col.link.url
+                }
+
+                # 'v.col.link.name'.
+                if(is.null(v.col.link.name)) {
+
+                        v.col.link.name <- v.col.link.label
+
+                } else {
+
+                        if(length(v.col.link.label) != length(v.col.link.name)) {
+
+                                stop("Objects 'v.col.link.label' and 'v.col.link.name' must have equal number of items.")
+                        }
+
+                        if(length(v.col.link.url) != length(v.col.link.name)) {
+
+                                stop("Objects 'v.col.link.url' and 'v.col.link.name' must have equal number of items.")
+                        }
+                }
+
+                # 'v.col.link.align'.
+                if(is.null(v.col.link.align)) {
+
+                        v.col.link.align  <- rep("left", length(v.col.link))
+
+                } else {
+
+                        if(length(v.col.link.label) != length(v.col.link.align)) {
+
+                                stop("Objects 'v.col.link.label' and 'v.col.link.align' must have equal number of items.")
+                        }
+
+                        if(length(v.col.link.url) != length(v.col.link.align)) {
+
+                                stop("Objects 'v.col.link.url' and 'v.col.link.align' must have equal number of items.")
+                        }
+                }
+
+                # 'v.col.link.width'.
+                if(is.null(v.col.link.width)) {
+
+                        v.col.link.width <- rep(120, length(v.col.link))
+
+                } else {
+
+                        if(length(v.col.link.label) != length(v.col.link.width)) {
+
+                                stop("Objects 'v.col.link.label' and 'v.col.link.width' must have equal number of items.")
+                        }
+
+                        if(length(v.col.link.url) != length(v.col.link.width)) {
+
+                                stop("Objects 'v.col.link.url' and 'v.col.link.width' must have equal number of items.")
+                        }
+                }
+        }
+
+
+
+        l.colDef.link <- sapply(
+
+                v.col.link.url,
+
+                function(x) { # x = v.col.link.url[1]
+
+                        colDef(
+                                name  = v.col.link.name[x == v.col.link.url],
+                                align = v.col.link.align[x == v.col.link.url],
+                                width = v.col.link.width[x == v.col.link.url],
+
+                                cell = function(value, index) {
+
+                                        htmltools::tags$a(
+
+                                                href   = value,
+
+                                                target = "_blank",
+
+                                                df.input %>%
+
+                                                        slice(index) %>%
+
+                                                        pull(v.col.link.label[x == v.col.link.url])
+                                        )
+                                }
+                        )
+                },
+
+                USE.NAMES = TRUE,
+                simplify  = FALSE
+        )
+
+
+        ######################################################################################
         # PROCESS
         ######################################################################################
 
         reactable(
 
-                data = df.input,
+                data = df.input %>% select(-all_of(v.col.link.label)),
 
                 style = list(
 
@@ -476,7 +588,9 @@
 
                         l.colDef.digit,
 
-                        l.colDef.euro
+                        l.colDef.euro,
+
+                        l.colDef.link
                 ),
 
                 defaultPageSize      = n.defaultPageSize,

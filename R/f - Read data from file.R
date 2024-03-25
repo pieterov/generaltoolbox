@@ -123,7 +123,7 @@
                 # c.file.string.exclude    = NULL
                 # b.show.info              = FALSE
                 # c.sheet.name             = NULL
-                # n.skip.rows             = 0
+                # n.skip.rows              = 0
                 # c.delim                  = NULL
                 # b.col.names              = TRUE
                 # l.col.type               = NULL
@@ -144,6 +144,11 @@
                 # c.path                   = path.deliverables
                 # c.sheet.name             = "Solids"
                 # n.guess.max              = 20000
+
+                # c.path        = paste0(path.data, "AI")
+                # v.file.string = paste0(c.filename, "_", c.type)
+                # c.file.type   = "sqlite"
+                # c.table.name  = "ts"
 
 
                 ##############################################################################
@@ -495,12 +500,15 @@
 
                                                # c.path.file <- l.path.file[[2]]
                                                #c.table.name <- "borden"
-                                               #c.path.file <- "D:/SQLITE MIN1/Wassenaar.sqlite"
+                                               #c.path.file <- l.path.file[[1]]
                                                #print(c.path.file)
 
                                                # Connect to sqlite file.
-                                               con <- dbConnect(drv    = RSQLite::SQLite(),
-                                                                dbname = c.path.file)
+                                               con <- dbConnect(
+
+                                                       drv    = RSQLite::SQLite(),
+                                                       dbname = c.path.file
+                                               )
 
                                                # Check whether c.table.name is in the list of tables.
                                                if (!c.table.name %in% dbListTables(con)) {
@@ -510,11 +518,13 @@
 
                                                        df.temp <- NULL
 
-                                                       warning(paste0(
-
-                                                               c.path.file," does not contain table '",
-                                                               c.table.name, "', the rest was read."
-                                                               ))
+                                                       warning(
+                                                               paste0(
+                                                                       c.path.file," does not contain table '",
+                                                                       c.table.name, "', The SQLite does contain the ",
+                                                                       "following tables: ", f_paste(dbListTables(con))
+                                                               )
+                                                       )
 
                                                } else {
 

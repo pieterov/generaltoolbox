@@ -75,21 +75,18 @@
 # INITIALIZATION
 #########################################################################
 
-        # Verwijder NA en "" uit lijst.
-        v.string <- v.string[!is.na(v.string)]
-        v.string <- v.string[!is.null(v.string)]
-        v.string <- v.string[v.string != ""]
+        # Return NULL als input NULL is.
+        if(is.null(v.string) | length(v.string) == 0) return(NULL)
 
-        # Return "" als input NULL is.
-        if(
-                is.null(v.string) |
-                is.na(v.string) |
-                length(v.string) == 0
-        )
-                return("")
 
         # Return "" als input "" is.
-        #if(all(v.string == "")) return("")
+        if(all(v.string == "")) return("")
+
+
+        # Verwijder NA en "" uit lijst.
+        v.string <- v.string[!is.na(v.string)]
+        v.string <- v.string[v.string != ""]
+
 
         # Remove duplicates, if required.
         if(b.unique) {

@@ -73,6 +73,14 @@
         # v.button.url    = c(c.ipsm.dumps, c.ipsm.allocatie.log, c.data.repo, "https://ipsm.nl/")
         # c.image.url     = c.image.url.hrgroep
 
+        # c.marker        = "v"
+        # c.title         = c.file.string
+        # c.message.main  = paste0("File - ", c.filename, " - was successfully downloaded from the source.")
+        # v.message.list  = "See folder IPSm/Data/EXPORT/."
+        # v.button.txt    = c("Source",      "Log",                "Destination", "RDS",      "IPSm")
+        # v.button.url    = c(c.export.from, c.ipsm.allocatie.log, c.data.export, c.data.rds, "https://ipsm.nl/")
+        # c.image.url     = c.image.url.hrgroep
+
 
         # Translate marker(s).
         c.marker.updated <- lapply(

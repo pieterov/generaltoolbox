@@ -4,7 +4,7 @@
 \alias{f_vector_info}
 \title{Provide information on vector}
 \usage{
-f_vector_info(v.input, name, n.top, show.freq, c.sort.by, n.width)
+f_vector_info(v.input, name, n.top, show.freq, n.width, c.sort.by)
 }
 \arguments{
 \item{v.input}{Vector of items to check statistics of.}
@@ -15,9 +15,9 @@ f_vector_info(v.input, name, n.top, show.freq, c.sort.by, n.width)
 
 \item{show.freq}{Should frequency be shown?}
 
-\item{c.sort.by}{How to sort the items in the frequency table, by its 'frequency' or 'value' (default: 'frequency').}
-
 \item{n.width}{Number of characters of the items to show in the list.}
+
+\item{c.sort.by}{How to sort the items in the frequency table, by its 'frequency' or 'value' (default: 'frequency').}
 }
 \value{
 Nothing. Only prints to console.
@@ -28,17 +28,6 @@ The function f_info() calls f_vector_info() for each feature in the object enter
 }
 \details{
 -
-}
-\examples{
-f_vector_info(
-
-     v.input   = c(0, 2, 2, NA, NA, NA, 0/0, -0/0, -0/0, 0/0, 6/0, -7/0, -8/0, 9/0, 10/0),
-     name      = "Pieter",
-     n.top     = 10,
-     show.freq = TRUE,
-     c.sort.by = 'frequency',
-     n.width   = 29
-)
 }
 \author{
 Pieter Overdevest

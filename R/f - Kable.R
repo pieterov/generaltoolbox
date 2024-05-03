@@ -65,33 +65,30 @@
         # Altijd!
         # c.caption           = "Add nice caption through 'c.caption'"
         # c.position          = "center"
+        # v.align             = NULL
         # v.width.cm          = 2
         # n.angle             = NULL
         # n.font.size         = 8
         # c.latex_options     = "basic"
         # v.grey.col          = NULL
         # b.grey.col          = TRUE
-        # n.top               = 35
+        # n.top               = "all"
 
-        # c.caption   = NULL
-        # c.position  = "left"
-        # v.width.cm  = 2
-        # n.angle     = NULL
-        # n.font.size = 10
-        # v.grey.col  = NULL
 
+        # Scenario Verkoopoverzicht
         # df.input        = df.input.for.kable %>%
         #
         #         mutate(
-        #                 across(c(5, 6, 8, 9, 10), format, nsmall = 2, big.mark = ".", decimal.mark = ","),
-        #                 across(c(7),              format, nsmall = 1, big.mark = ".", decimal.mark = ",")
+        #                 across(c(5, 6, 8, 9, 10), ~format(.x, nsmall = 2, big.mark = ".", decimal.mark = ",")),
+        #                 across(c(7),              ~format(.x, nsmall = 1, big.mark = ".", decimal.mark = ","))
         #         )
         # c.caption       = NULL
         # c.position      = "left"
         # v.align         = c(rep("c", 4), rep("r", 2), rep("c", 1), rep("r", 3))
-        # v.width.cm      = c(rep(2, 4), NA, rep(5, 5))
+        # v.width.cm      = c(0.7, 1.6, 0.8, 0.8, rep(1.7, 6))
         # n.font.size     = 8
         # c.latex_options = "striped"
+
 
 #########################################################################
 # Error Checks.

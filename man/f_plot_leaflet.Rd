@@ -10,7 +10,10 @@ f_plot_leaflet(
   c.layer = NULL,
   v.coord.point.midpoint = NULL,
   n.zoom = 13,
+  b.zoom.control = TRUE,
   b.save.leaflet = FALSE,
+  b.save.pdf = FALSE,
+  n.zoom.pdf = 4,
   b.add.date = TRUE,
   b.add.time = TRUE,
   b.add.streetsmart = TRUE,
@@ -28,11 +31,13 @@ f_plot_leaflet(
   c.fill.numeric.point = NULL,
   df.weight.point = NULL,
   c.weight.point = NULL,
+  n.weight.point = NULL,
   df.stroke.color.point = NULL,
   c.stroke.factor.point = NULL,
   c.stroke.numeric.point = NULL,
   df.stroke.weight.point = NULL,
   c.stroke.weight.point = NULL,
+  n.stroke.weight.point = NULL,
   n.opacity.fill = 0.9,
   n.opacity.stroke = 0.9,
   df.line = NULL,
@@ -65,7 +70,11 @@ f_plot_leaflet(
   b.show.stroke.polygon = TRUE,
   df.text = NULL,
   v.coord.text = c("text.lon", "text.lat"),
-  c.text.label = "text.label"
+  c.text.label = "text.label",
+  c.text.direction = "left",
+  c.text.color = "black",
+  c.text.font.size = "25px",
+  n.text.opacity = 1
 )
 }
 \arguments{
@@ -79,7 +88,11 @@ f_plot_leaflet(
 
 \item{n.zoom}{At what zoom level should leaflet be opened? (default: 13).}
 
+\item{b.zoom.control}{Should we include zoom control (default: TRUE).}
+
 \item{b.save.leaflet}{Should we save the leaflet? (default: FALSE).}
+
+\item{b.save.pdf}{Should we save the leaflet also as pdf? (default: FALSE).}
 
 \item{b.add.streetsmart}{Should we add StreetSmart link to pop-up? (default: TRUE).}
 
@@ -111,6 +124,8 @@ f_plot_leaflet(
 
 \item{c.weight.point}{POINT -  (default: NULL).}
 
+\item{n.weight.point}{Point marker size, in case you want to tune alle markers - (default: NULL).}
+
 \item{df.stroke.color.point}{POINT -   (default: NULL).}
 
 \item{c.stroke.factor.point}{POINT -    (default: NULL).}
@@ -120,6 +135,8 @@ f_plot_leaflet(
 \item{df.stroke.weight.point}{POINT -   (default: NULL).}
 
 \item{c.stroke.weight.point}{POINT -    (default: NULL).}
+
+\item{n.stroke.weight.point}{Stroke marker size, in case you want to tune alle markers - (default: NULL).}
 
 \item{n.opacity.fill}{POINT - opacity of fill (default: 0.9).}
 
@@ -181,14 +198,21 @@ f_plot_leaflet(
 
 \item{b.show.stroke.polygon}{POLYGON - (default: TRUE).}
 
-\item{df.text}{TEXT - (default: NULL).}
+\item{df.text}{TEXT - data frame with text data (default: NULL).}
 
-\item{v.coord.text}{TEXT - (default: c("text.lon", "text.lat")).}
+\item{v.coord.text}{TEXT - features containing coordinates (default: c("text.lon", "text.lat")).}
 
-\item{c.text.label}{TEXT - (default: "text.label").}
+\item{c.text.label}{TEXT - feature containing text label (default: "text.label").}
 
-\item{v.add.date, v.add.time}{Vector of booleans to specify whether date and/or time should be added.
-This should be as long as x (default: TRUE and TRUE, resp.).}
+\item{c.text.direction}{TEXT - Text direction (default: 'left').}
+
+\item{c.text.color}{TEXT - Test color (default: 'black').}
+
+\item{c.text.font.size}{TEXT - Text size (default: '25px').}
+
+\item{n.text.opacity}{TEXT - Text and box opacity (default: 1).}
+
+\item{v.add.date, v.add.time}{Vector of booleans to specify whether date and/or time should be added.}
 }
 \value{
 A beautiful leaflet!
@@ -225,11 +249,13 @@ f_plot_leaflet(
      c.fill.numeric.point      = NULL,
      df.weight.point           = NULL,
      c.weight.point            = NULL,
+     n.weight.point            = NULL,
      df.stroke.color.point     = NULL,
      c.stroke.factor.point     = NULL,
      c.stroke.numeric.point    = NULL,
      df.stroke.weight.point    = NULL,
      c.stroke.weight.point     = NULL,
+     n.stroke.weight.point     = NULL,
      n.opacity.fill            = 0.9,
      n.opacity.stroke          = 0.9,
      df.line                   = NULL,

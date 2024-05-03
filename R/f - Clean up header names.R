@@ -38,7 +38,7 @@
         #########################################################################
 
         # Get and clean up header row.
-        names.df.data <- names(df.data) %>%
+        v.names <- names(df.data) %>%
 
                 gsub("\\(|\\)|\\ |/|_|-|–|&|#|\\?|%|\\$|<|>|\u20AC|\\+|'|\\n|\\r|:|,",".", .) %>%
                 gsub("\\.+", ".", .) %>%
@@ -46,8 +46,22 @@
                 tolower(.) %>%
                 stringi::stri_trans_general('latin-ascii')
 
+        # Replace NA by xi.
+        for (i in seq_along(v.names)) {
+
+                v.names[i] <- ifelse(
+
+                        (is.na(v.names[i]) | v.names[i] == "NA"),
+
+                        paste0("x", i),
+
+                        v.names[i]
+                )
+        }
+
+
         # Clean up column names. \u20AC stands for euro sign.
-        names(df.data) <- names.df.data
+        names(df.data) <- v.names
 
 
         #########################################################################
@@ -57,3 +71,6 @@
         return(df.data)
 
         }
+
+
+

@@ -67,7 +67,7 @@
         # v.string    = df.temp$ID
         # b.quotation = TRUE
 
-        # v.string = "Unexpected zero value in Variant Price (12)"
+        # v.string = NA
         # n.top    = 10
 
 
@@ -77,6 +77,10 @@
 
         # Return NULL als input NULL is.
         if(is.null(v.string) | length(v.string) == 0) return(NULL)
+
+
+        # Return "" als input "" is.
+        if(all(v.string == "")) return("")
 
 
         # Verwijder NA en "" uit lijst.

@@ -8,6 +8,7 @@ f_summarize(
   df.input,
   b.sort = TRUE,
   b.view = TRUE,
+  b.write = FALSE,
   b.return = FALSE,
   n.char = "all",
   n.freq = 3
@@ -19,6 +20,8 @@ f_summarize(
 \item{b.sort}{Should items be sorted? (default: TRUE).}
 
 \item{b.view}{Should we display the result? (default: TRUE).}
+
+\item{b.write}{Should we write the summary table to XLS? (default: FALSE).}
 
 \item{b.return}{Should we return the resulting data frame (default: FALSE).}
 
@@ -41,6 +44,7 @@ f_summarize(
      df.input = mtcars,
      b.sort   = TRUE,
      b.view   = TRUE,
+     b.write  = FALSE,
      b.return = FALSE,
      n.char   = "all",
      n.freq   = 3

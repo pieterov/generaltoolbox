@@ -7,6 +7,7 @@
 #' @param df.input Data frame to summarize.
 #' @param b.sort Should items be sorted? (default: TRUE).
 #' @param b.view Should we display the result? (default: TRUE).
+#' @param b.write Should we write the summary table to XLS? (default: FALSE).
 #' @param b.return Should we return the resulting data frame (default: FALSE).
 #' @param n.char Number of characters to show of each item (default: "all").
 #' @param n.freq Number of items to show (default: 3).
@@ -23,6 +24,7 @@
 #'      df.input = mtcars,
 #'      b.sort   = TRUE,
 #'      b.view   = TRUE,
+#'      b.write  = FALSE,
 #'      b.return = FALSE,
 #'      n.char   = "all",
 #'      n.freq   = 3
@@ -38,6 +40,7 @@
                 df.input,
                 b.sort   = TRUE,
                 b.view   = TRUE,
+                b.write  = FALSE,
                 b.return = FALSE,
                 n.char   = "all",
                 n.freq   = 3
@@ -64,9 +67,11 @@
         # n.char   = 20
         # n.freq   = 3
 
-        # df.input = df.temp
+        # df.input = l.result1[[1]][[1]]
         # b.view   = FALSE
         # b.return = TRUE
+
+        # df.input <- tibble(a=sample(LETTERS[1:3],20, replace = TRUE), b=sample(c(now(), today()+100),20, replace = TRUE))
 
         ##############################################################################################
         # Error check.
@@ -151,23 +156,31 @@
 
                         min = sapply(
 
-                                df.input, function(v.temp) {
+                                df.input, function(v.temp) { # v.temp <- df.input$b
 
-                                        ifelse("numeric" %in% class(v.temp), min(v.temp), NA)
+                                        ifelse(
+                                                any(c("numeric", "integer", "Date", "POSIXct", "POSIXt") %in% class(v.temp)),
+                                                as.character(min(v.temp, na.rm = TRUE)),
+                                                NA
+                                        )
                                 }),
 
                         max = sapply(
 
                                 df.input, function(v.temp) {
 
-                                        ifelse("numeric" %in% class(v.temp), max(v.temp), NA)
+                                        ifelse(
+                                                any(c("numeric", "integer", "Date", "POSIXct", "POSIXt") %in% class(v.temp)),
+                                                as.character(max(v.temp, na.rm = TRUE)),
+                                                NA
+                                        )
                                 }),
 
                         example = sapply(
 
                                 df.input,
 
-                                function(v.temp) { # v.temp = df.input[["line.quantity"]]
+                                function(v.temp) { # v.temp = df.input[["b"]]
 
                                         n.freq.present <- v.temp %>% unique() %>% length()
 
@@ -183,31 +196,22 @@
 
                                                 .[1:n.freq.used] %>%
 
-                                                purrr::when(
+                                                {
+                                                        if(n.freq.used == n.freq.present) {
 
-                                                        # We show all elements.
-                                                        (n.freq.used == n.freq.present) ~ f_paste(
+                                                                f_paste(v.string = ., b.sort = FALSE)
 
-                                                                v.string = .,
-                                                                b.sort   = FALSE
-                                                        ),
+                                                        } else {
 
-                                                        # We show fewer elements then present.
-                                                        TRUE ~ paste0(
-
-                                                                f_paste(
-                                                                        v.string = .,
-                                                                        c.and    = "",
-                                                                        b.sort   = FALSE
-                                                                ),
-
-                                                                ", ..."
-                                                        )
-                                                )
-
-
+                                                                paste0(
+                                                                        f_paste(v.string = ., c.and = "", b.sort = FALSE),
+                                                                        ", ..."
+                                                                )
+                                                        }
+                                                }
                                 })
                 )
+
 
         # Sort column names?
         if(b.sort) {
@@ -222,7 +226,21 @@
         # Return.
         ##############################################################################################
 
-        if(b.view & !b.return) {View(df.info.per.column)}
-        if(b.return)           {return(df.info.per.column)}
+        if(b.write)  {
+
+                # Write data to XLS.
+                f_write_data_to_file(
+
+                        x             = df.info.per.column,
+                        c.file.string = "df.info.per.column",
+                        v.sheet.name  = "Sheet1",
+                        v.path        = path.data,
+                        v.xls         = TRUE,
+                        v.add.time    = TRUE
+                )
+        }
+
+        if(b.view)   {View(df.info.per.column)}
+        if(b.return) {return(df.info.per.column)}
 }
 

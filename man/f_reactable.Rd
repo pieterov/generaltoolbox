@@ -7,7 +7,7 @@
 f_reactable(
   df.input,
   c.col.default.align = "center",
-  n.col.default.max.width = 120,
+  n.col.default.max.width = 500,
   v.col.text = NULL,
   v.col.text.name = NULL,
   v.col.text.align = NULL,
@@ -22,11 +22,18 @@ f_reactable(
   v.col.euro.number = NULL,
   v.col.euro.align = NULL,
   v.col.euro.width = NULL,
+  v.col.link.label = NULL,
+  v.col.link.url = NULL,
+  v.col.link.name = NULL,
+  v.col.link.align = NULL,
+  v.col.link.width = NULL,
+  v.row.number.color = NULL,
+  c.row.number.color = NULL,
   n.defaultPageSize = 10,
-  b.showPageSizeOptions = FALSE,
+  b.showPageSizeOptions = TRUE,
   v.pageSizeOptions = c(10, 20, 30),
-  b.filterable = FALSE,
-  b.searchable = FALSE
+  b.filterable = TRUE,
+  b.searchable = TRUE
 )
 }
 \arguments{
@@ -34,13 +41,13 @@ f_reactable(
 
 \item{c.col.default.align}{What is default alignment. Options are: "left", "center", and "right" (default: "center").}
 
-\item{n.col.default.max.width}{What is the max width of a column (default: 120).}
+\item{n.col.default.max.width}{What is the max width of a column (default: 500).}
 
 \item{v.col.text}{Vector with feature names that should be formated as text (default: NULL).}
 
 \item{v.col.text.name}{Vector with header names that should be used in the table instead (default: NULL).}
 
-\item{v.col.text.align}{Vector with alignment of the numbers. Options are: "left", "center", and "right" (default: NULL).}
+\item{v.col.text.align}{Vector with alignment of the text. Options are: "left", "center", and "right" (default: NULL).}
 
 \item{v.col.text.width}{Vector with widths of the concerned columns (default: NULL).}
 
@@ -60,19 +67,33 @@ f_reactable(
 
 \item{v.col.euro.number}{Vector with number of digits to use (default: NULL).}
 
-\item{v.col.euro.align}{Vector with alignment of the numbers. Options are: "left", "center", and "right" (default: NULL).}
+\item{v.col.euro.align}{Vector with alignment of the euro's. Options are: "left", "center", and "right" (default: NULL).}
 
 \item{v.col.euro.width}{Vector with widths of the concerned columns (default: NULL).}
 
+\item{v.col.link.label}{Vector with feature names that should be used as link label (default: NULL).}
+
+\item{v.col.link.url}{Vector with feature names that should be used as link url (default: NULL).}
+
+\item{v.col.link.name}{Vector with header names that should be used in the table instead (default: NULL).}
+
+\item{v.col.link.align}{Vector with alignment of the links. Options are: "left", "center", and "right" (default: NULL).}
+
+\item{v.col.link.width}{Vector with widths of the concerned columns (default: NULL).}
+
+\item{v.row.number.color}{Row numbers that need to be colored with c.row.number.color (default: NULL).}
+
+\item{c.row.number.color}{Color to give to the concerned rows (default: NULL).}
+
 \item{n.defaultPageSize}{What is the default page size? (default: 10).}
 
-\item{b.showPageSizeOptions}{Should we show page size options? (default: FALSE).}
+\item{b.showPageSizeOptions}{Should we show page size options? (default: TRUE).}
 
 \item{v.pageSizeOptions}{What page size options to provide (default: c(10, 20, 30)).}
 
-\item{b.filterable}{Should table be filterable? (default: FALSE).}
+\item{b.filterable}{Should table be filterable? (default: TRUE).}
 
-\item{b.searchable}{Should table be searchable? (default: FALSE).}
+\item{b.searchable}{Should table be searchable? (default: TRUE).}
 }
 \value{
 Reactable table.
@@ -88,7 +109,7 @@ f_reactable(
 
      df.input                = mtcars,
      c.col.default.align     = "center",
-     n.col.default.max.width = 120,
+     n.col.default.max.width = 500,
      v.col.text              = NULL,
      v.col.text.name         = NULL,
      v.col.text.align        = NULL,
@@ -103,11 +124,18 @@ f_reactable(
      v.col.euro.number       = NULL,
      v.col.euro.align        = NULL,
      v.col.euro.width        = NULL,
+     v.col.link.label        = NULL,
+     v.col.link.url          = NULL,
+     v.col.link.name         = NULL,
+     v.col.link.align        = NULL,
+     v.col.link.width        = NULL,
+     v.row.number.color      = NULL,
+     c.row.number.color      = NULL,
      n.defaultPageSize       = 10,
-     b.showPageSizeOptions   = FALSE,
+     b.showPageSizeOptions   = TRUE,
      v.pageSizeOptions       = c(10, 20, 30),
-     b.filterable            = FALSE,
-     b.searchable            = FALSE
+     b.filterable            = TRUE,
+     b.searchable            = TRUE
 )
 }
 \author{

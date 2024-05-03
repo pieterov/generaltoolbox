@@ -109,7 +109,7 @@
                 ) %>%
 
                 mutate(
-                        x = ifelse(is.na(x), "NA", x),
+                        x = ifelse(is.na(x), "NA", as.character(x)),
 
                         x = if(n.char != "all") {
 

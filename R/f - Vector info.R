@@ -9,6 +9,7 @@
 #' @param name Name to print above the table.
 #' @param n.top Max number of items to show in the list.
 #' @param show.freq Should frequency be shown?
+#' @param c.sort.by How to sort the items in the frequency table, by its 'frequency' or 'value' (default: 'frequency').
 #' @param n.width Number of characters of the items to show in the list.
 #'
 #' @returns Nothing. Only prints to console.
@@ -18,14 +19,15 @@
 #' @export
 #'
 #' @examples
-#' f_vector_info(
-#'
-#'      v.input   = c(0, 2, 2, NA, NA, NA, 0/0, -0/0, -0/0, 0/0, 6/0, -7/0, -8/0, 9/0, 10/0),
-#'      name      = "Pieter",
-#'      n.top     = 10,
-#'      show.freq = TRUE,
-#'      n.width   = 29
-#' )
+# f_vector_info(
+#
+#      v.input   = c(0, 2, 2, NA, NA, NA, 0/0, -0/0, -0/0, 0/0, 6/0, -7/0, -8/0, 9/0, 10/0),
+#      name      = "Pieter",
+#      n.top     = 10,
+#      show.freq = TRUE,
+#      c.sort.by = 'frequency',
+#      n.width   = 29
+# )
 
 
         #################################################################################
@@ -38,13 +40,21 @@
                 name,
                 n.top,
                 show.freq,
-                n.width
+                n.width,
+                c.sort.by
         ) {
 
 
         ##############################################################################
-        # Error check.
+        # TESTING.
         ##############################################################################
+
+        # ALTIJD:
+        # name      = "pieter"
+        # n.top     = 10
+        # show.freq = TRUE
+        # n.width   = 29
+        # c.sort.by = "frequency"
 
         # v.input   = df.datachamp.baseline$id.sku.vendor[1:3]
         # name      = "df.datachamp.baseline$id.sku.vendor"
@@ -60,7 +70,20 @@
         # v.input <- c(NA, NA, NA)
         # v.input <- c(0/0, 0/0, 0/0, 0/0)
         # v.input <- c(6/0, 7/0, 8/0, 9/0, 10/0)
+        # v.input <- as.factor(LETTERS[1:10])
+        # v.input <- c(today(), today(), today(), today()+1, today()+1, today()+2, NA, Inf)
 
+        # f_info(
+        #         c(0, 2, 2, NA, NA, NA, 0/0, -0/0, -0/0, 0/0, 6/0, -7/0, -8/0, 9/0, 10/0)
+        # )
+
+        # f_info(
+        #         c(as_date("2023 11 06"), -6/0, NA, NA, as_date("2023 11 05"), as_date("2023 10 06"))
+        # )
+
+        # f_info(
+        #         sample(c("A", "B", "C"), 10000, replace = TRUE) %>% as.factor()
+        # )
 
         ##############################################################################
         # Error check.
@@ -79,6 +102,15 @@
         # Initialization. We take max of nchar and 3 to prevent count errors below. Width is at least 3.
         n.count.true <- nchar(format(length(v.input), big.mark = ","))
         n.count      <- max(3, n.count.true)
+        c.class      <- paste(class(v.input), collapse = '/')
+
+
+        # Reformat data to character, since date(time) gives an error in 'v.input[v.input %in% NA]  <- "NA "',
+        # see below. To be sure, all are converted to character.
+        # Als het weer een issue wordt dan deze conversie hieronder zetten, bijv. in regel 222. Gedaan, ik heb
+        # de regel rond regel 222 toegevoegd.
+        #v.input = as.character(v.input)
+
 
         # Calculate basic info.
         df.basic.info <- data.frame(
@@ -164,14 +196,14 @@
         # Print header.
         cat(
                 paste0(
-                        "\n ", name, " (", class(v.input), ")\n\n"
+                        "\n ", name, " (", c.class, ")\n\n"
                 )
         )
 
 
         cat(
                 paste0(
-                        strrep(" ", n.width + n.count),
+                        strrep(" ", n.width + n.count - 1), # -1
 
                         "n",
 
@@ -183,7 +215,7 @@
 
         names(df.basic.info) <- c(
 
-                strrep("=", n.width-1),
+                strrep("=", n.width - 1),
 
                 strrep("=", n.count),
 
@@ -197,19 +229,37 @@
                 right     = FALSE
         )
 
+        # Reformat data to character, since date(time) and factor give an error in
+        # 'v.input[v.input %in% NA]  <- "NA "', see below. To be sure, all are converted to character.
+        v.input = as.character(v.input)
 
         # Show frequency table.
-        if (show.freq) {
+        if(show.freq) {
 
                 # Replace any NA by "NA", and NaN by "NaN"
-                v.input[v.input %in% NA]  <- "NA "
-                v.input[v.input %in% NaN] <- "NaN "
-                v.input[v.input %in% Inf] <- "Inf "
+                v.input[v.input %in% NA]  <- " NA"
+                v.input[v.input %in% NaN] <- " NaN"
+                v.input[v.input %in% Inf] <- " Inf"
 
                 # Calculate frequency of levels in vector.
                 df.freq.source <- as.data.frame(table(v.input)) %>%
 
-                        arrange(desc(Freq), v.input) %>%
+                        {
+                                if(c.sort.by == "frequency") {
+
+                                        arrange(., desc(Freq), v.input)
+
+                                } else if(c.sort.by == "value") {
+
+                                        arrange(., v.input)
+
+                                } else {
+                                        cat(paste(
+                                                "You did not provide a valid value for 'c.sort.by', this must be",
+                                                "'frequency' or 'value'."
+                                        ))
+                                }
+                        } %>%
 
                         mutate(
                                 v.input     = as.character(v.input),
@@ -235,6 +285,7 @@
                         Freq = paste0(strrep(" ", n.count - 3), "..."),
                         perc = paste0(strrep(" ", 5       - 3), "...")
                 )
+
 
                 df.total <- data.frame(
 
@@ -262,18 +313,21 @@
 
                         rename(Freq = Freq2, perc = perc2) %>%
 
-                        head(n.top)
+                        if(is.numeric(n.top)) head(., n.top) else .
 
 
-                # Puntjes toevoegen als n.top een getal is.
+                # Puntjes toevoegen als n.top een getal is, en kleiner of gelijk is aan het aantal rijen in df.freq.
                 if(is.numeric(n.top)) {
 
-                        df.freq <- rbind(df.freq, df.dots)
+                        if(nrow(df.freq) >= n.top) {
+
+                                df.freq <- rbind(df.freq, df.dots)
+                        }
                 }
 
 
                 # Total toevoegen.
-                df.freq <- rbind(df.freq, df.total)
+                df.freq       <- rbind(df.freq, df.total)
 
                 names(df.freq) <- names(df.basic.info)
 
@@ -319,7 +373,7 @@
                 print(
                         x         = df.freq,
                         row.names = FALSE,
-                        right     = FALSE
+                        right     = TRUE
                 )
         }
 }

@@ -71,8 +71,12 @@
         # c.file.type  = "qmd"
         # b.return.md5 = FALSE
 
-        # c.path      = paste0(path.images, "PRODUCT PICTURES KOKOON")
-        # b.recursive = TRUE
+        # BLC
+        # c.path       = c.folder.source
+        # b.recursive  = FALSE
+        # c.file.type  = "qmd"
+        # b.return.md5 = FALSE
+
 
         #################################################################################
         # ERROR CHECK
@@ -179,20 +183,18 @@
 
                         contains.date     = !is.na(date.in.file.name),
                         contains.time     = !is.na(time.in.file.name)
-                        )
+                )
 
 
-        # Added suppresswarnings because hms() gives warning when it cannot parse time.
-        suppressWarnings(
+        # Added 'quiet = TRUE' because hms() gives warning when it cannot parse time, or all are NA.
+        df.output <- df.output %>%
 
-                df.output <- df.output %>%
+                mutate(
+                        time.in.file.name = lubridate::hms(time.in.file.name, quiet = TRUE)
+                ) %>%
 
-                        mutate(
-                                time.in.file.name = hms(time.in.file.name)
-                        ) %>%
+                arrange(date.in.file.name, time.in.file.name)
 
-                        arrange(date.in.file.name, time.in.file.name)
-        )
 
 
         # Voeg md5 toe, indien gevraagd.

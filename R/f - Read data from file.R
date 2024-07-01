@@ -150,6 +150,12 @@
                 # c.file.type   = "sqlite"
                 # c.table.name  = "ts"
 
+                # SQLite / AI Infrasolutions
+                # v.file.string = paste0(c.filename, "_", c.type)
+                # c.file.type   = "sqlite"
+                # c.table.name  = "bord"
+                # c.path        = paste0(path.data, "AI")
+
 
                 ##############################################################################
                 # ERRROR CHECK
@@ -513,11 +519,7 @@
                                                # Check whether c.table.name is in the list of tables.
                                                if (!c.table.name %in% dbListTables(con)) {
 
-                                                       # Disconnect from database.
-                                                       dbDisconnect(con)
-
-                                                       df.temp <- NULL
-
+                                                       # Give warning to user.
                                                        warning(
                                                                paste0(
                                                                        c.path.file," does not contain table '",
@@ -525,6 +527,12 @@
                                                                        "following tables: ", f_paste(dbListTables(con))
                                                                )
                                                        )
+
+                                                       # Disconnect from database.
+                                                       dbDisconnect(con)
+
+                                                       df.temp <- NULL
+
 
                                                } else {
 

@@ -84,7 +84,7 @@
                 c.delim                  = NULL,
 
                 # Set standard decimal mark.
-                c.decimal.mark           = ",",
+                c.decimal.mark           = ".",
 
                 # Do the data contain header names?
                 b.col.names              = TRUE,

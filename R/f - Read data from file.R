@@ -361,7 +361,7 @@
 
                                                                        file      = c.path.file,
                                                                        delim     = c.delim,
-                                                                       locale    = locale(decimal_mark = c_decimal_mark),
+                                                                       locale    = locale(decimal_mark = c.decimal.mark),
                                                                        trim_ws   = TRUE,
                                                                        col_names = b.col.names,
                                                                        col_types = l.col.type

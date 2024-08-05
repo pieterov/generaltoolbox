@@ -14,7 +14,7 @@
 #' @param c.sheet.name In case of xls (default: NULL).
 #' @param n.skip.rows In case of xls (default: 0).
 #' @param c.delim In case of txt, csv, delim (default: NULL).
-#' @param c.decimal.mark In case of txt, csv, delim (default: ',').
+#' @param c.decimal.mark In case of txt, csv, delim (default: '.').
 #' @param b.col.names Do the data contain header names? (default: TRUE).
 #' @param l.col.type List with column types, see also Details (default: NULL).
 #' @param n.guess.max Number of rows to check on data type (default: 1000).
@@ -43,7 +43,7 @@
 #'      c.sheet.name             = NULL,
 #'      n.skip.rows              = 0,
 #'      c.delim                  = NULL,
-#'      c.decimal.mark           = ",",
+#'      c.decimal.mark           = ".",
 #'      b.col.names              = TRUE,
 #'      l.col.type               = NULL,
 #'      n.guess.max              = 1000,

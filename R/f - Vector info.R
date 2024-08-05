@@ -72,13 +72,14 @@
         # v.input <- c(6/0, 7/0, 8/0, 9/0, 10/0)
         # v.input <- as.factor(LETTERS[1:10])
         # v.input <- c(today(), today(), today(), today()+1, today()+1, today()+2, NA, Inf)
+        # v.input <- c(now(), now(), now(), today()+1, today()+1, today()+2, NA, Inf)
 
         # f_info(
         #         c(0, 2, 2, NA, NA, NA, 0/0, -0/0, -0/0, 0/0, 6/0, -7/0, -8/0, 9/0, 10/0)
         # )
 
         # f_info(
-        #         c(as_date("2023 11 06"), -6/0, NA, NA, as_date("2023 11 05"), as_date("2023 10 06"))
+        #         c(as_datetime("2023 11 06"), -6/0, NA, NA, as_date("2023 11 05"), as_date("2023 10 06"))
         # )
 
         # f_info(
@@ -132,7 +133,7 @@
                                 length(v.input),
                                 length(unique(v.input)),
                                 sum(v.input == 0, na.rm = TRUE),
-                                sum(v.input == "", na.rm = TRUE),
+                                sum(as.character(v.input) == "", na.rm = TRUE),
                                 sum(v.input %in% NA),
                                 sum(v.input %in% NaN),
                                 sum(v.input %in% -Inf),
@@ -158,7 +159,7 @@
                                         ),
 
                                         round(
-                                                sum(v.input == "", na.rm = TRUE) / length(v.input) * 100,
+                                                sum(as.character(v.input) == "", na.rm = TRUE) / length(v.input) * 100,
                                                 digits = 1
                                         ),
 
@@ -237,9 +238,10 @@
         if(show.freq) {
 
                 # Replace any NA by "NA", and NaN by "NaN"
-                v.input[v.input %in% NA]  <- " NA"
-                v.input[v.input %in% NaN] <- " NaN"
-                v.input[v.input %in% Inf] <- " Inf"
+                v.input[v.input %in% NA]   <- " NA"
+                v.input[v.input %in% NaN]  <- " NaN"
+                v.input[v.input %in% -Inf] <- " -Inf"
+                v.input[v.input %in% Inf]  <- " Inf"
 
                 # Calculate frequency of levels in vector.
                 df.freq.source <- as.data.frame(table(v.input)) %>%

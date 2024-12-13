@@ -515,11 +515,25 @@
                                                #c.path.file <- l.path.file[[1]]
                                                #print(c.path.file)
 
-                                               # Connect to sqlite file.
-                                               con <- dbConnect(
+                                               # db_path <- file.path(c.rootfolder.read, "SQLITE", df.temp$file.folder[1], df.temp$file.name[1])
+                                               # con <- dbConnect(SQLite(), dbname = db_path)
+                                               # db_tables <- dbListTables(con)
+                                               # print(db_tables)
+                                               # dbDisconnect(con)
 
-                                                       drv    = RSQLite::SQLite(),
-                                                       dbname = c.path.file
+                                               # Connect to sqlite file.
+                                               con <- tryCatch(
+
+                                                       dbConnect(
+                                                               drv    = RSQLite::SQLite(),
+                                                               dbname = c.path.file
+                                                       ),
+                                                       error = function(e) {
+                                                               cat(paste0("\n\nError: ", c.path.file, " results in: '", e$message, "'"))
+                                                       },
+                                                       warning = function(w) {
+                                                               cat(paste0("\n\nWarning: ", c.path.file, " results in: '", w$message, "'"))
+                                                       }
                                                )
 
                                                # Check whether c.table.name is in the list of tables.

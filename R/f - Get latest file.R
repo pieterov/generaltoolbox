@@ -229,7 +229,11 @@
 
                 } else {
 
-                        cat(paste0(df.type$files, " - ", df.type$date.last.mod, " - "))
+                        cat(paste0("\nFile     : ", df.type$files))
+
+                        cat(paste0("\nLast mod : ", df.type$date.last.mod))
+
+                        #cat(paste0(df.type$files, " - ", df.type$date.last.mod, " - "))
                 } }
 
         # Return file, incl path.

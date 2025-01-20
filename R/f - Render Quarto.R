@@ -48,37 +48,17 @@
         # TESTING
         ###############################################################################
 
-        # BLC
-        # c.folder.source      = path.code
-        # c.file.source        = "Q - N-line Modelling - HTML.qmd"
-        # c.folder.destination = paste0(path.deliverables, "Reports/")
-        # c.file.destination   = paste(c.file.root, "- Distance", n.distance)
-        # b.add.time           = TRUE
-
-
-        # Oletti
-        # c.folder.source      = path.code
-        # c.file.source        = "Verkoopoverzicht.qmd"
-        # c.folder.destination = paste0(path.deliverables, "Verkoopoverzichten/")
-        # c.file.destination   = glue("Verkoopoverzicht - {c.period.new} - {c.partner.order}")
-
-        # c.folder.source      = path.code
-        # c.file.source        = "Verkoopoverzicht - Per Partner - PDF.qmd"
-        # c.folder.destination = paste0(path.deliverables, "Verkoopoverzichten/")
-        # c.file.destination   = glue("Verkoopoverzicht - {c.period.report} - {c.partner.order}")
-
-        # c.folder.source      = path.code
-        # c.file.source        = "Q - Data Understanding Clickstream - HTML.qmd"
-        # c.folder.destination = path.deliverables
-        # c.file.destination   = "Clickstream Data Understanding"
-
-        # c.folder.source      = path.code
-        # c.file.source        = "Verkoopoverzicht - Per Partner - PDF.qmd"
-        # c.folder.destination = paste0(path.deliverables, "Verkoopoverzichten/")
-        # c.file.destination   = glue("{c.partner.order} - {c.period.report}")
-        # b.add.date           = FALSE
+        # Always
+        # c.file.destination   = NULL
+        # b.add.date           = TRUE
         # b.add.time           = FALSE
-        # l.execute.params     = list(c.partner.order_ = c.partner.order)
+
+        # HRG - Quality Reporting - M6
+        # c.folder.source      = path.code
+        # c.file.source        = "Q - 6 - DQ - AI - HTML.qmd"
+        # c.folder.destination = path.deliverables
+        # c.file.destination   = c.description
+        # b.add.time           = TRUE
 
 
         #################################################################################
@@ -89,7 +69,8 @@
         if(!grepl("\\.qmd$", c.file.source)) {
 
                 stop(glue(
-                        "The source file (c.file.source) '{c.file.source}' must end with '.qmd'!\n"
+                        "The source file (c.file.source) '{c.file.source}' must end ",
+                        "with '.qmd'!\n"
                 ))
         }
 
@@ -98,8 +79,8 @@
         if(!(grepl("HTML", c.file.source) | grepl("PDF", c.file.source))) {
 
                 stop(glue(
-                        "The source file (c.file.source) '{c.file.source}' does not contain
-                        'HTML' or 'PDF'!\n"
+                        "The source file (c.file.source) '{c.file.source}' does not contain",
+                        "'HTML' or 'PDF'!\n"
                 ))
         }
 
@@ -119,8 +100,8 @@
         )) {
 
                 stop(glue(
-                        "The source file (c.file.source), '{c.file.source}', does not occur ",
-                        "in the source folder (c.folder.source), '{c.folder.source}'!"
+                        "The source file (c.file.source), '{c.file.source}', does not ",
+                        "occur in the source folder (c.folder.source), '{c.folder.source}'!"
                 ))
         }
 

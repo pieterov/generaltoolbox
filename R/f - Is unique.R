@@ -20,9 +20,9 @@
 #'     v.excluding = NA
 #' )
 
-#################################################################################
+###############################################################################
 # FUNCTION.
-#################################################################################
+###############################################################################
 
         f_is_unique <- function(
 
@@ -31,9 +31,18 @@
         ) {
 
 
-#########################################################################
+###############################################################################
+# ERROR CHECK
+###############################################################################
+
+        if (is.null(v.vector)) {
+                stop("De input van de functie 'f_is_unique()' is NULL!")
+        }
+
+
+###############################################################################
 # PROCESS
-#########################################################################
+###############################################################################
 
         # Verwijder elementen die niet meegenomen moeten worden, bijv NA en NULL.
         v.output <- v.vector[!v.vector %in% v.excluding]
@@ -45,8 +54,10 @@
 
                 warning(paste0(
 
-                        "The vector ", deparse(substitute(v.vector)), " contains unique elements, however, ",
-                        "only after removing one or more NAs present in the vector!"
+                        "The vector ", deparse(substitute(v.vector)),
+                        " contains unique elements, however, ",
+                        "only after removing one or more NAs present "
+                        "in the vector!"
                 ))
         }
 

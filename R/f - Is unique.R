@@ -40,8 +40,8 @@
         }
 
 
-        if (is.na(v.vector)) {
-                stop("De functie input is NA!")
+        if (all(is.na(v.vector))) {
+                stop("De functie input is NA of bevat alleen NA!")
         }
 
 

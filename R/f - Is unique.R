@@ -36,7 +36,12 @@
 ###############################################################################
 
         if (is.null(v.vector)) {
-                stop("De input van de functie 'f_is_unique()' is NULL!")
+                stop("De functie input is NULL!")
+        }
+
+
+        if (is.na(v.vector)) {
+                stop("De functie input is NA!")
         }
 
 
@@ -56,7 +61,7 @@
 
                         "The vector ", deparse(substitute(v.vector)),
                         " contains unique elements, however, ",
-                        "only after removing one or more NAs present "
+                        "only after removing one or more NAs present ",
                         "in the vector!"
                 ))
         }

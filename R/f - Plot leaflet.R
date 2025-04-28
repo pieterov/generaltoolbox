@@ -1187,13 +1187,13 @@
 
 
                 # Voeg point.x en point.y toe.
-                if( all(all_of(v.coord.point.xy) %in% names(df.point)) ) {
+                if( all(v.coord.point.xy %in% names(df.point)) ) {
 
                         df.point$point.x <- as.numeric(df.point[[c.coord.point.x]])
                         df.point$point.y <- as.numeric(df.point[[c.coord.point.y]])
 
                         # Voeg point.lon en point.lat toe.
-                        if( all(all_of(v.coord.point.lonlat) %in% names(df.point)) ) {
+                        if( all(v.coord.point.lonlat %in% names(df.point)) ) {
 
                                 df.point$point.lat <- as.numeric(df.point[[c.coord.point.lat]])
                                 df.point$point.lon <- as.numeric(df.point[[c.coord.point.lon]])
@@ -1210,7 +1210,7 @@
                 } else {
 
                         # Voeg point.x en point.y toe.
-                        if( all(all_of(v.coord.point.lonlat) %in% names(df.point)) ) {
+                        if( all(v.coord.point.lonlat %in% names(df.point)) ) {
 
                                 df.point$point.lat <- as.numeric(df.point[[c.coord.point.lat]])
                                 df.point$point.lon <- as.numeric(df.point[[c.coord.point.lon]])
@@ -1380,13 +1380,13 @@
 
 
                 # Voeg line.x en line.y toe.
-                if( all(all_of(v.coord.line.xy) %in% names(df.line)) ) {
+                if( all(v.coord.line.xy %in% names(df.line)) ) {
 
                         df.line$line.x <- as.numeric(df.line[[c.coord.line.x]])
                         df.line$line.y <- as.numeric(df.line[[c.coord.line.y]])
 
                         # Voeg line.lon en line.lat toe.
-                        if( all(all_of(v.coord.line.lonlat) %in% names(df.line)) ) {
+                        if( all(v.coord.line.lonlat %in% names(df.line)) ) {
 
                                 df.line$line.lat <- as.numeric(df.line[[c.coord.line.lat]])
                                 df.line$line.lon <- as.numeric(df.line[[c.coord.line.lon]])
@@ -1403,7 +1403,7 @@
                 } else {
 
                         # Voeg line.x en line.y toe.
-                        if( all(all_of(v.coord.line.lonlat) %in% names(df.line)) ) {
+                        if( all(v.coord.line.lonlat %in% names(df.line)) ) {
 
                                 df.line$line.lat <- as.numeric(df.line[[c.coord.line.lat]])
                                 df.line$line.lon <- as.numeric(df.line[[c.coord.line.lon]])
@@ -1566,7 +1566,7 @@
 
 
                 # Hernoem x,y naar polygon.x en polygon.y, en voeg polygon.lon en polygon.lat toe.
-                if( all(all_of(v.coord.polygon.xy) %in% names(df.polygon)) ) {
+                if( all(v.coord.polygon.xy %in% names(df.polygon)) ) {
 
                         df.polygon$polygon.x <- as.numeric(df.polygon[[c.coord.polygon.x]])
                         df.polygon$polygon.y <- as.numeric(df.polygon[[c.coord.polygon.y]])
@@ -1580,7 +1580,7 @@
                 }
 
                 # Hernoem lon,lat naar polygon.lon en polygon.lat, en voeg polygon.x en polygon.y toe.
-                if( all(all_of(v.coord.polygon.lonlat) %in% names(df.polygon)) ) {
+                if( all(v.coord.polygon.lonlat %in% names(df.polygon)) ) {
 
                         df.polygon$polygon.lat <- as.numeric(df.polygon[[c.coord.polygon.lat]])
                         df.polygon$polygon.lon <- as.numeric(df.polygon[[c.coord.polygon.lon]])
@@ -1685,7 +1685,7 @@
 
 
                 # Hernoem x,y naar text.x en text.y, en voeg text.lon en text.lat toe.
-                if( all(all_of(v.coord.text.xy) %in% names(df.text)) ) {
+                if( all(v.coord.text.xy %in% names(df.text)) ) {
 
                         df.text$text.x <- as.numeric(df.text[[c.coord.text.x]])
                         df.text$text.y <- as.numeric(df.text[[c.coord.text.y]])
@@ -1699,7 +1699,7 @@
                 }
 
                 # Hernoem lon,lat naar text.lon en text.lat, en voeg text.x en text.y toe.
-                if( all(all_of(v.coord.text.lonlat) %in% names(df.text)) ) {
+                if( all(v.coord.text.lonlat %in% names(df.text)) ) {
 
                         df.text$text.lat <- as.numeric(df.text[[c.coord.text.lat]])
                         df.text$text.lon <- as.numeric(df.text[[c.coord.text.lon]])

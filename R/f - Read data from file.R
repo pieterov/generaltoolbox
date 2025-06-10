@@ -114,501 +114,199 @@
 
                 # Clean up header names?
                 b.clean.up.header.names  = TRUE
-                ) {
+        ) {
 
 
-                ##############################################################################
-                # TEST ONLY!!
-                ##############################################################################
+        ##############################################################################
+        # TEST ONLY!!
+        ##############################################################################
 
-                # DEFAULT WAARDEN - HOUDEN!!
-                # v.file.string            = NULL
-                # c.path                   = NULL
-                # b.exact.match            = FALSE
-                # c.file.string.exclude    = NULL
-                # b.show.info              = FALSE
-                # c.sheet.name             = NULL
-                # n.skip.rows              = 0
-                # c.delim                  = NULL
-                # b.col.names              = TRUE
-                # l.col.type               = NULL
-                # n.guess.max              = 1000
-                # c.table.name             = NULL
-                # c.show.report            = "all"
-                # b.add.mod.date.path.file = FALSE
-                # b.clean.up.header.names  = TRUE
+        # DEFAULT WAARDEN - HOUDEN!!
+        # v.file.string            = NULL
+        # c.path                   = NULL
+        # b.exact.match            = FALSE
+        # c.file.string.exclude    = NULL
+        # b.show.info              = FALSE
+        # c.sheet.name             = NULL
+        # n.skip.rows              = 0
+        # c.delim                  = NULL
+        # b.col.names              = TRUE
+        # l.col.type               = NULL
+        # n.guess.max              = 1000
+        # c.table.name             = NULL
+        # c.show.report            = "all"
+        # b.add.mod.date.path.file = FALSE
+        # b.clean.up.header.names  = TRUE
 
-                # BLC
-                # v.file.string = "DPCOMP with sort test multivariate v1 case 4"
-                # c.file.type   = "xls"
-                # c.path        = path.data
-                # c.sheet.name  = "model"
+        # c.path        = paste0(path.data, "AI")
+        # v.file.string = paste0(c.filename, "_", c.type)
+        # c.file.type   = "sqlite"
+        # c.table.name  = "ts"
 
-                # v.file.string            = "Binary Mixtures - Parts I II III - FINAL"
-                # c.file.type              = "xls"
-                # c.path                   = path.deliverables
-                # c.sheet.name             = "Solids"
-                # n.guess.max              = 20000
+        # SQLite / AI Infrasolutions
+        # v.file.string = paste0(c.filename, "_", c.type)
+        # c.file.type   = "sqlite"
+        # c.table.name  = "bord"
+        # c.path        = paste0(path.data, "AI")
 
-                # c.path        = paste0(path.data, "AI")
-                # v.file.string = paste0(c.filename, "_", c.type)
-                # c.file.type   = "sqlite"
-                # c.table.name  = "ts"
-
-                # SQLite / AI Infrasolutions
-                # v.file.string = paste0(c.filename, "_", c.type)
-                # c.file.type   = "sqlite"
-                # c.table.name  = "bord"
-                # c.path        = paste0(path.data, "AI")
+        # Shapefile
+        # v.file.string = "APV Borden"
+        # c.path        = paste0(path.data, c.folder)
+        # c.file.type   = 'shp'
 
 
-                ##############################################################################
-                # ERRROR CHECK
-                ##############################################################################
+        ##############################################################################
+        # ERRROR CHECK
+        ##############################################################################
 
-                # Does c.file.type have a valid value?
-                if(!c.file.type %in% c("xls", "csv", "tsv", "txt", "rds", "fst", "xml", "parquet", "sqlite", "shp", "dbf", "gs")) {
+        # Does c.file.type have a valid value?
+        if(!c.file.type %in% c("xls", "csv", "tsv", "txt", "rds", "fst", "xml", "parquet", "sqlite", "shp", "dbf", "gs")) {
 
-                        stop(paste0(
+                stop(paste0(
 
-                                "Note, the value for c.file.type ('", c.file.type, "') is invalid. It must be one of, ",
-                                "'xls', 'csv', 'tsv', 'txt', 'rds', 'fst', 'xml', 'parquet', 'sqlite', 'shp', 'dbf', or 'gs'!"
-                        ))
+                        "Note, the value for c.file.type ('", c.file.type, "') is invalid. It must be one of, ",
+                        "'xls', 'csv', 'tsv', 'txt', 'rds', 'fst', 'xml', 'parquet', 'sqlite', 'shp', 'dbf', or 'gs'!"
+                ))
+        }
+
+
+        ##############################################################################
+        # INITIALIZE
+        ##############################################################################
+
+        # Define c.file.category and c.delim in case of c.file.type to be 'csv' or 'txt'.
+        if(c.file.type %in% c("csv", "tsv", "txt")) {
+
+                c.file.category <- "delim"
+
+                c.delim <- ifelse(
+
+                        is.null(c.delim),
+
+                        case_when(
+
+                                c.file.type == "csv" ~ ",",
+                                c.file.type == "tsv" ~ "\t",
+                                c.file.type == "txt" ~ " "
+                        ),
+
+                        c.delim
+                )
+
+
+        } else {
+
+                c.file.category <- c.file.type
+        }
+
+
+        # Update c.path when it is not NULL.
+        if(!is.null(c.path)) {
+
+                #  Append '/' if not there and it is not an url.
+                if(!grepl("/$", c.path) & !grepl("^http", c.path)) {
+
+                        c.path <- paste0(c.path, "/")
                 }
 
+                # Get latest file in case the file is not read by URL (like Channable).
+                if(!grepl("^http", c.path)) {
 
-                ##############################################################################
-                # INITIALIZE
-                ##############################################################################
+                        l.path.file <- lapply(v.file.string, function(c.file.string) {# c.file.string <- v.file.string[1]
 
-                # Define c.file.category and c.delim in case of c.file.type to be 'csv' or 'txt'.
-                if(c.file.type %in% c("csv", "tsv", "txt")) {
+                                f_get_latest_file(
 
-                        c.file.category <- "delim"
-
-                        c.delim <- ifelse(
-
-                                is.null(c.delim),
-
-                                case_when(
-
-                                        c.file.type == "csv" ~ ",",
-                                        c.file.type == "tsv" ~ "\t",
-                                        c.file.type == "txt" ~ " "
-                                ),
-
-                                c.delim
-                        )
-
+                                        c.file.string         = c.file.string,
+                                        c.file.type           = c.file.type,
+                                        c.path                = c.path,
+                                        b.exact.match         = b.exact.match,
+                                        c.file.string.exclude = c.file.string.exclude,
+                                        c.sheet.name          = c.sheet.name,
+                                        c.show.report         = c.show.report
+                                )
+                        })
 
                 } else {
 
-                        c.file.category <- c.file.type
+                        l.path.file <- list(c.path)
+                }
+        }
+
+
+        ########################################################################################################
+        # Functions
+        ########################################################################################################
+
+        f_post_processing <- function(df.input, c.path.file, c.delim, b.add.mod.date.path.file, b.show.info) {
+
+
+                # Add column with path name and date of modification.
+                if(b.add.mod.date.path.file) {
+
+                        df.input <- df.input %>%
+
+                                mutate(
+                                        path.file = c.path.file,
+                                        mod.date  = file.mtime(c.path.file)
+                                )
                 }
 
 
-                # Update c.path when it is not NULL.
-                if(!is.null(c.path)) {
+                # Show header names, if needed.
+                if (b.show.info) {
 
-                        #  Append '/' if not there and it is not an url.
-                        if(!grepl("/$", c.path) & !grepl("^http", c.path)) {
+                        cat(paste0("\nFile name:    '", basename(c.path.file), "'"), "\n")
+                        cat(paste0("Column names: ",    f_paste(names(df.input), b.quotation = TRUE)), "\n")
 
-                                c.path <- paste0(c.path, "/")
-                        }
+                        if(!is.null(c.delim)) {
 
-                        # Get latest file in case the file is not read by URL (like Channable).
-                        if(!grepl("^http", c.path)) {
-
-                                l.path.file <- lapply(v.file.string, function(c.file.string) {# c.file.string <- v.file.string[1]
-
-                                        f_get_latest_file(
-
-                                                c.file.string         = c.file.string,
-                                                c.file.type           = c.file.type,
-                                                c.path                = c.path,
-                                                b.exact.match         = b.exact.match,
-                                                c.file.string.exclude = c.file.string.exclude,
-                                                c.sheet.name          = c.sheet.name,
-                                                c.show.report         = c.show.report
-                                        )
-                                })
-
-                        } else {
-
-                                l.path.file <- list(c.path)
+                                cat(paste0("Delimiter:    '", c.delim, "'"))
                         }
                 }
 
-
-                ########################################################################################################
-                # Functions
-                ########################################################################################################
-
-                f_post_processing <- function(df.input, c.path.file, c.delim, b.add.mod.date.path.file, b.show.info) {
+                # Return updated input
+                return(df.input)
+        }
 
 
-                        # Add column with path name and date of modification.
-                        if(b.add.mod.date.path.file) {
+        ##############################################################################
+        # Read data based on file type.
+        ##############################################################################
 
-                                df.input <- df.input %>%
+        # Get data.
+        switch(c.file.category,
 
-                                        mutate(
-                                                path.file = c.path.file,
-                                                mod.date  = file.mtime(c.path.file)
-                                        )
-                        }
+               "xls" = {
 
+                       # Read data from Excel file. Suppress warnings for not being able to match the right format.
+                       suppressWarnings(
 
-                        # Show header names, if needed.
-                        if (b.show.info) {
-
-                                cat(paste0("\nFile name:    '", basename(c.path.file), "'"), "\n")
-                                cat(paste0("Column names: ",    f_paste(names(df.input), b.quotation = TRUE)), "\n")
-
-                                if(!is.null(c.delim)) {
-
-                                        cat(paste0("Delimiter:    '", c.delim, "'"))
-                                }
-                        }
-
-                        # Return updated input
-                        return(df.input)
-                }
-
-
-                ##############################################################################
-                # Read data based on file type.
-                ##############################################################################
-
-                # Get data.
-                switch(c.file.category,
-
-                       "xls" = {
-
-                               # Read data from Excel file. Suppress warnings for not being able to match the right format.
-                               suppressWarnings(
-
-                                       l.data.object <- lapply(l.path.file,
-
-                                               function(c.path.file) { # c.path.file <- l.path.file[[1]]
-
-                                                       # Get all sheet names in the workbook.
-                                                       v.sheet.name <- readxl::excel_sheets(c.path.file)
-
-                                                       if(is.null(c.sheet.name)) {
-
-                                                                c.sheet.name <- v.sheet.name[1]
-
-                                                       } else {
-                                                                c.sheet.name <- v.sheet.name[grepl(c.sheet.name, v.sheet.name)]
-                                                       }
-
-
-                                                       df.temp <-
-                                                               readxl::read_xlsx(
-
-                                                                       path      = c.path.file,
-                                                                       sheet     = c.sheet.name,
-                                                                       skip      = n.skip.rows,
-                                                                       col_names = b.col.names,
-                                                                       col_types = l.col.type,
-                                                                       guess_max = n.guess.max
-                                                               ) %>%
-
-                                                               f_post_processing(
-
-                                                                       c.path.file,
-                                                                       c.delim,
-                                                                       b.add.mod.date.path.file,
-                                                                       b.show.info
-                                                               )
-
-
-                                                       # Check whether one or more of the columns is empty. If so,
-                                                       # advice to increase 'guess_max'
-                                                       walk(names(df.temp), function(x) {
-
-                                                               if(all(is.na(df.temp[x]))) {
-
-                                                                        cat(paste0(
-                                                                               "\nAll cells in column '", x, "' are empty. ",
-                                                                               "Consider increasing 'n.guess.max' to a ",
-                                                                               "number close to the number of rows in the ",
-                                                                               "data frame (",
-                                                                               format(nrow(df.temp), big.mark = ","), ").\n"
-                                                                        ))
-                                                               }
-                                                       })
-
-                                                       return(df.temp)
-                                               })
-                                       )
-                       },
-
-
-                       "delim" = {
-
-                               # Read data from delimited file. Suppress warnings for not being able to match the right format.
-                               suppressWarnings(
-
-                                       l.data.object <- lapply(l.path.file,
-
-                                               function(c.path.file) { # c.path.file <- l.path.file[[1]]
-
-                                                       df.temp <-
-
-                                                               readr::read_delim(
-
-                                                                       file      = c.path.file,
-                                                                       delim     = c.delim,
-                                                                       locale    = locale(decimal_mark = c.decimal.mark),
-                                                                       trim_ws   = TRUE,
-                                                                       col_names = b.col.names,
-                                                                       col_types = l.col.type
-                                                               )  %>%
-
-                                                               f_post_processing(
-
-                                                                       c.path.file,
-                                                                       c.delim,
-                                                                       b.add.mod.date.path.file,
-                                                                       b.show.info
-                                                               )
-
-
-                                                       return(df.temp)
-                                               })
-                                       )
-                       },
-
-
-                       "rds" = {
-
-                               # Read data from RDS file.
                                l.data.object <- lapply(l.path.file,
 
                                        function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                               df.temp <-
+                                               # Get all sheet names in the workbook.
+                                               v.sheet.name <- readxl::excel_sheets(c.path.file)
 
-                                                       readRDS(
+                                               if(is.null(c.sheet.name)) {
 
-                                                               file = c.path.file
-
-                                                       )  %>%
-
-                                                       f_post_processing(
-
-                                                               c.path.file,
-                                                               c.delim,
-                                                               b.add.mod.date.path.file,
-                                                               b.show.info
-                                                       )
-
-
-                                               return(df.temp)
-                                       }
-                               )
-                       },
-
-                       "fst" = {
-
-                               # Read data from FST file.
-                               l.data.object <- lapply(l.path.file,
-
-                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
-
-                                               df.temp <-
-
-                                                       read_fst(
-
-                                                               path = c.path.file
-                                                       )  %>%
-
-                                                       f_post_processing(
-
-                                                               c.path.file,
-                                                               c.delim,
-                                                               b.add.mod.date.path.file,
-                                                               b.show.info
-                                                       )
-
-
-                                               return(df.temp)
-                                       }
-                               )
-                       },
-
-                       "xml" = {
-
-                               # Read data from XML file.
-                               l.data.object <- lapply(l.path.file,
-
-                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
-
-                                               df.temp <-
-
-                                                       xmlParse(
-
-                                                               file = c.path.file
-                                                       ) %>%
-
-                                                       xmlToDataFrame()  %>%
-
-                                                       f_post_processing(
-
-                                                               c.path.file,
-                                                               c.delim,
-                                                               b.add.mod.date.path.file,
-                                                               b.show.info
-                                                       )
-
-
-                                               return(df.temp)
-                                       }
-                               )
-                       },
-
-
-                       "parquet" = {
-
-                               # Read data from PARQUET file.
-                               l.data.object <- lapply(l.path.file,
-
-                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
-
-                                               df.temp <-
-
-                                                       read_parquet(
-
-                                                               file = c.path.file
-                                                       )  %>%
-
-                                                       f_post_processing(
-
-                                                               c.path.file,
-                                                               c.delim,
-                                                               b.add.mod.date.path.file,
-                                                               b.show.info
-                                                       )
-
-
-                                               return(df.temp)
-                                       }
-                               )
-                       },
-
-
-                       "sqlite" = {
-
-                               # Check whether a table name is provided.
-                               if (is.null(c.table.name)) stop(paste0("Missing c.table.name in function input."))
-
-                               l.data.object <- lapply(
-
-                                       l.path.file,
-
-                                       function(c.path.file) {
-
-                                               # c.path.file <- l.path.file[[2]]
-                                               #c.table.name <- "borden"
-                                               #c.path.file <- l.path.file[[1]]
-                                               #print(c.path.file)
-
-                                               # db_path <- file.path(c.rootfolder.read, "SQLITE", df.temp$file.folder[1], df.temp$file.name[1])
-                                               # con <- dbConnect(SQLite(), dbname = db_path)
-                                               # db_tables <- dbListTables(con)
-                                               # print(db_tables)
-                                               # dbDisconnect(con)
-
-                                               # Connect to sqlite file.
-                                               con <- tryCatch(
-
-                                                       dbConnect(
-                                                               drv    = RSQLite::SQLite(),
-                                                               dbname = c.path.file
-                                                       ),
-                                                       error = function(e) {
-                                                               cat(paste0("\n\nError: ", c.path.file, " results in: '", e$message, "'"))
-                                                       },
-                                                       warning = function(w) {
-                                                               cat(paste0("\n\nWarning: ", c.path.file, " results in: '", w$message, "'"))
-                                                       }
-                                               )
-
-                                               # Check whether c.table.name is in the list of tables.
-                                               if (!c.table.name %in% dbListTables(con)) {
-
-                                                       # Give warning to user.
-                                                       warning(
-                                                               paste0(
-                                                                       c.path.file," does not contain table '",
-                                                                       c.table.name, "', The SQLite does contain the ",
-                                                                       "following tables: ", f_paste(dbListTables(con))
-                                                               )
-                                                       )
-
-                                                       # Disconnect from database.
-                                                       dbDisconnect(con)
-
-                                                       df.temp <- NULL
-
+                                                        c.sheet.name <- v.sheet.name[1]
 
                                                } else {
-
-                                                       # Extract table c.table.name and add column with path name and date
-                                                       # of modification.
-                                                       df.temp <-
-
-                                                               dbGetQuery(
-
-                                                                       con,
-                                                                       paste("select * from", c.table.name)
-                                                               )  %>%
-
-                                                               f_post_processing(
-
-                                                                       c.path.file,
-                                                                       c.delim,
-                                                                       b.add.mod.date.path.file,
-                                                                       b.show.info
-                                                               )
-
-
-                                                       # Disconnect from database.
-                                                       dbDisconnect(con)
-
-                                                       }
-
-                                               return(df.temp)
-
+                                                        c.sheet.name <- v.sheet.name[grepl(c.sheet.name, v.sheet.name)]
                                                }
-                                )
-                       },
 
 
-                       "shp" = {
-
-                               # Read data from SHAPE file.
-                               l.data.object <- lapply(l.path.file,
-
-                                       function(c.path.file) { # c.path.file <- l.path.file[[1]]
-
-                                               # Open shapefile.
-                                               sf.temp <- readOGR(
-
-                                                       dsn   = dirname(c.path.file),
-                                                       layer = gsub("\\.shp$", "", basename(c.path.file))
-                                               )
-
-
-                                               # Open shapefile.
                                                df.temp <-
+                                                       readxl::read_xlsx(
 
-                                                       sf.temp %>%
-
-                                                       # Converteer shapefile in dataframe.
-                                                       as.data.frame(.)  %>%
+                                                               path      = c.path.file,
+                                                               sheet     = c.sheet.name,
+                                                               skip      = n.skip.rows,
+                                                               col_names = b.col.names,
+                                                               col_types = l.col.type,
+                                                               guess_max = n.guess.max
+                                                       ) %>%
 
                                                        f_post_processing(
 
@@ -619,26 +317,47 @@
                                                        )
 
 
+                                               # Check whether one or more of the columns is empty. If so,
+                                               # advice to increase 'guess_max'
+                                               walk(names(df.temp), function(x) {
+
+                                                       if(all(is.na(df.temp[x]))) {
+
+                                                                cat(paste0(
+                                                                       "\nAll cells in column '", x, "' are empty. ",
+                                                                       "Consider increasing 'n.guess.max' to a ",
+                                                                       "number close to the number of rows in the ",
+                                                                       "data frame (",
+                                                                       format(nrow(df.temp), big.mark = ","), ").\n"
+                                                                ))
+                                                       }
+                                               })
+
                                                return(df.temp)
-                                       }
+                                       })
                                )
-                       },
+               },
 
 
-                       "dbf" = {
+               "delim" = {
 
-                               # Read data from DBF file.
+                       # Read data from delimited file. Suppress warnings for not being able to match the right format.
+                       suppressWarnings(
+
                                l.data.object <- lapply(l.path.file,
 
                                        function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                               # Open dbf file.
                                                df.temp <-
 
-                                                       read.dbf(
+                                                       readr::read_delim(
 
-                                                               file  = c.path.file,
-                                                               as.is = TRUE
+                                                               file      = c.path.file,
+                                                               delim     = c.delim,
+                                                               locale    = locale(decimal_mark = c.decimal.mark),
+                                                               trim_ws   = TRUE,
+                                                               col_names = b.col.names,
+                                                               col_types = l.col.type
                                                        )  %>%
 
                                                        f_post_processing(
@@ -651,28 +370,194 @@
 
 
                                                return(df.temp)
-                                       }
+                                       })
                                )
-                       },
+               },
 
 
-                       "gs" = {
+               "rds" = {
 
-                               # Read data from Google Sheet.
-                               l.data.object <- lapply(v.file.string,
+                       # Read data from RDS file.
+                       l.data.object <- lapply(l.path.file,
 
-                                       function(c.file.string) { # c.file.string <- v.file.string[[1]]
+                               function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                               # Open dbf file.
+                                       df.temp <-
+
+                                               readRDS(
+
+                                                       file = c.path.file
+
+                                               )  %>%
+
+                                               f_post_processing(
+
+                                                       c.path.file,
+                                                       c.delim,
+                                                       b.add.mod.date.path.file,
+                                                       b.show.info
+                                               )
+
+
+                                       return(df.temp)
+                               }
+                       )
+               },
+
+               "fst" = {
+
+                       # Read data from FST file.
+                       l.data.object <- lapply(l.path.file,
+
+                               function(c.path.file) { # c.path.file <- l.path.file[[1]]
+
+                                       df.temp <-
+
+                                               read_fst(
+
+                                                       path = c.path.file
+                                               )  %>%
+
+                                               f_post_processing(
+
+                                                       c.path.file,
+                                                       c.delim,
+                                                       b.add.mod.date.path.file,
+                                                       b.show.info
+                                               )
+
+
+                                       return(df.temp)
+                               }
+                       )
+               },
+
+               "xml" = {
+
+                       # Read data from XML file.
+                       l.data.object <- lapply(l.path.file,
+
+                               function(c.path.file) { # c.path.file <- l.path.file[[1]]
+
+                                       df.temp <-
+
+                                               xmlParse(
+
+                                                       file = c.path.file
+                                               ) %>%
+
+                                               xmlToDataFrame()  %>%
+
+                                               f_post_processing(
+
+                                                       c.path.file,
+                                                       c.delim,
+                                                       b.add.mod.date.path.file,
+                                                       b.show.info
+                                               )
+
+
+                                       return(df.temp)
+                               }
+                       )
+               },
+
+
+               "parquet" = {
+
+                       # Read data from PARQUET file.
+                       l.data.object <- lapply(l.path.file,
+
+                               function(c.path.file) { # c.path.file <- l.path.file[[1]]
+
+                                       df.temp <-
+
+                                               read_parquet(
+
+                                                       file = c.path.file
+                                               )  %>%
+
+                                               f_post_processing(
+
+                                                       c.path.file,
+                                                       c.delim,
+                                                       b.add.mod.date.path.file,
+                                                       b.show.info
+                                               )
+
+
+                                       return(df.temp)
+                               }
+                       )
+               },
+
+
+               "sqlite" = {
+
+                       # Check whether a table name is provided.
+                       if (is.null(c.table.name)) stop(paste0("Missing c.table.name in function input."))
+
+                       l.data.object <- lapply(
+
+                               l.path.file,
+
+                               function(c.path.file) {
+
+                                       # c.path.file <- l.path.file[[2]]
+                                       #c.table.name <- "borden"
+                                       #c.path.file <- l.path.file[[1]]
+                                       #print(c.path.file)
+
+                                       # db_path <- file.path(c.rootfolder.read, "SQLITE", df.temp$file.folder[1], df.temp$file.name[1])
+                                       # con <- dbConnect(SQLite(), dbname = db_path)
+                                       # db_tables <- dbListTables(con)
+                                       # print(db_tables)
+                                       # dbDisconnect(con)
+
+                                       # Connect to sqlite file.
+                                       con <- tryCatch(
+
+                                               dbConnect(
+                                                       drv    = RSQLite::SQLite(),
+                                                       dbname = c.path.file
+                                               ),
+                                               error = function(e) {
+                                                       cat(paste0("\n\nError: ", c.path.file, " results in: '", e$message, "'"))
+                                               },
+                                               warning = function(w) {
+                                                       cat(paste0("\n\nWarning: ", c.path.file, " results in: '", w$message, "'"))
+                                               }
+                                       )
+
+                                       # Check whether c.table.name is in the list of tables.
+                                       if (!c.table.name %in% dbListTables(con)) {
+
+                                               # Give warning to user.
+                                               warning(
+                                                       paste0(
+                                                               c.path.file," does not contain table '",
+                                                               c.table.name, "', The SQLite does contain the ",
+                                                               "following tables: ", f_paste(dbListTables(con))
+                                                       )
+                                               )
+
+                                               # Disconnect from database.
+                                               dbDisconnect(con)
+
+                                               df.temp <- NULL
+
+
+                                       } else {
+
+                                               # Extract table c.table.name and add column with path name and date
+                                               # of modification.
                                                df.temp <-
 
-                                                       read_sheet(
+                                                       dbGetQuery(
 
-                                                               ss        = c.file.string,
-                                                               sheet     = c.sheet.name,
-                                                               col_names = b.col.names,
-                                                               col_types = l.col.type
-                                                        )  %>%
+                                                               con,
+                                                               paste("select * from", c.table.name)
+                                                       )  %>%
 
                                                        f_post_processing(
 
@@ -683,32 +568,140 @@
                                                        )
 
 
-                                               return(df.temp)
+                                               # Disconnect from database.
+                                               dbDisconnect(con)
+
+                                               }
+
+                                       return(df.temp)
+
                                        }
-                               )
-                       })
+                        )
+               },
+
+
+               "shp" = {
+
+                       # Read data from SHP file.
+                       l.data.object <- lapply(l.path.file,
+
+                               function(c.path.file) { # c.path.file <- l.path.file[[1]]
+
+                                       # Read geospatial vector data from an
+                                       # external file or a database connection.
+                                       # This data includes not just the shapes
+                                       # (geometries like points, lines, or
+                                       # polygons) but also the descriptive
+                                       # attribute data that accompanies them.
+                                       df.temp <-  st_read(c.path.file) %>%
+
+                                               # Extract geometry data.
+                                               st_geometry() %>%
+
+                                               # Convert to coordinates.
+                                               st_coordinates() %>%
+
+                                               # Convert matrix to tibble.
+                                               as_tibble()  %>%
+
+                                               f_post_processing(
+
+                                                       c.path.file,
+                                                       c.delim,
+                                                       b.add.mod.date.path.file,
+                                                       b.show.info
+                                               )
+
+                                       return(df.temp)
+                               }
+                       )
+               },
+
+
+               "dbf" = {
+
+                       # Read data from DBF file.
+                       l.data.object <- lapply(l.path.file,
+
+                               function(c.path.file) { # c.path.file <- l.path.file[[1]]
+
+                                       # Open dbf file.
+                                       df.temp <-
+
+                                               read.dbf(
+
+                                                       file  = c.path.file,
+                                                       as.is = TRUE
+                                               )  %>%
+
+                                               f_post_processing(
+
+                                                       c.path.file,
+                                                       c.delim,
+                                                       b.add.mod.date.path.file,
+                                                       b.show.info
+                                               )
+
+
+                                       return(df.temp)
+                               }
+                       )
+               },
+
+
+               "gs" = {
+
+                       # Read data from Google Sheet.
+                       l.data.object <- lapply(v.file.string,
+
+                               function(c.file.string) { # c.file.string <- v.file.string[[1]]
+
+                                       # Open dbf file.
+                                       df.temp <-
+
+                                               read_sheet(
+
+                                                       ss        = c.file.string,
+                                                       sheet     = c.sheet.name,
+                                                       col_names = b.col.names,
+                                                       col_types = l.col.type
+                                                )  %>%
+
+                                               f_post_processing(
+
+                                                       c.path.file,
+                                                       c.delim,
+                                                       b.add.mod.date.path.file,
+                                                       b.show.info
+                                               )
+
+
+                                       return(df.temp)
+                               }
+                       )
+               })
 
 
 
-                # Bind list of data frames in one data frame.
-                df.data.object <- suppressWarnings(bind_rows(l.data.object))
+        # Bind list of data frames in one data frame.
+        df.data.object <- suppressWarnings(bind_rows(l.data.object))
 
-                # Clean up header names when requested.
-                if(b.clean.up.header.names) {
+        # Clean up header names when requested.
+        if(b.clean.up.header.names) {
 
-                        df.data.object <- df.data.object %>%
+                df.data.object <- df.data.object %>%
 
-                                # Clean-up header names.
-                                f_clean_up_header_names()
-                }
+                        # Clean-up header names.
+                        f_clean_up_header_names()
+        }
 
-                # Convert to tibble.
-                # df.data.object <- as_tibble(df.data.object)
+        # Convert to tibble.
+        # df.data.object <- as_tibble(df.data.object)
 
-                # Add break lines.
-                cat("\n\n")
+        # Add break lines.
+        cat("\n\n")
 
-                # Return data.object.
-                return(df.data.object)
+        # Return data.object.
+        return(df.data.object)
 
-                }
+        }

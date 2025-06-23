@@ -386,9 +386,13 @@
         # # PERMANENT TEXT LABEL.
         # ##############################################
         #
-        # df.text                 = NULL
-        # v.coord.text            = c("text.lon", "text.lat")
-        # c.text.label            = "text.label"
+        # df.text                   = NULL
+        # v.coord.text              = c("text.lon", "text.lat")
+        # c.text.label              = "text.label"
+        # c.text.direction          = 'left'
+        # c.text.color              = 'black'
+        # c.text.font.size          = '25px'
+        # n.text.opacity            = 1
 
 
 
@@ -463,8 +467,10 @@
         # c.leaflet.title         = "Analyse ISA proofing"
         # c.legend.title          = "Type"
         # v.coord.point.midpoint  = c(df.boundary$lon[1], df.boundary$lat[1])
-        # n.zoom                  = 18
+        # n.zoom                  = 17
         # b.save.leaflet          = TRUE
+        # b.add.date              = FALSE
+        # b.add.time              = FALSE
         # df.point                = df.point.plot
         # v.coord.point           = c("point.lon", "point.lat")
         # c.id.point              = "point.id"
@@ -476,51 +482,23 @@
         # c.stroke.factor.point   = "stroke.type"
         # df.stroke.weight.point  = df.stroke.weight.point.
         # c.stroke.weight.point   = "stroke.type"
-        # n.opacity.fill          = 0.9
-        # n.opacity.stroke        = 0.9
+        # n.opacity.fill          = 1
+        # n.opacity.stroke        = 1
         # v.info.tag.point.label  = v.tag.label
         # v.info.veld.point.label = v.veld.label
         # v.info.tag.point.popup  = v.tag.popup
         # v.info.veld.point.popup = v.veld.popup
         # df.line                 = df.line.plot
         # v.coord.line            = c("lon", "lat")
-        # c.id.line               = "id"
+        # c.id.line               = "line.id"
         # df.color.line           = df.color.line.
         # c.color.line            = "line.type"
         # df.weight.line          = df.weight.line.
         # c.weight.line           = "line.type"
         # n.opacity.line          = 1
-        # df.polygon              = df.buffer
-        # v.coord.polygon         = c("buffer.lon", "buffer.lat")
-        # c.id.polygon            = "wegsegment.id"
         # df.text                 = df.leak.cluster.id
         # v.coord.text            = c("center.x", "center.y")
         # c.text.label            = "leak.cluster.id"
-
-        # KAIOS
-        # df.point            = df.bord.kaios
-        # v.coord.point       = c("bord.x", "bord.y")
-        # c.id.point          = "bord.id"
-        # c.fill.factor.point = "bord.flag"
-
-        # df.point       = df.cell %>% select(point.x = cell.x.mid, point.y = cell.y.mid) %>% mutate(id = seq(n()))
-        # c.id.point     = "id"
-        # v.coord.point  = c("cell.x", "cell.y")
-        # b.save.leaflet = TRUE
-
-        # c.leaflet.title = paste0(
-        #
-        #         "Cell Centers t.b.v. ISA Analyse Den Bosch (cellgrootte ",
-        #         n.cell.width/1000, "x", n.cell.width/1000, "km2). Label: cell ID (#centers)")
-        #
-        # df.point       = df.cell %>% select(point.x = cell.x.mid, point.y = cell.y.mid) %>% mutate(id = seq(n()))
-        # c.id.point     = "id"
-        # v.coord.point  = c("point.x", "point.y")
-        # df.text        = df.cell %>% mutate(text.label = paste0(cell.seq, " (", n.center, ")"))
-        # v.coord.text   = c("cell.x.mid", "cell.y.mid")
-        # c.text.label   = "text.label"
-        # b.save.leaflet = FALSE
-
 
         # SCHOOLZONE
         # c.leaflet.title         = "Voorbeelden Schoolzones Rotterdam"
@@ -2169,8 +2147,25 @@
                 df.point <- df.point %>%
 
                         mutate(
-                                point.label = v.point.label,
-                                point.popup = v.point.popup
+                                # Original
+                                #point.label = v.point.label,
+                                #point.popup = v.point.popup
+
+                                # Clean non-UTF-8 or otherwise malformed text.
+                                point.label = iconv(
+                                        v.point.label,
+                                        from = "",
+                                        to   = "UTF-8",
+                                        sub  = "byte"
+                                ),
+
+                                # Clean non-UTF-8 or otherwise malformed text.
+                                point.popup = iconv(
+                                        v.point.popup,
+                                        from = "",
+                                        to   = "UTF-8",
+                                        sub  = "byte"
+                                )
                         )
 
                 # Define POINT fill colors.

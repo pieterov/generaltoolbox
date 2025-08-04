@@ -683,8 +683,10 @@
 
 
 
-        # Bind list of data frames in one data frame.
-        df.data.object <- suppressWarnings(bind_rows(l.data.object))
+        # Bind list of data frames in one data frame. Added 'dplyr::' to prevent
+        # calling this function from data.table. From dplyr it automatically
+        # binds by column name.
+        df.data.object <- suppressWarnings(dplyr::bind_rows(l.data.object))
 
         # Clean up header names when requested.
         if(b.clean.up.header.names) {

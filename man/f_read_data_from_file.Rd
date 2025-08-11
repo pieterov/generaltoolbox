@@ -14,6 +14,7 @@ f_read_data_from_file(
   c.sheet.name = NULL,
   n.skip.rows = 0,
   c.delim = NULL,
+  c.decimal.mark = ".",
   b.col.names = TRUE,
   l.col.type = NULL,
   n.guess.max = 1000,
@@ -42,6 +43,8 @@ f_read_data_from_file(
 \item{n.skip.rows}{In case of xls (default: 0).}
 
 \item{c.delim}{In case of txt, csv, delim (default: NULL).}
+
+\item{c.decimal.mark}{In case of txt, csv, delim (default: '.').}
 
 \item{b.col.names}{Do the data contain header names? (default: TRUE).}
 
@@ -80,6 +83,7 @@ f_read_data_from_file(
      c.sheet.name             = NULL,
      n.skip.rows              = 0,
      c.delim                  = NULL,
+     c.decimal.mark           = ".",
      b.col.names              = TRUE,
      l.col.type               = NULL,
      n.guess.max              = 1000,

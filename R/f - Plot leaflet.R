@@ -500,6 +500,46 @@
         # v.coord.text            = c("center.x", "center.y")
         # c.text.label            = "leak.cluster.id"
 
+
+        # c.leaflet.title         = "2025 06 16 - Landsmeer - GM0415 - ISA"
+        # c.legend.title          = "Type"
+        # n.zoom                  = 17
+        # b.save.leaflet          = TRUE
+        # b.add.date              = FALSE
+        # b.add.time              = FALSE
+        # # POINTS
+        # df.point                = df.point.all
+        # v.coord.point           = l.output$v.coord.point
+        # c.id.point              = l.output$c.id.point
+        # df.fill.point           = l.output$df.fill.point
+        # c.fill.factor.point     = l.output$c.fill.factor.point
+        # df.weight.point         = l.output$df.weight.point
+        # c.weight.point          = l.output$c.weight.point
+        # df.stroke.color.point   = l.output$df.stroke.color.point
+        # c.stroke.factor.point   = l.output$c.stroke.factor.point
+        # df.stroke.weight.point  = l.output$df.stroke.weight.point
+        # c.stroke.weight.point   = l.output$c.stroke.weight.point
+        # n.opacity.fill          = l.output$n.opacity.fill
+        # n.opacity.stroke        = l.output$n.opacity.stroke
+        # v.info.tag.point.label  = l.output$v.info.tag.point.label
+        # v.info.veld.point.label = l.output$v.info.veld.point.label
+        # v.info.tag.point.popup  = l.output$v.info.tag.point.popup
+        # v.info.veld.point.popup = l.output$v.info.veld.point.popup
+        # # LINES
+        # df.line                 = df.line.all.cleaned
+        # v.coord.line            = l.output$v.coord.line
+        # c.id.line               = l.output$c.id.line
+        # df.color.line           = l.output$df.color.line
+        # c.color.line            = l.output$c.color.line
+        # df.weight.line          = l.output$df.weight.line
+        # c.weight.line           = l.output$c.weight.line
+        # n.opacity.line          = l.output$n.opacity.line
+        # # TEXT
+        # df.text                 = df.text.all
+        # v.coord.text            = l.output$v.coord.text
+        # c.text.label            = l.output$c.text.label
+
+
         # SCHOOLZONE
         # c.leaflet.title         = "Voorbeelden Schoolzones Rotterdam"
         # c.legend.title          = "Categorie"
@@ -2295,7 +2335,7 @@
                 ) %>%
 
 
-                # Set base map - Toner Light.
+                # Set base map.
                 addProviderTiles(
 
                         # https://maps.stamen.com/stadia-partnership/
@@ -2622,15 +2662,21 @@
 
                         sldf.line <- SpatialLinesDataFrame(
 
-                                sl   = sl.line,
+                                sl = sl.line,
 
                                 # Rownames is deprecated for tibbles. Therefore
                                 # dataframe set to as.data.frame.
                                 data = as.data.frame(df.line) %>%
 
-                                        select(all_of(c.id.line), color.line.value, weight.line.value) %>%
+                                        select(
+                                                all_of(c.id.line),
+                                                color.line.value,
+                                                weight.line.value
+                                        ) %>%
 
                                         distinct() %>%
+
+                                        #add_count(line.id) %>% filter(n>1) %>% arrange(line.id)
 
                                         # Add rownames.
                                         tibble::column_to_rownames(c.id.line)

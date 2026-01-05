@@ -237,7 +237,13 @@
         # Functions
         ########################################################################################################
 
-        f_post_processing <- function(df.input, c.path.file, c.delim, b.add.mod.date.path.file, b.show.info) {
+        f_post_processing <- function(
+                df.input,
+                c.path.file,
+                c.delim,
+                b.add.mod.date.path.file,
+                b.show.info
+        ) {
 
 
                 # Add column with path name and date of modification.
@@ -667,7 +673,7 @@
                                                        col_types = l.col.type
                                                 )  %>%
 
-                                               f_post_processing(
+                                                f_post_processing(
 
                                                        c.path.file,
                                                        c.delim,
@@ -695,6 +701,12 @@
 
                         # Clean-up header names.
                         f_clean_up_header_names()
+        }
+                
+        # Convert to tibble if not already.
+        if(!tibble::is_tibble(df.data.object)) {
+
+                df.data.object <- as_tibble(df.data.object)
         }
 
         # Convert to tibble.

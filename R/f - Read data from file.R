@@ -703,11 +703,6 @@
                         f_clean_up_header_names()
         }
                 
-        # Convert to tibble if not already.
-        if(!tibble::is_tibble(df.data.object)) {
-
-                df.data.object <- as_tibble(df.data.object)
-        }
 
         # Convert to tibble.
         # df.data.object <- as_tibble(df.data.object)

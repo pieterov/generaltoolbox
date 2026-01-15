@@ -132,23 +132,24 @@
 
 
         # Whether frequency is added determines by what feature is sorted.
-        v.result <- df.result %>%
 
-                purrr::when(
+        # 1. Handle sorting
+        v.result <- df.result
 
-                         b.sort.by.freq ~ arrange(., desc(n)),
-                         b.sort.by.val  ~ arrange(., x),
-                         TRUE           ~ .
-                ) %>%
+        if (b.sort.by.freq) {
+                v.result <- v.result %>% arrange(desc(n))
+        } else if (b.sort.by.val) {
+                v.result <- v.result %>% arrange(x)
+        }
 
-                purrr::when(
+        # 2. Handle pulling the result
+        if (b.show.freq) {
+                v.result <- v.result %>% pull(y)
+        } else {
+                v.result <- v.result %>% pull(x)
+        }
 
-                         b.show.freq ~ pull(., y),
-                         TRUE        ~ pull(., x)
-                )
-
-
-
+                
         #########################################################################
         # Return
         #########################################################################

@@ -5,7 +5,7 @@
 #' @author Pieter Overdevest
 #'
 #' @param v.input Vector with strings to be converted.
-#' @param c.format Format of date in the strings (default: "%d/%m/%Y").
+#' @param c.format Format of date in the strings (default: "\%d/\%m/\%Y").
 #' @param c.origin Starting date (default: "1899-12-30")
 #'
 #' @returns Vector with dates.
@@ -21,9 +21,9 @@
 #'            c.origin = "1899-12-30"
 #' )
 
-        #################################################################################
+        #######################################################################
         # FUNCTION.
-        #################################################################################
+        #######################################################################
 
         f_as_date <- function(
 
@@ -34,57 +34,44 @@
                 c.origin = "1899-12-30"
         ) {
 
-
-        ######################################################################################
-        # TEST
-        ######################################################################################
-
-        # v.input <- c("16/03/2022", "16/03/2022", "16/03/2022", "44635", "44634", "44634", "44635", NA, "pieter")
-
-
-        ######################################################################################
-        # ERROR CHECKS
-        ######################################################################################
-
-
-        ######################################################################################
-        # INITIALIZATION
-        ######################################################################################
-
-        ######################################################################################
+                
+        #######################################################################
         # PROCESS
-        ######################################################################################
-
-        v.output <- suppressWarnings(
-
-                case_when(
-
-                        !is.na(as.Date(v.input,             format = "%d/%m/%Y"))    ~ as.Date(v.input,             format = "%d/%m/%Y"),
-                        !is.na(as.Date(as.numeric(v.input), origin = "1899-12-30"))  ~ as.Date(as.numeric(v.input), origin = "1899-12-30"),
-                        TRUE                                                         ~ NA_Date_
-                )
-        )
-
-
-        ######################################################################################
+        #######################################################################
+        
+        # 1. Try converting using the format string (Strategy A)
+        # We suppress warnings here because non-matching formats will naturally warn
+        v.date.fmt <- suppressWarnings(as.Date(v.input, format = c.format))
+        
+        # 2. Try converting using the numeric origin (Strategy B)
+        # Only necessary if Strategy A produced NAs, but fast to compute for all
+        v.date.num <- suppressWarnings(as.Date(as.numeric(v.input), origin = c.origin))
+        
+        # 3. Coalesce: Take result from A; if NA, take result from B
+        v.output <- dplyr::coalesce(v.date.fmt, v.date.num)
+        
+                
+        #######################################################################
         # ERROR CHECK
-        ######################################################################################
-
-        v.temp <- v.input[!is.na(v.input) & is.na(year(v.output))]
-
+        #######################################################################
+        
+        # Identify values that were not NA originally but became NA (conversion failed)
+        v.temp <- v.input[!is.na(v.input) & is.na(v.output)]
+        
         if(length(v.temp) > 0) {
 
                 warning(paste0(
-
-                        "Note, the following 'dates' could not be converted to a valid date format: ",
-                        f_paste(v.temp, b.quotation = TRUE)
+                        "Note, the following 'dates' could not be converted to a ",
+                        "valid date format: ",
+                        # Assuming f_paste is another function in your package:
+                        f_paste(v.temp, b.quotation = TRUE) 
                 ))
         }
+                
 
-
-        ######################################################################################
+        #######################################################################
         # RETURN
-        ######################################################################################
+        #######################################################################
 
         return(v.output)
 

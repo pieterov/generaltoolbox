@@ -1,11 +1,11 @@
 Package: generaltoolbox
 Type: Package
 Title: General toolbox by Pieter Overdevest
-Version: 1.1.249
+Version: 1.1.250
 Author: Pieter Overdevest
 Maintainer: The package maintainer <pieter@innovatewithdata.nl>
 Description: This package contains general toolbox functions.
 License: none
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.3

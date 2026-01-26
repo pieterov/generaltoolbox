@@ -19,16 +19,15 @@
 #' @export
 #'
 #' @examples
-# f_vector_info(
-#
-#      v.input   = c(0, 2, 2, NA, NA, NA, 0/0, -0/0, -0/0, 0/0, 6/0, -7/0, -8/0, 9/0, 10/0),
-#      name      = "Pieter",
-#      n.top     = 10,
-#      show.freq = TRUE,
-#      c.sort.by = 'frequency',
-#      n.width   = 29
-# )
-
+#' f_vector_info(
+#'
+#'     v.input   = c(0, 2, 2, NA, NA, NA, 0/0, -0/0, -0/0, 0/0, 6/0, -7/0, -8/0, 9/0, 10/0),
+#'     name      = "Pieter",
+#'     n.top     = 10,
+#'     show.freq = TRUE,
+#'     c.sort.by = 'frequency',
+#'     n.width   = 29
+#')
 
         #################################################################################
         # FUNCTION.

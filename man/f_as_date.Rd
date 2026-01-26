@@ -9,7 +9,7 @@ f_as_date(v.input, c.format = "\%d/\%m/\%Y", c.origin = "1899-12-30")
 \arguments{
 \item{v.input}{Vector with strings to be converted.}
 
-\item{c.format}{Format of date in the strings (default: "%d/%m/%Y").}
+\item{c.format}{Format of date in the strings (default: "\%d/\%m/\%Y").}
 
 \item{c.origin}{Starting date (default: "1899-12-30")}
 }

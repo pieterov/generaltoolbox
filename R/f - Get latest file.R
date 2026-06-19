@@ -30,32 +30,32 @@
 #'        c.show.report         = "all"
 #' )
 
-        #################################################################################
-        # FUNCTION.
-        #################################################################################
+#################################################################################
+# FUNCTION.
+#################################################################################
 
-        f_get_latest_file <- function(
+f_get_latest_file <- function(
 
-                # String to search for in the filename.
-                c.file.string,
+        # String to search for in the filename.
+        c.file.string,
 
-                # File type.
-                c.file.type,
+        # File type.
+        c.file.type,
 
-                # Path where file should be searched for.
-                c.path,
+        # Path where file should be searched for.
+        c.path,
 
-                # Exact match or not.
-                b.exact.match         = FALSE,
-                c.file.string.exclude = NULL,
+        # Exact match or not.
+        b.exact.match         = FALSE,
+        c.file.string.exclude = NULL,
 
-                # In case of Excel file.
-                c.sheet.name          = NULL,
+        # In case of Excel file.
+        c.sheet.name          = NULL,
 
-                # Show all feedback.
-                c.show.report         = "all" # alternative: 'none', 'minimal', 'all'
+        # Show all feedback.
+        c.show.report         = "all" # alternative: 'none', 'minimal', 'all'
 
-                ) {
+        ) {
 
 
 ##############################################################################
@@ -132,7 +132,9 @@
                         version.number = as.numeric(version.number),
 
                         # Get boolean to express if file is highest version.
-                        highest.version = ifelse(version.number == max(version.number), TRUE, FALSE)) %>%
+                        highest.version = ifelse(
+                                version.number == max(version.number), TRUE, FALSE)
+                        ) %>%
 
                 # Filter the file(s) with the highest version number.
                 filter(highest.version) %>%
@@ -143,12 +145,33 @@
                         # Get the last modified date for file.
                         date.last.mod = file.info(path.file)$mtime,
 
-                        # Get boolean to express if file is the most recently modifed version.
-                        most.recent.mod.version = ifelse(date.last.mod == max(date.last.mod), TRUE, FALSE)) %>%
+                        # Get boolean to express if file is the most recently
+                        #  modifed version.
+                        most.recent.mod.version = ifelse(
+                                date.last.mod == max(date.last.mod),
+                                TRUE,
+                                FALSE
+                        )
+                ) %>%
 
                 # Filter the file with the most recent date of modification.
                 filter(most.recent.mod.version == TRUE)
 
+        # Check the number of rows of df.type. There should be one row left.
+        if (nrow(df.type) > 1) {
+        
+                # Collapse the conflicting file names into a single string
+                c.conflicting.files <- paste(df.type$files, collapse = ", ")
+                
+                stop(paste0(
+                        "There are multiple files that comply with the ",
+                        "requirements given by the user that have exactly ",
+                        "the same date of last modification. ",
+                        "Observed files: '", c.conflicting.files, "' in path '",
+                        c.path, ".' The user is requested to check the files ",
+                        "in said folder."
+                ))
+        }
 
         # Communicate stats to the user.
         c.path.file <- as.character(df.type$path.file)
@@ -239,4 +262,4 @@
         # Return file, incl path.
         return(c.path.file)
 
-        }
+}

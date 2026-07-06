@@ -63,9 +63,6 @@
         # c.file.type  = "xls"
         # b.return.md5 = TRUE
 
-        # c.path       = path.datachamp.dropbox
-        # c.file.type  = "csv"
-
         # c.path       = c.folder.source
         # b.recursive  = FALSE
         # c.file.type  = "qmd"

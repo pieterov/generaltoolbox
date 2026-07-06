@@ -68,19 +68,6 @@
         # v.add.time     = FALSE
         # n.day.max      = 100
 
-        # df.input      = df.datachamp.increment.change
-        # c.file.string = "Increment Changes"
-        # c.path        = paste0(path.datachamp.dropbox, "Increment Changes - ", str_to_title(c.update.type), "/")
-        # c.file.type   = "xls"
-        # n.day.max     = 7
-
-        # df.input      = df.datachamp.change.log
-        # c.file.string = "Change Log"
-        # c.path        = paste0(path.datachamp.dropbox, "Change Log - ", str_to_title(c.update.type), "/")
-        # c.file.type   = "xls"
-        # n.day.max     = 7
-
-
 ##############################################################################################
 # ERROR CHECK!
 ##############################################################################################

@@ -229,13 +229,6 @@
         # c.file.string = "Data Export"
         # v.add.time    = FALSE
 
-        # x             = df.datachamp.baseline.updated
-        # c.file.string = "Oletti Productfeed - Baseline"
-        # v.path        = rep(paste0(path.datachamp.dropbox, "Baseline - ", str_to_title(c.update.type), "/"), 2)
-        # v.add.date    = c(TRUE, FALSE)
-        # v.add.time    = c(TRUE, FALSE)
-
-
 ##############################################################################
 # ERROR CHECK
 ##############################################################################

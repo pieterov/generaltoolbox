@@ -81,6 +81,24 @@
         # v.button.url    = c(c.export.from, c.ipsm.allocatie.log, c.data.export, c.data.rds, "https://ipsm.nl/")
         # c.image.url     = c.image.url.hrgroep
 
+        # c.slack.hook    = c.slack.hook
+        # c.marker        = "v"
+        # c.title         = c.file.string
+        # c.message.main  = paste0(
+        #         "File - ",
+        #         paste0(c.pre.file.string, c.filename),
+        #         " - was successfully downloaded from the source."
+        # )
+        # v.message.list  = "See IPSm/Data/EXPORT/."
+        # v.button.txt    = c(
+        #         'Source', 'Log',
+        #         'Destination', 'RDS', 'IPSm'
+        # )
+        # v.button.url    = c(
+        #         c.export.from, c.ipsm.allocatie.log,
+        #         c.data.export, c.data.rds, "https://ipsm.nl/"
+        # )
+        # c.image.url     = c.image.url.hrgroep
 
         # Translate marker(s).
         c.marker.updated <- lapply(
@@ -118,7 +136,7 @@
                         v.message.list
                 ),
 
-                collapse = "\n"
+                collapse = "\\n"
 
         ) %>% gsub("'", "", .)
 
@@ -144,8 +162,8 @@
 
                                         'type': 'mrkdwn',
                                         'text': '*",
-                                                c.marker.updated, "\t" , c.title, "*\n\n",
-                                                c.message.main, "\n\n", c.message.list, "'
+                                                c.marker.updated, "\\t" , c.title, "*\\n\\n",
+                                                c.message.main, "\\n\\n", c.message.list, "'
                                 }", c.image.url.message,
                         "},
 
@@ -164,9 +182,13 @@
                                                         'text': {
                                                                 'type': 'plain_text',
                                                                 'text': ':spiral_note_pad: ", c.button.txt, "'
-                                                        },
-                                                        'url': '", c.button.url, "'
-                                                        }"
+                                                        }",
+                                                        ifelse(
+                                                                startsWith(c.button.url, "http"),
+                                                                paste0(",'url': '", c.button.url, "'"),
+                                                                ""
+                                                        ),
+                                                        "}"
                                                 )
                                                 },
 
@@ -195,9 +217,11 @@
                 		'type': 'divider'
                 	}
 
-                ]}")
+                ]}") 
 
 
+        # Convert single quotes to double quotes for valid JSON.
+        c.message <- gsub("'", '"', c.message)
 
 
         # How many times to attempt to send Slack.
@@ -217,9 +241,9 @@
                 result <- try({
 
                         httr::POST(
-                                url    = c.slack.hook,
-                                encode = "json",
-                                body   =  c.message
+                                url  = c.slack.hook,
+                                body = c.message,
+                                httr::content_type_json()
                         )
 
                         # Testing.

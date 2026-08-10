@@ -1,41 +1,35 @@
 #' @title  Apply function to list of items
 #'
-#' @description Applies function to list of items.
+#' @description Applies function to list of items in parallel or sequentially.
 #'
 #' @author Pieter Overdevest
 #'
 #' @param l.input List of items.
 #' @param f.input Function to apply to each item.
-#' @param mc.cores Number of cores (default: NULL)
+#' @param mc.cores Number of cores (default: NULL). If NULL or 1, runs sequentially.
 #'
 #' @returns List of items that have been processed with said function.
 #'
-#' @details -
+#' @details Uses future.apply for cross-platform parallel execution (compatible with Positron, RStudio, macOS, and Windows).
 #'
 #' @export
 #'
 #' @examples
 #' l.output <- f_lapply(
-#'
 #'      l.input  = list(1, 2, 3),
-#'      f.input  = function(x) {x+2},
+#'      f.input  = function(x) {x + 2},
 #'      mc.cores = NULL
 #' )
-
 
         #################################################################################
         # FUNCTION.
         #################################################################################
 
         f_lapply <- function(
-
                 l.input,
-
                 f.input,
-
                 mc.cores = NULL
         ) {
-
 
         ######################################################################################
         # TEST
@@ -58,80 +52,52 @@
         # ERROR CHECKS
         ######################################################################################
 
-        if(!any(c("list", "numeric", "integer", "character") %in% class(l.input))) {
-
+        if (!is.list(l.input) && !is.numeric(l.input) && !is.character(l.input)) {
                 stop("Note, input to f_lapply - l.input - must be a list or vector of numeric or character values!")
         }
 
-
-        if(class(f.input) != "function") {
-
+        if (!is.function(f.input)) {
                 stop("Note, input to f_lapply - f.input - must be a function!")
         }
 
 
-        if(!is.null(mc.cores)) {
+        if (!is.null(mc.cores)) {
+                n_cores_available <- parallel::detectCores(logical = TRUE)
 
-                if(mc.cores > detectCores()) {
-
+                if (mc.cores > n_cores_available) {
                         stop(paste0(
-
                                 "Note, mc.cores (", mc.cores,
-
                                 ") exceeds the number of cores in your system (",
-
-                                detectCores(), ")!"
+                                n_cores_available, ")!"
                         ))
                 }
         }
-
-
-        ######################################################################################
-        # INITIALIZATION
-        ######################################################################################
 
         ######################################################################################
         # PROCESS
         ######################################################################################
 
-        if (!is.null(mc.cores) & (
+        if (!is.null(mc.cores) && mc.cores > 1) {
 
-                f_who_am_i() %in% c(
+                # Set up background process workers
+                future::plan(future::multisession, workers = mc.cores)
+                
+                # Ensure plan resets back to sequential processing on exit/error
+                on.exit(future::plan(future::sequential), add = TRUE)
 
-                        # MacBook Pro
-                        "Pieters-MacBook-Pro.local", "Pieters-MBP.home",
-
-                        # Mac Studio
-                        "Pieters-Mac-Studio.local"
-                        )
-                )
-        ) {
-
-                l.output <- mclapply(
-
+                l.output <- future.apply::future_lapply(
                         X        = l.input,
-
                         FUN      = f.input,
-
-                        mc.cores = mc.cores
+                        future.seed = TRUE
                 )
-
 
         } else {
 
                 l.output <- lapply(
-
                         X        = l.input,
-
                         FUN      = f.input
                 )
         }
-
-
-        ######################################################################################
-        # ERROR CHECK
-        ######################################################################################
-
 
         ######################################################################################
         # RETURN

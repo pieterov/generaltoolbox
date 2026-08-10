@@ -4,8 +4,9 @@
 #'
 #' @author Pieter Overdevest
 #'
-#' @param l.input List of items.
-#' @param f.input Function to apply to each item.
+#' @param l.input  List of items.
+#' @param f.input  Function to apply to each item.
+#' @param ...      Additional arguments passed to f.input.
 #' @param mc.cores Number of cores (default: NULL). If NULL or 1, runs sequentially.
 #'
 #' @returns List of items that have been processed with said function.
@@ -28,6 +29,7 @@
         f_lapply <- function(
                 l.input,
                 f.input,
+                ...,
                 mc.cores = NULL
         ) {
 
@@ -53,13 +55,15 @@
         ######################################################################################
 
         if (!is.list(l.input) && !is.numeric(l.input) && !is.character(l.input)) {
-                stop("Note, input to f_lapply - l.input - must be a list or vector of numeric or character values!")
+                stop(
+                        "Note, input to f_lapply - l.input - must be a list or vector of ",
+                        "numeric or character values!"
+                )
         }
 
         if (!is.function(f.input)) {
                 stop("Note, input to f_lapply - f.input - must be a function!")
         }
-
 
         if (!is.null(mc.cores)) {
                 n_cores_available <- parallel::detectCores(logical = TRUE)
@@ -86,16 +90,19 @@
                 on.exit(future::plan(future::sequential), add = TRUE)
 
                 l.output <- future.apply::future_lapply(
-                        X        = l.input,
-                        FUN      = f.input,
-                        future.seed = TRUE
+                        X               = l.input,
+                        FUN             = f.input,
+                        ...,
+                        future.seed     = TRUE,
+                        future.packages = .packages()
                 )
 
         } else {
 
                 l.output <- lapply(
-                        X        = l.input,
-                        FUN      = f.input
+                        X   = l.input,
+                        FUN = f.input,
+                        ...
                 )
         }
 
@@ -104,6 +111,4 @@
         ######################################################################################
 
         return(l.output)
-
-        }
-
+}

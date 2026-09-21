@@ -179,7 +179,34 @@ f_get_latest_file <- function(
         # If filetype is 'xls''
         if(c.file.type == "xls") {
 
-                v.sheet.name <- readxl::excel_sheets(c.path.file)
+                # Retry a few times: cloud-synced files (e.g. OneDrive) can briefly be
+                # unavailable/incomplete (cloud-only placeholder still hydrating), which
+                # makes them fail to open as a valid zip/xlsx.
+                v.sheet.name <- NULL
+                n.attempt    <- 1
+
+                while(is.null(v.sheet.name) && n.attempt <= 6) {
+
+                        v.sheet.name <- tryCatch(
+                                readxl::excel_sheets(c.path.file),
+                                error = function(e) NULL
+                        )
+
+                        if(is.null(v.sheet.name)) {
+
+                                Sys.sleep(5)
+                                n.attempt <- n.attempt + 1
+                        }
+                }
+
+                if(is.null(v.sheet.name)) {
+
+                        stop(paste0(
+                                "Could not open '", c.path.file, "' as an Excel file after ",
+                                n.attempt - 1, " attempts. The file may not be fully synced ",
+                                "locally yet (e.g. a OneDrive cloud-only placeholder)."
+                        ))
+                }
 
                 if(is.null(c.sheet.name)) {
 

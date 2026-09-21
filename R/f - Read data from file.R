@@ -291,8 +291,34 @@
 
                                        function(c.path.file) { # c.path.file <- l.path.file[[1]]
 
-                                               # Get all sheet names in the workbook.
-                                               v.sheet.name <- readxl::excel_sheets(c.path.file)
+                                               # Get all sheet names in the workbook. Retry a few times, since
+                                               # cloud-synced files (e.g. OneDrive) can briefly be unavailable/
+                                               # incomplete (cloud-only placeholder still hydrating).
+                                               v.sheet.name <- NULL
+                                               n.attempt    <- 1
+
+                                               while(is.null(v.sheet.name) && n.attempt <= 6) {
+
+                                                       v.sheet.name <- tryCatch(
+                                                               readxl::excel_sheets(c.path.file),
+                                                               error = function(e) NULL
+                                                       )
+
+                                                       if(is.null(v.sheet.name)) {
+
+                                                               Sys.sleep(5)
+                                                               n.attempt <- n.attempt + 1
+                                                       }
+                                               }
+
+                                               if(is.null(v.sheet.name)) {
+
+                                                       stop(paste0(
+                                                               "Could not open '", c.path.file, "' as an Excel file after ",
+                                                               n.attempt - 1, " attempts. The file may not be fully synced ",
+                                                               "locally yet (e.g. a OneDrive cloud-only placeholder)."
+                                                       ))
+                                               }
 
                                                if(is.null(c.sheet.name)) {
 

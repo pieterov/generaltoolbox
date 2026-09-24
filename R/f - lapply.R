@@ -94,7 +94,7 @@
                         FUN             = f.input,
                         ...,
                         future.seed     = TRUE,
-                        future.packages = .packages()
+                        future.packages = rev(.packages())
                 )
 
         } else {
